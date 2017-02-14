@@ -78,7 +78,7 @@ public class Obs extends BaseOpenmrsData {
 
     private static final String DATE_TIME_SECONDS_ISO_8601_TIME_ZONE_PATTERN = "yyyy-MM-dd'T'HH:mm:ssXXX";
     private static final String DATE_TIME_SECONDS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
-    private static final String DATE_NO_T_SECONDS_PATTERN = "yyyy-MM-dd HH:mm:ss"
+    private static final String DATE_TIME_NO_T_SECONDS_PATTERN = "yyyy-MM-dd HH:mm:ss"
 
     private static final String 
     
@@ -1092,7 +1092,16 @@ public class Obs extends BaseOpenmrsData {
 				DateFormat dateFormat = new SimpleDateFormat(DATE_TIME_PRECISE_PATTERN);
 				setValueDatetime(dateFormat.parse(s));
 		       } else if ("DTSR".equals(abbrev)) {
-			    DateFormat dateFormat = new SimpleDateFormat(DATE_TIME_PRECISE_RFC_822_TIME_ZONE_PATTERN);
+			    DateFormat dateFormat = new SimpleDateFormat(DATE_TIME_SECONDS_RFC_822_TIME_ZONE_PATTERN);
+				setValueDatetime(dateFormat.parse(s));
+			} else if ("DTSI".equals(abbrev)) {
+			    DateFormat dateFormat = new SimpleDateFormat(DATE_TIME_SECONDS_ISO_8601_TIME_ZONE_PATTERN);
+				setValueDatetime(dateFormat.parse(s));
+			} else if ("DTS".equals(abbrev)) {
+			    DateFormat dateFormat = new SimpleDateFormat(DATE_TIME_SECONDS_PATTERN);
+				setValueDatetime(dateFormat.parse(s));
+			} else if ("DTNS".equals(abbrev)) {
+			    DateFormat dateFormat = new SimpleDateFormat(DATE_TIME_NO_T_SECONDS_PATTERN);
 				setValueDatetime(dateFormat.parse(s));
 			} else if ("ST".equals(abbrev)) {
 				setValueText(s);
