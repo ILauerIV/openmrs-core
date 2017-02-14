@@ -27,6 +27,14 @@ public class ConceptDatatype extends BaseOpenmrsMetadata {
 	public static final String DATE = "DT";
 	
 	public static final String DATETIME = "TS";
+
+    public static final String DATETIMEPRECISERFC = "DTPR";
+    public static final String DATETIMEPRECISE = "DTP";
+    public static final String DATETIMESECONDSRFC = "DTSR";
+    public static final String DATETIMESECONDSISO = "DTSI";
+    public static final String DATETIMESECONDS = "DTS";
+    public static final String DATETIMENOTSECONDS = "DTNS";
+    
 	
 	public static final String DOCUMENT = "RP";
 	
