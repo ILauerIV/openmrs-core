@@ -69,9 +69,19 @@ public class Obs extends BaseOpenmrsData {
 	private static final String TIME_PATTERN = "HH:mm";
 	
 	private static final String DATE_PATTERN = "yyyy-MM-dd";
-	
-	public static final long serialVersionUID = 112342333L;
-	
+
+        private static final String DATE_TIME_PRECISE_RFC_822_TIME_ZONE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+
+    private static final String DATE_TIME_PRECISE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+
+    private static final String DATE_TIME_SECONDS_RFC_822_TIME_ZONE_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
+
+    private static final String DATE_TIME_SECONDS_ISO_8601_TIME_ZONE_PATTERN = "yyyy-MM-dd'T'HH:mm:ssXXX";
+    private static final String DATE_TIME_SECONDS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final String DATE_NO_T_SECONDS_PATTERN = "yyyy-MM-dd HH:mm:ss"
+
+    private static final String 
+    
 	private static final Log log = LogFactory.getLog(Obs.class);
 	
 	private static final String FORM_NAMESPACE_PATH_SEPARATOR = "^";
@@ -1066,7 +1076,7 @@ public class Obs extends BaseOpenmrsData {
 				throw new RuntimeException("Not Yet Implemented");
 			} else if ("NM".equals(abbrev) || "SN".equals(abbrev)) {
 				setValueNumeric(Double.valueOf(s));
-			} else if ("DT".equals(abbrev)) {
+		        } else if ("DT".equals(abbrev)) {
 				DateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
 				setValueDatetime(dateFormat.parse(s));
 			} else if ("TM".equals(abbrev)) {
@@ -1075,6 +1085,15 @@ public class Obs extends BaseOpenmrsData {
 			} else if ("TS".equals(abbrev)) {
 				DateFormat datetimeFormat = new SimpleDateFormat(DATE_TIME_PATTERN);
 				setValueDatetime(datetimeFormat.parse(s));
+			} else if ("DTPR".equals(abbrev)) {
+				DateFormat dateFormat = new SimpleDateFormat(DATE_TIME_PRECISE_RFC_822_TIME_ZONE_PATTERN);
+				setValueDatetime(dateFormat.parse(s));
+		        } else if ("DTP".equals(abbrev)) {
+				DateFormat dateFormat = new SimpleDateFormat(DATE_TIME_PRECISE_PATTERN);
+				setValueDatetime(dateFormat.parse(s));
+		       } else if ("DTSR".equals(abbrev)) {
+			    DateFormat dateFormat = new SimpleDateFormat(DATE_TIME_PRECISE_RFC_822_TIME_ZONE_PATTERN);
+				setValueDatetime(dateFormat.parse(s));
 			} else if ("ST".equals(abbrev)) {
 				setValueText(s);
 			} else {
