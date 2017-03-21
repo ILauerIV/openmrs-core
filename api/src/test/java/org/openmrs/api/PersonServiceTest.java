@@ -9,23 +9,11 @@
  */
 package org.openmrs.api;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-import static org.openmrs.test.TestUtil.containsId;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.Vector;
-
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.Patient;
@@ -47,6 +35,21 @@ import org.openmrs.test.TestUtil;
 import org.openmrs.test.Verifies;
 import org.openmrs.util.OpenmrsConstants;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.Vector;
+
+import org.hamcrest.Matchers;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import static org.openmrs.test.TestUtil.containsId;
+
 /**
  * This class tests methods in the PersonService class. TODO: Test all methods in the PersonService
  * class.
@@ -64,6 +67,9 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
     protected AdministrationService adminService = null;
 
     protected PersonService personService = null;
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Before
     public void onSetUpInTransaction() throws Exception {
@@ -2201,27 +2207,27 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
 
     /**
      * @verifies Return Null When Person Is Null
-     * @see PersonServiceImpl#voidPerson(org.openmrs.Person, String)
+     * @see PersonService#voidPerson(org.openmrs.Person, String)
      */
-    @org.junit.Test
+    @Test
     public void voidPerson_shouldReturnNullWhenPersonIsNull() throws Exception {
         Assert.assertNull(Context.getPersonService().voidPerson(null, "For Testing"));
     }
 
     /**
      * @verifies Return Null When Person Is Null
-     * @see PersonServiceImpl#unvoidPerson(org.openmrs.Person)
+     * @see PersonService#unvoidPerson(org.openmrs.Person)
      */
-    @org.junit.Test
+    @Test
     public void unvoidPerson_shouldReturnNullWhenPersonIsNull() throws Exception {
         Assert.assertNull(Context.getPersonService().unvoidPerson(null));
     }
 
     /**
      * @verifies return null when personId is null
-     * @see PersonServiceImpl#getPerson(Integer)
+     * @see PersonService#getPerson(Integer)
      */
-    @org.junit.Test
+    @Test
     public void getPerson_shouldReturnNullWhenPersonIdIsNull() throws Exception {
         Assert.assertNull(Context.getPersonService().getPerson(null));
 
@@ -2229,9 +2235,9 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
 
     /**
      * @verifies not allow someone to be in a relationship with themselves
-     * @see PersonServiceImpl#saveRelationship(org.openmrs.Relationship)
+     * @see PersonService#saveRelationship(org.openmrs.Relationship)
      */
-    @org.junit.Test(expected = APIException.class)
+    @Test
     public void saveRelationship_shouldNotAllowSomeoneToBeInARelationshipWithThemselves() throws Exception {
         executeDataSet(CREATE_PATIENT_XML);
         executeDataSet(CREATE_RELATIONSHIP_XML);
@@ -2242,13 +2248,15 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
         sibling.setPersonB(p1);
         sibling.setRelationshipType(personService.getRelationshipType(4));
         Relationship relation = Context.getPersonService().saveRelationship(sibling);
+        expectedException.expect(APIException.class);
+        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Person.cannot.sRemoame",null)));
     }
 
     /**
      * @verifies void a relationship
-     * @see PersonServiceImpl#voidRelationship(org.openmrs.Relationship, String)
+     * @see PersonService#voidRelationship(org.openmrs.Relationship, String)
      */
-    @org.junit.Test
+    @Test
     public void voidRelationship_shouldVoidARelationship() throws Exception {
         executeDataSet(CREATE_PATIENT_XML);
         executeDataSet(CREATE_RELATIONSHIP_XML);
@@ -2264,18 +2272,10 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
     }
 
     /**
-     * @verifies save a relationship type
-     * @see PersonServiceImpl#saveRelationshipType(org.openmrs.RelationshipType)
-     */
-    @org.junit.Test
-    public void saveRelationshipType_shouldSaveARelationshipType() throws Exception {
-    }
-
-    /**
      * @verifies return a list of all person attribute types if viewtype is null
-     * @see PersonServiceImpl#getPersonAttributeTypes(org.openmrs.util.OpenmrsConstants.PERSON_TYPE, org.openmrs.api.PersonService.ATTR_VIEW_TYPE)
+     * @see PersonService#getPersonAttributeTypes(org.openmrs.util.OpenmrsConstants.PERSON_TYPE, org.openmrs.api.PersonService.ATTR_VIEW_TYPE)
      */
-    @org.junit.Test
+    @Test
     public void getPersonAttributeTypes_shouldReturnAListOfAllPersonAttributeTypesIfViewtypeIsNull() throws Exception {
         List<PersonAttributeType> list = Context.getPersonService().getPersonAttributeTypes(null, null);
         Assert.assertNotNull(list);
@@ -2284,9 +2284,9 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
 
     /**
      * @verifies parse a name with 2 given names and 1 family name
-     * @see PersonServiceImpl#parsePersonName(String)
+     * @see PersonService#parsePersonName(String)
      */
-    @org.junit.Test
+    @Test
     public void parsePersonName_shouldParseANameWith2GivenNamesAnd1FamilyName() throws Exception {
         PersonName pname = Context.getPersonService().parsePersonName("John Adam Smith");
         Assert.assertEquals(pname.getGivenName(), "John");
@@ -2294,13 +2294,11 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
         Assert.assertEquals(pname.getMiddleName(), "Adam");
     }
 
-
-
     /**
      * @verifies parse a name with family name and 2 given names
-     * @see PersonServiceImpl#parsePersonName(String)
+     * @see PersonService#parsePersonName(String)
      */
-    @org.junit.Test
+    @Test
     public void parsePersonName_shouldParseANameWithFamilyNameAnd2GivenNames() throws Exception {
         PersonName pname = Context.getPersonService().parsePersonName("Smith,John Adam");
         Assert.assertEquals(pname.getGivenName(), "John");
@@ -2310,9 +2308,9 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
 
     /**
      * @verifies return a map of relationships
-     * @see PersonServiceImpl#getRelationshipMap(org.openmrs.RelationshipType)
+     * @see PersonService#getRelationshipMap(org.openmrs.RelationshipType)
      */
-    @org.junit.Test
+    @Test
     public void getRelationshipMap_shouldReturnAMapOfRelationships() throws Exception {
         executeDataSet(CREATE_PATIENT_XML);
         executeDataSet(CREATE_RELATIONSHIP_XML);
@@ -2334,9 +2332,9 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
 
     /**
      * @verifies retire a RealtionshipType
-     * @see PersonServiceImpl#retireRelationshipType(org.openmrs.RelationshipType, String)
+     * @see PersonService#retireRelationshipType(org.openmrs.RelationshipType, String)
      */
-    @org.junit.Test
+    @Test
     public void retireRelationshipType_shouldRetireARealtionshipType() throws Exception {
         RelationshipType relationshipType = personService.getRelationshipType(1);
         RelationshipType retired = Context.getPersonService().retireRelationshipType(relationshipType, "For Testing");
@@ -2347,31 +2345,33 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
 
     /**
      * @verifies throw an error when trying to retire RelationshipType when the explanation string is of length 0
-     * @see PersonServiceImpl#retireRelationshipType(org.openmrs.RelationshipType, String)
+     * @see PersonService#retireRelationshipType(org.openmrs.RelationshipType, String)
      */
-    @org.junit.Test(expected = APIException.class)
+    @Test
     public void retireRelationshipType_shouldThrowAnErrorWhenTryingToRetireRelationshipTypeWhenTheExplanationStringIsOfLength0() throws Exception {
         RelationshipType relationshipType = personService.getRelationshipType(1);
         Context.getPersonService().retireRelationshipType(relationshipType, "");
+        expectedException.expect(APIException.class);
+        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Relationship.retiring.reason.required",null)));
     }
 
     /**
      * @verifies should throw an error when trying to retire RelationshipType when the explanation string is null
-     * @see PersonServiceImpl#retireRelationshipType(org.openmrs.RelationshipType, String)
+     * @see PersonService#retireRelationshipType(org.openmrs.RelationshipType, String)
      */
-    @org.junit.Test(expected = APIException.class)
+    @Test
     public void retireRelationshipType_shouldShouldThrowAnErrorWhenTryingToRetireRelationshipTypeWhenTheExplanationStringIsNull() throws Exception {
         RelationshipType relationshipType = personService.getRelationshipType(1);
         Context.getPersonService().retireRelationshipType(relationshipType, null);
+        expectedException.expect(APIException.class);
+        expectedException.expectMessage((Matcher.is(Context.getMessageSourceService().getMessage("Relationship.retiring.reason.required",null)));
     }
 
     /**
      * @verifies unretire a retired RelationshipType
-     * @see PersonServiceImpl#unretireRelationshipType(org.openmrs.RelationshipType)
+     * @see PersonService#unretireRelationshipType(org.openmrs.RelationshipType)
      */
-
-
-    @org.junit.Test
+    @Test
     public void unretireRelationshipType_shouldUnretireARetiredRelationshipType() throws Exception {
         RelationshipType relationshipType = Context.getPersonService().getRelationshipType(1);
         relationshipType = Context.getPersonService().retireRelationshipType(relationshipType, "For testing");
@@ -2383,14 +2383,11 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
 
     }
 
-
-
-
     /**
      * @verifies set sort weight to one when all person attribute types are empty
-     * @see PersonServiceImpl#savePersonAttributeType(org.openmrs.PersonAttributeType)
+     * @see PersonService#savePersonAttributeType(org.openmrs.PersonAttributeType)
      */
-    @org.junit.Test
+    @Test
     public void savePersonAttributeType_shouldSetSortWeightToOneWhenAllPersonAttributeTypesAreEmpty() throws Exception {
         PersonService service = Context.getPersonService();
         PersonAttributeType pat = new PersonAttributeType();
@@ -2400,9 +2397,9 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
 
     /**
      * @verifies retire person attribute type when retire reason is not null nor empty
-     * @see PersonServiceImpl#retirePersonAttributeType(org.openmrs.PersonAttributeType, String)
+     * @see PersonService#retirePersonAttributeType(org.openmrs.PersonAttributeType, String)
      */
-    @org.junit.Test
+    @Test
     public void retirePersonAttributeType_shouldRetirePersonAttributeTypeWhenRetireReasonIsNotNullNorEmpty() throws Exception {
         PersonService ps = Context.getPersonService();
         PersonAttributeType pat = ps.getPersonAttributeType(1);
@@ -2415,25 +2412,27 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
 
     /**
      * @verifies throw an error when retire reason is null
-     * @see PersonServiceImpl#retirePersonAttributeType(org.openmrs.PersonAttributeType, String)
+     * @see PersonService#retirePersonAttributeType(org.openmrs.PersonAttributeType, String)
      */
-    @org.junit.Test(expected = APIException.class)
+    @Test
     public void retirePersonAttributeType_shouldThrowAnErrorWhenRetireReasonIsNull() throws Exception {
         PersonService ps = Context.getPersonService();
         PersonAttributeType pat = ps.getPersonAttributeType(1);
         ps.retirePersonAttributeType(pat, null);
+        expectedException.expect(APIException.class);
+        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Person.retiring.reason.required",null)));
     }
 
     /**
      * @verifies should throw an error when retire reason string length is less than one
-     * @see PersonServiceImpl#retirePersonAttributeType(org.openmrs.PersonAttributeType, String)
+     * @see PersonService#retirePersonAttributeType(org.openmrs.PersonAttributeType, String)
      */
-    @org.junit.Test(expected = APIException.class)
+    @Test
     public void retirePersonAttributeType_shouldThrowAnErrorWhenRetireReasonStringLengthIsLessThanOne() throws Exception {
         PersonService ps = Context.getPersonService();
         PersonAttributeType pat = ps.getPersonAttributeType(1);
         ps.retirePersonAttributeType(pat, "");
+        expectedException.expect(APIException.class);
+        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Person.retiring.reason.required",null)));
     }
-
-
 }
