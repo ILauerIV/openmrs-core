@@ -2364,7 +2364,7 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
         RelationshipType relationshipType = personService.getRelationshipType(1);
         Context.getPersonService().retireRelationshipType(relationshipType, null);
         expectedException.expect(APIException.class);
-        expectedException.expectMessage((Matcher.is(Context.getMessageSourceService().getMessage("Relationship.retiring.reason.required",null)));
+        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Relationship.retiring.reason.required",null)));
     }
 
     /**
