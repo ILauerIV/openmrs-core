@@ -3,7 +3,7 @@
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
- *
+ * <p>
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
@@ -45,6 +45,7 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import org.hamcrest.Matchers;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -2249,7 +2250,7 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
         sibling.setRelationshipType(personService.getRelationshipType(4));
         Relationship relation = Context.getPersonService().saveRelationship(sibling);
         expectedException.expect(APIException.class);
-        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Person.cannot.sRemoame",null)));
+        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Person.cannot.sRemoame", null)));
     }
 
     /**
@@ -2352,7 +2353,7 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
         RelationshipType relationshipType = personService.getRelationshipType(1);
         Context.getPersonService().retireRelationshipType(relationshipType, "");
         expectedException.expect(APIException.class);
-        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Relationship.retiring.reason.required",null)));
+        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Relationship.retiring.reason.required", null)));
     }
 
     /**
@@ -2364,7 +2365,7 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
         RelationshipType relationshipType = personService.getRelationshipType(1);
         Context.getPersonService().retireRelationshipType(relationshipType, null);
         expectedException.expect(APIException.class);
-        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Relationship.retiring.reason.required",null)));
+        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Relationship.retiring.reason.required", null)));
     }
 
     /**
@@ -2420,7 +2421,7 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
         PersonAttributeType pat = ps.getPersonAttributeType(1);
         ps.retirePersonAttributeType(pat, null);
         expectedException.expect(APIException.class);
-        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Person.retiring.reason.required",null)));
+        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Person.retiring.reason.required", null)));
     }
 
     /**
@@ -2433,6 +2434,6 @@ public class PersonServiceTest extends BaseContextSensitiveTest {
         PersonAttributeType pat = ps.getPersonAttributeType(1);
         ps.retirePersonAttributeType(pat, "");
         expectedException.expect(APIException.class);
-        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Person.retiring.reason.required",null)));
+        expectedException.expectMessage(Matcher.is(Context.getMessageSourceService().getMessage("Person.retiring.reason.required", null)));
     }
 }
