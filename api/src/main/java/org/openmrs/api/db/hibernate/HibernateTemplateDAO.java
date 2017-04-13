@@ -11,16 +11,16 @@ package org.openmrs.api.db.hibernate;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.api.db.TemplateDAO;
 import org.openmrs.notification.Template;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HibernateTemplateDAO implements TemplateDAO {
 	
-	private final static Log log = LogFactory.getLog(HibernateTemplateDAO.class);
+	private final static Logger log = LoggerFactory.getLogger(HibernateTemplateDAO.class);
 	
 	/**
 	 * Hibernate session factory
@@ -39,17 +39,20 @@ public class HibernateTemplateDAO implements TemplateDAO {
 		this.sessionFactory = sessionFactory;
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Template> getTemplates() {
 		log.info("Getting all templates from the database");
 		return sessionFactory.getCurrentSession().createQuery("from Template").list();
 	}
 	
+	@Override
 	public Template getTemplate(Integer id) {
 		log.info("Get template " + id);
 		return (Template) sessionFactory.getCurrentSession().get(Template.class, id);
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Template> getTemplatesByName(String name) {
 		log.info("Get template " + name);
@@ -57,10 +60,12 @@ public class HibernateTemplateDAO implements TemplateDAO {
 		        .setString(0, name).list();
 	}
 	
+	@Override
 	public void createTemplate(Template template) throws DAOException {
 		sessionFactory.getCurrentSession().saveOrUpdate(template);
 	}
 	
+	@Override
 	public void updateTemplate(Template template) throws DAOException {
 		if (template.getId() == null) {
 			createTemplate(template);
@@ -70,6 +75,7 @@ public class HibernateTemplateDAO implements TemplateDAO {
 		}
 	}
 	
+	@Override
 	public void deleteTemplate(Template template) throws DAOException {
 		sessionFactory.getCurrentSession().delete(template);
 	}

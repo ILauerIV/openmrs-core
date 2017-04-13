@@ -12,6 +12,7 @@ package org.openmrs.api;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.Cohort;
@@ -19,9 +20,8 @@ import org.openmrs.Patient;
 import org.openmrs.PatientProgram;
 import org.openmrs.Program;
 import org.openmrs.api.context.Context;
+import org.openmrs.serialization.SerializationException;
 import org.openmrs.test.BaseContextSensitiveTest;
-
-import org.junit.Assert;
 
 /**
  * Contains methods to test behavior of OpenmrsService methods
@@ -30,16 +30,17 @@ public class OpenmrsServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * Tests that if two service methods are called (one from inside the other) the first one will
-	 * be rolled back if an exception is thrown inside the second one.
-	 * 
-	 * <pre>
+	 * be rolled back if an exception is thrown inside the second one. <pre>
 	 * We are testing with the merge patient method since it is transactional and calls multiple other 
 	 * transactional methods
 	 * </pre>
+	 * 
+	 * @throws SerializationException
 	 */
 	@Test
 	@Ignore
-	public void shouldCheckThatAMethodIsNotRolledBackInCaseOfAnErrorInAnotherInvokedInsideIt() throws Exception {
+	public void shouldCheckThatAMethodIsNotRolledBackInCaseOfAnErrorInAnotherInvokedInsideIt()
+	        throws SerializationException {
 		//TODO FIx why this test fails when run with other tests
 		PatientService patientService = Context.getPatientService();
 		EncounterService encounterService = Context.getEncounterService();

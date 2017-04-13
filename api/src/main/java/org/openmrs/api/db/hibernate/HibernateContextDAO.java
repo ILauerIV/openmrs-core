@@ -17,8 +17,6 @@ import java.util.Properties;
 import java.util.concurrent.Future;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.CacheMode;
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
@@ -39,6 +37,8 @@ import org.openmrs.api.db.ContextDAO;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
 import org.openmrs.util.Security;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.springframework.orm.hibernate4.SessionHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +53,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  */
 public class HibernateContextDAO implements ContextDAO {
 	
-	private static Log log = LogFactory.getLog(HibernateContextDAO.class);
+	private static Logger log = LoggerFactory.getLogger(HibernateContextDAO.class);
 	
 	/**
 	 * Hibernate session factory
@@ -73,6 +73,7 @@ public class HibernateContextDAO implements ContextDAO {
 	/**
 	 * @see org.openmrs.api.db.ContextDAO#authenticate(java.lang.String, java.lang.String)
 	 */
+	@Override
 	@Transactional(noRollbackFor = ContextAuthenticationException.class)
 	public User authenticate(String login, String password) throws ContextAuthenticationException {
 		
@@ -208,6 +209,7 @@ public class HibernateContextDAO implements ContextDAO {
 	/**
 	 * @see org.openmrs.api.db.ContextDAO#getUserByUuid(java.lang.String)
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public User getUserByUuid(String uuid) {
 		
@@ -256,6 +258,7 @@ public class HibernateContextDAO implements ContextDAO {
 	 */
 	private boolean participate = false;
 	
+	@Override
 	public void openSession() {
 		log.debug("HibernateContext: Opening Hibernate Session");
 		if (TransactionSynchronizationManager.hasResource(sessionFactory)) {
@@ -276,6 +279,7 @@ public class HibernateContextDAO implements ContextDAO {
 	/**
 	 * @see org.openmrs.api.context.Context#closeSession()
 	 */
+	@Override
 	public void closeSession() {
 		log.debug("HibernateContext: closing Hibernate Session");
 		if (!participate) {
@@ -301,6 +305,7 @@ public class HibernateContextDAO implements ContextDAO {
 	/**
 	 * @see org.openmrs.api.db.ContextDAO#clearSession()
 	 */
+	@Override
 	@Transactional
 	public void clearSession() {
 		sessionFactory.getCurrentSession().clear();
@@ -309,6 +314,7 @@ public class HibernateContextDAO implements ContextDAO {
 	/**
 	 * @see org.openmrs.api.db.ContextDAO#evictFromSession(java.lang.Object)
 	 */
+	@Override
 	public void evictFromSession(Object obj) {
 		sessionFactory.getCurrentSession().evict(obj);
 	}
@@ -316,6 +322,7 @@ public class HibernateContextDAO implements ContextDAO {
 	/**
 	 * @see org.openmrs.api.db.ContextDAO#refreshEntity(Object)
 	 */
+	@Override
 	public void refreshEntity(Object obj) {
 		sessionFactory.getCurrentSession().refresh(obj);
 	}
@@ -323,6 +330,7 @@ public class HibernateContextDAO implements ContextDAO {
 	/**
 	 * @see org.openmrs.api.db.ContextDAO#flushSession()
 	 */
+	@Override
 	@Transactional
 	public void flushSession() {
 		sessionFactory.getCurrentSession().flush();
@@ -331,6 +339,7 @@ public class HibernateContextDAO implements ContextDAO {
 	/**
 	 * @see org.openmrs.api.context.Context#startup(Properties)
 	 */
+	@Override
 	@Transactional
 	public void startup(Properties properties) {
 	}
@@ -338,6 +347,7 @@ public class HibernateContextDAO implements ContextDAO {
 	/**
 	 * @see org.openmrs.api.context.Context#shutdown()
 	 */
+	@Override
 	public void shutdown() {
 		if (log.isInfoEnabled()) {
 			showUsageStatistics();
@@ -388,6 +398,7 @@ public class HibernateContextDAO implements ContextDAO {
 	 * @see org.openmrs.api.db.ContextDAO#mergeDefaultRuntimeProperties(java.util.Properties)
 	 * @should merge default runtime properties
 	 */
+	@Override
 	public void mergeDefaultRuntimeProperties(Properties runtimeProperties) {
 		
 		Map<String, String> cache = new HashMap<String, String>();

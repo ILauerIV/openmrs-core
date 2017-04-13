@@ -13,8 +13,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
@@ -23,13 +21,15 @@ import org.openmrs.User;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.notification.Alert;
 import org.openmrs.notification.db.AlertDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Hibernate specific implementation of the
  */
 public class HibernateAlertDAO implements AlertDAO {
 	
-	private final Log log = LogFactory.getLog(getClass());
+	private final Logger log = LoggerFactory.getLogger(getClass());
 	
 	/**
 	 * Hibernate session factory
@@ -51,6 +51,7 @@ public class HibernateAlertDAO implements AlertDAO {
 	/**
 	 * @see org.openmrs.notification.db.AlertDAO#saveAlert(org.openmrs.notification.Alert)
 	 */
+	@Override
 	public Alert saveAlert(Alert alert) throws DAOException {
 		sessionFactory.getCurrentSession().saveOrUpdate(alert);
 		return alert;
@@ -59,6 +60,7 @@ public class HibernateAlertDAO implements AlertDAO {
 	/**
 	 * @see org.openmrs.notification.db.AlertDAO#getAlert(java.lang.Integer)
 	 */
+	@Override
 	public Alert getAlert(Integer alertId) throws DAOException {
 		return (Alert) sessionFactory.getCurrentSession().get(Alert.class, alertId);
 	}
@@ -66,6 +68,7 @@ public class HibernateAlertDAO implements AlertDAO {
 	/**
 	 * @see org.openmrs.notification.db.AlertDAO#deleteAlert(org.openmrs.notification.Alert)
 	 */
+	@Override
 	public void deleteAlert(Alert alert) throws DAOException {
 		sessionFactory.getCurrentSession().delete(alert);
 	}
@@ -73,6 +76,7 @@ public class HibernateAlertDAO implements AlertDAO {
 	/**
 	 * @see org.openmrs.notification.AlertService#getAllAlerts(boolean)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Alert> getAllAlerts(boolean includeExpired) throws DAOException {
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria(Alert.class);
@@ -88,6 +92,7 @@ public class HibernateAlertDAO implements AlertDAO {
 	/**
 	 * @see org.openmrs.notification.db.AlertDAO#getAlerts(org.openmrs.User, boolean, boolean)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Alert> getAlerts(User user, boolean includeRead, boolean includeExpired) throws DAOException {
 		log.debug("Getting alerts for user " + user + " read? " + includeRead + " expired? " + includeExpired);

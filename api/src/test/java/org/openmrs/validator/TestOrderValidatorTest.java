@@ -36,11 +36,10 @@ import org.springframework.validation.Errors;
 public class TestOrderValidatorTest extends BaseContextSensitiveTest {
 	
 	/**
-	 * @verifies fail validation if the specimen source is invalid
 	 * @see TestOrderValidator#validate(Object, org.springframework.validation.Errors)
 	 */
 	@Test
-	public void validate_shouldFailValidationIfTheSpecimenSourceIsInvalid() throws Exception {
+	public void validate_shouldFailValidationIfTheSpecimenSourceIsInvalid() {
 		ConceptService conceptService = Context.getConceptService();
 		Concept specimenSource = conceptService.getConcept(3);
 		OrderService orderService = Context.getOrderService();
@@ -66,11 +65,10 @@ public class TestOrderValidatorTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @verifies pass validation if the specimen source is valid
 	 * @see TestOrderValidator#validate(Object, org.springframework.validation.Errors)
 	 */
 	@Test
-	public void validate_shouldPassValidationIfTheSpecimenSourceIsValid() throws Exception {
+	public void validate_shouldPassValidationIfTheSpecimenSourceIsValid() {
 		ConceptService conceptService = Context.getConceptService();
 		Concept specimenSource = conceptService.getConcept(22);
 		OrderService orderService = Context.getOrderService();

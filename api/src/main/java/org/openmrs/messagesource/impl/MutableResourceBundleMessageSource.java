@@ -21,8 +21,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.messagesource.MutableMessageSource;
 import org.openmrs.messagesource.PresentationMessage;
 import org.openmrs.module.Module;
@@ -30,6 +28,8 @@ import org.openmrs.module.ModuleFactory;
 import org.openmrs.util.LocaleUtility;
 import org.openmrs.util.OpenmrsClassLoader;
 import org.openmrs.util.OpenmrsUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -41,7 +41,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
  */
 public class MutableResourceBundleMessageSource extends ReloadableResourceBundleMessageSource implements MutableMessageSource {
 
-	private Log log = LogFactory.getLog(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 	
 	/**
 	 * Local reference to basenames used to search for properties files.
@@ -58,6 +58,7 @@ public class MutableResourceBundleMessageSource extends ReloadableResourceBundle
 	/**
 	 * @see org.openmrs.messagesource.MessageSourceService#getLocales()
 	 */
+	@Override
 	public Collection<Locale> getLocales() {
 		long now = System.currentTimeMillis();
 		if (locales == null || cacheMilliseconds <= 0 || now - cacheMilliseconds > lastCached) {
@@ -130,6 +131,7 @@ public class MutableResourceBundleMessageSource extends ReloadableResourceBundle
 	 *
 	 * @see org.openmrs.messagesource.MessageSourceService#getPresentations()
 	 */
+	@Override
 	public Collection<PresentationMessage> getPresentations() {
 		Collection<PresentationMessage> presentations = new Vector<PresentationMessage>();
 		
@@ -195,6 +197,7 @@ public class MutableResourceBundleMessageSource extends ReloadableResourceBundle
 	/**
 	 * @see org.openmrs.messagesource.MutableMessageSource#addPresentation(org.openmrs.messagesource.PresentationMessage)
 	 */
+	@Override
 	public void addPresentation(PresentationMessage message) {
 		Resource propertyFile = findPropertiesFileFor(message.getCode());
 		if (propertyFile != null) {
@@ -216,6 +219,7 @@ public class MutableResourceBundleMessageSource extends ReloadableResourceBundle
 	/**
 	 * @see org.openmrs.messagesource.MutableMessageSource#removePresentation(org.openmrs.messagesource.PresentationMessage)
 	 */
+	@Override
 	public void removePresentation(PresentationMessage message) {
 		Resource propertyFile = findPropertiesFileFor(message.getCode());
 		if (propertyFile != null) {
@@ -286,6 +290,7 @@ public class MutableResourceBundleMessageSource extends ReloadableResourceBundle
 	/**
 	 * @see org.openmrs.messagesource.MutableMessageSource#merge(MutableMessageSource, boolean)
 	 */
+	@Override
 	public void merge(MutableMessageSource fromSource, boolean overwrite) {
 		
 		// collect all existing properties
@@ -348,6 +353,7 @@ public class MutableResourceBundleMessageSource extends ReloadableResourceBundle
 	 * @see org.openmrs.messagesource.MutableMessageSource#getPresentation(java.lang.String,
 	 *      java.util.Locale)
 	 */
+	@Override
 	public PresentationMessage getPresentation(String key, Locale forLocale) {
 		// TODO Auto-generated method stub
 		return null;
@@ -356,6 +362,7 @@ public class MutableResourceBundleMessageSource extends ReloadableResourceBundle
 	/**
 	 * @see org.openmrs.messagesource.MutableMessageSource#getPresentationsInLocale(java.util.Locale)
 	 */
+	@Override
 	public Collection<PresentationMessage> getPresentationsInLocale(Locale locale) {
 		// TODO Auto-generated method stub
 		return null;

@@ -21,13 +21,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.util.LocaleUtility;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
 import org.openmrs.util.RoleConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Defines a User Account in the system. This account belongs to a {@link Person} in the system,
@@ -40,7 +40,7 @@ public class User extends BaseOpenmrsMetadata implements java.io.Serializable, A
 	
 	public static final long serialVersionUID = 2L;
 	
-	protected final Log log = LogFactory.getLog(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
 	// Fields
 	
@@ -283,6 +283,7 @@ public class User extends BaseOpenmrsMetadata implements java.io.Serializable, A
 	/**
 	 * @see org.openmrs.Attributable#findPossibleValues(java.lang.String)
 	 */
+	@Override
 	public List<User> findPossibleValues(String searchText) {
 		try {
 			return Context.getUserService().getUsersByName(searchText, "", false);
@@ -295,6 +296,7 @@ public class User extends BaseOpenmrsMetadata implements java.io.Serializable, A
 	/**
 	 * @see org.openmrs.Attributable#getPossibleValues()
 	 */
+	@Override
 	public List<User> getPossibleValues() {
 		try {
 			return Context.getUserService().getAllUsers();
@@ -307,6 +309,7 @@ public class User extends BaseOpenmrsMetadata implements java.io.Serializable, A
 	/**
 	 * @see org.openmrs.Attributable#hydrate(java.lang.String)
 	 */
+	@Override
 	public User hydrate(String userId) {
 		try {
 			return Context.getUserService().getUser(Integer.valueOf(userId));
@@ -319,6 +322,7 @@ public class User extends BaseOpenmrsMetadata implements java.io.Serializable, A
 	/**
 	 * @see org.openmrs.Attributable#serialize()
 	 */
+	@Override
 	public String serialize() {
 		if (getUserId() != null) {
 			return "" + getUserId();
@@ -330,6 +334,7 @@ public class User extends BaseOpenmrsMetadata implements java.io.Serializable, A
 	/**
 	 * @see org.openmrs.Attributable#getDisplayString()
 	 */
+	@Override
 	public String getDisplayString() {
 		String returnString = "";
 		if (getPersonName() != null) {
@@ -558,6 +563,7 @@ public class User extends BaseOpenmrsMetadata implements java.io.Serializable, A
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#getId()
 	 */
+	@Override
 	public Integer getId() {
 		return getUserId();
 	}
@@ -566,6 +572,7 @@ public class User extends BaseOpenmrsMetadata implements java.io.Serializable, A
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#setId(java.lang.Integer)
 	 */
+	@Override
 	public void setId(Integer id) {
 		setUserId(id);
 	}

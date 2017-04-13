@@ -11,11 +11,11 @@ package org.openmrs.propertyeditor;
 
 import java.beans.PropertyEditorSupport;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.LocationTag;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
  */
 public class LocationTagEditor extends PropertyEditorSupport {
 	
-	private static Log log = LogFactory.getLog(LocationTagEditor.class);
+	private static Logger log = LoggerFactory.getLogger(LocationTagEditor.class);
 	
 	public LocationTagEditor() {
 	}
@@ -37,6 +37,7 @@ public class LocationTagEditor extends PropertyEditorSupport {
 	 * 
 	 * @see java.beans.PropertyEditorSupport#setAsText(java.lang.String)
 	 */
+	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
 		LocationService ls = Context.getLocationService();
 		if (Context.isAuthenticated() && StringUtils.hasText(text)) {
@@ -59,6 +60,7 @@ public class LocationTagEditor extends PropertyEditorSupport {
 	/**
 	 * @see java.beans.PropertyEditorSupport#getAsText()
 	 */
+	@Override
 	public String getAsText() {
 		LocationTag t = (LocationTag) getValue();
 		return t == null ? null : t.getLocationTagId().toString();

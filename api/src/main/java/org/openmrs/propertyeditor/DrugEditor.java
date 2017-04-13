@@ -11,11 +11,11 @@ package org.openmrs.propertyeditor;
 
 import java.beans.PropertyEditorSupport;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.Drug;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
  */
 public class DrugEditor extends PropertyEditorSupport {
 	
-	private Log log = LogFactory.getLog(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	public DrugEditor() {
 	}
@@ -43,6 +43,7 @@ public class DrugEditor extends PropertyEditorSupport {
 	 * @should set using uuid
 	 * @should fail if drug does not exist with non-empty identifier
 	 */
+	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
 		ConceptService es = Context.getConceptService();
 		if (StringUtils.hasText(text)) {
@@ -69,6 +70,7 @@ public class DrugEditor extends PropertyEditorSupport {
 	 * @should return drug identifier as string when editor has a value
 	 * @should return empty string when editor has a null value
 	 */
+	@Override
 	public String getAsText() {
 		Drug d = (Drug) getValue();
 		if (d == null) {

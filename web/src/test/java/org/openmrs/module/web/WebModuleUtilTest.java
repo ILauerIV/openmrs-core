@@ -16,6 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Scanner;
@@ -45,17 +46,14 @@ import org.w3c.dom.Element;
 @PrepareForTest(WebModuleUtil.class)
 public class WebModuleUtilTest {
 	
-	private Properties propertiesWritten;
-	
 	private static final String REAL_PATH = "/usr/local/apache-tomcat-7.0.27/webapps/openmrs";
 	
 	/**
 	 * @see WebModuleUtil#isModulePackageNameInTaskClass(String, String) 
-	 * @verifies return false for different package names
 	 * @throws Exception
 	 */
 	@Test
-	public void isModulePackageNameInTaskClass_shouldReturnFalseForDifferentPackageName() throws Exception {
+	public void isModulePackageNameInTaskClass_shouldReturnFalseForDifferentPackageName() {
 		String modulePackageName = "org.openmrs.logic.task";
 		String taskClass = "org.openmrs.logic.TaskInitializeLogicRuleProvidersTask";
 		boolean result = WebModuleUtil.isModulePackageNameInTaskClass(modulePackageName, taskClass);
@@ -64,11 +62,10 @@ public class WebModuleUtilTest {
 	
 	/**
 	 * @see WebModuleUtil#isModulePackageNameInTaskClass(String, String) 
-	 * @verifies return false if module has longer package name
 	 * @throws Exception
 	 */
 	@Test
-	public void isModulePackageNameInTaskClass_shouldReturnFalseIfModuleHasLongerPackageName() throws Exception {
+	public void isModulePackageNameInTaskClass_shouldReturnFalseIfModuleHasLongerPackageName() {
 		String modulePackageName = "org.openmrs.logic.task";
 		String taskClass = "org.openmrs.logic.TaskInitializeLogicRuleProvidersTask";
 		boolean result = WebModuleUtil.isModulePackageNameInTaskClass(modulePackageName, taskClass);
@@ -77,11 +74,10 @@ public class WebModuleUtilTest {
 	
 	/**
 	 * @see WebModuleUtil#isModulePackageNameInTaskClass(String, String) 
-	 * @verifies properly match subpackages
 	 * @throws Exception
 	 */
 	@Test
-	public void isModulePackageNameInTaskClass_shouldProperlyMatchSubpackages() throws Exception {
+	public void isModulePackageNameInTaskClass_shouldProperlyMatchSubpackages() {
 		String modulePackageName = "org.openmrs.module.xforms";
 		String taskClass = "org.openmrs.module.xforms.ProcessXformsQueueTask";
 		boolean result = WebModuleUtil.isModulePackageNameInTaskClass(modulePackageName, taskClass);
@@ -90,11 +86,10 @@ public class WebModuleUtilTest {
 	
 	/**
 	 * @see WebModuleUtil#isModulePackageNameInTaskClass(String, String)
-	 * @verifies return false for empty package names
 	 * @throws Exception
 	 */
 	@Test
-	public void isModulePackageNameInTaskClass_shouldReturnFalseForEmptyPackageNames() throws Exception {
+	public void isModulePackageNameInTaskClass_shouldReturnFalseForEmptyPackageNames() {
 		String modulePackageName = "";
 		String taskClass = "";
 		boolean result = WebModuleUtil.isModulePackageNameInTaskClass(modulePackageName, taskClass);
@@ -102,11 +97,11 @@ public class WebModuleUtilTest {
 	}
 	
 	/**
+	 * @throws ParserConfigurationException
 	 * @see WebModuleUtil#startModule(Module, ServletContext, boolean)
-	 * @verifies creates dwr-modules.xml if not found
 	 */
 	@Test
-	public void startModule_shouldCreateDwrModulesXmlIfNotExists() throws Exception {
+	public void startModule_shouldCreateDwrModulesXmlIfNotExists() throws ParserConfigurationException {
 		// create dummy module and start it
 		Module mod = buildModuleForMessageTest();
 		ModuleFactory.getStartedModulesMap().put(mod.getModuleId(), mod);
@@ -130,11 +125,13 @@ public class WebModuleUtilTest {
 	}
 	
 	/**
+	 * @throws ParserConfigurationException
+	 * @throws FileNotFoundException
 	 * @see WebModuleUtil#startModule(Module, ServletContext, boolean)
-	 * @verifies dwr-modules.xml has dwr tag of module started
 	 */
 	@Test
-	public void startModule_dwrModuleXmlshouldContainModuleInfo() throws Exception {		
+	public void startModule_dwrModuleXmlshouldContainModuleInfo()
+	        throws ParserConfigurationException, FileNotFoundException {
 		// create dummy module and start it
 		Module mod = buildModuleForMessageTest();
 		ModuleFactory.getStartedModulesMap().put(mod.getModuleId(), mod);
@@ -206,10 +203,9 @@ public class WebModuleUtilTest {
 	
 	/**
 	 * @see WebModuleUtil#getModuleWebFolder(String)
-	 * @verifies return null if the dispatcher servlet is not yet set
 	 */
 	@Test(expected = ModuleException.class)
-	public void getModuleWebFolder_shouldReturnNullIfTheDispatcherServletIsNotYetSet() throws Exception {
+	public void getModuleWebFolder_shouldReturnNullIfTheDispatcherServletIsNotYetSet() {
 		//We need to do this in case it is run after getModuleWebFolder_shouldReturnTheCorrectModuleFolder 
 		WebModuleUtil.setDispatcherServlet(null);
 		WebModuleUtil.getModuleWebFolder("");
@@ -217,10 +213,9 @@ public class WebModuleUtilTest {
 	
 	/**
 	 * @see WebModuleUtil#getModuleWebFolder(String)
-	 * @verifies return the correct module folder
 	 */
 	@Test
-	public void getModuleWebFolder_shouldReturnTheCorrectModuleFolder() throws Exception {
+	public void getModuleWebFolder_shouldReturnTheCorrectModuleFolder() {
 		setupMocks(false);
 		String moduleId = "basicmodule";
 		String expectedPath = (REAL_PATH + "/WEB-INF/view/module/" + moduleId).replace("/", File.separator);
@@ -231,10 +226,9 @@ public class WebModuleUtilTest {
 	
 	/**
 	 * @see WebModuleUtil#getModuleWebFolder(String)
-	 * @verifies return the correct module folder if real path has a trailing slash
 	 */
 	@Test
-	public void getModuleWebFolder_shouldReturnTheCorrectModuleFolderIfRealPathHasATrailingSlash() throws Exception {
+	public void getModuleWebFolder_shouldReturnTheCorrectModuleFolderIfRealPathHasATrailingSlash() {
 		setupMocks(true);
 		String moduleId = "basicmodule";
 		String expectedPath = (REAL_PATH + "/WEB-INF/view/module/" + moduleId).replace("/", File.separator);

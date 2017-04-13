@@ -17,8 +17,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.LockOptions;
@@ -45,6 +43,8 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.api.db.OrderDAO;
 import org.openmrs.util.OpenmrsConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class should not be used directly. This is just a common implementation of the OrderDAO that
@@ -59,7 +59,7 @@ import org.openmrs.util.OpenmrsConstants;
  */
 public class HibernateOrderDAO implements OrderDAO {
 	
-	protected static final Log log = LogFactory.getLog(HibernateOrderDAO.class);
+	protected static final Logger log = LoggerFactory.getLogger(HibernateOrderDAO.class);
 	
 	/**
 	 * Hibernate session factory
@@ -82,6 +82,7 @@ public class HibernateOrderDAO implements OrderDAO {
 	 * @see org.openmrs.api.db.OrderDAO#saveOrder(org.openmrs.Order)
 	 * @see org.openmrs.api.OrderService#saveOrder(org.openmrs.Order, org.openmrs.api.OrderContext)
 	 */
+	@Override
 	public Order saveOrder(Order order) throws DAOException {
 		sessionFactory.getCurrentSession().saveOrUpdate(order);
 		
@@ -92,6 +93,7 @@ public class HibernateOrderDAO implements OrderDAO {
 	 * @see org.openmrs.api.db.OrderDAO#deleteOrder(org.openmrs.Order)
 	 * @see org.openmrs.api.OrderService#purgeOrder(org.openmrs.Order)
 	 */
+	@Override
 	public void deleteOrder(Order order) throws DAOException {
 		sessionFactory.getCurrentSession().delete(order);
 	}
@@ -99,7 +101,7 @@ public class HibernateOrderDAO implements OrderDAO {
 	/**
 	 * @see org.openmrs.api.OrderService#getOrder(java.lang.Integer)
 	 */
-	@SuppressWarnings("unchecked")
+	@Override
 	public Order getOrder(Integer orderId) throws DAOException {
 		if (log.isDebugEnabled()) {
 			log.debug("getting order #" + orderId);
@@ -112,6 +114,7 @@ public class HibernateOrderDAO implements OrderDAO {
 	 * @see org.openmrs.api.db.OrderDAO#getOrders(org.openmrs.OrderType, java.util.List,
 	 *      java.util.List, java.util.List, java.util.List)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Order> getOrders(OrderType orderType, List<Patient> patients, List<Concept> concepts, List<User> orderers,
 	        List<Encounter> encounters) {
@@ -159,6 +162,7 @@ public class HibernateOrderDAO implements OrderDAO {
 	/**
 	 * @see org.openmrs.api.db.OrderDAO#getOrderByUuid(java.lang.String)
 	 */
+	@Override
 	public Order getOrderByUuid(String uuid) {
 		return (Order) sessionFactory.getCurrentSession().createQuery("from Order o where o.uuid = :uuid").setString("uuid",
 		    uuid).uniqueResult();
@@ -232,6 +236,7 @@ public class HibernateOrderDAO implements OrderDAO {
 	/**
 	 * Delete Obs that references (deleted) Order
 	 */
+	@Override
 	public void deleteObsThatReference(Order order) {
 		if (order != null) {
 			sessionFactory.getCurrentSession().createQuery("delete Obs where order = :order").setParameter("order", order)
@@ -242,6 +247,7 @@ public class HibernateOrderDAO implements OrderDAO {
 	/**
 	 * @see org.openmrs.api.db.OrderDAO#getOrderByOrderNumber(java.lang.String)
 	 */
+	@Override
 	public Order getOrderByOrderNumber(String orderNumber) {
 		Criteria searchCriteria = sessionFactory.getCurrentSession().createCriteria(Order.class, "order");
 		searchCriteria.add(Restrictions.eq("order.orderNumber", orderNumber));
@@ -286,6 +292,7 @@ public class HibernateOrderDAO implements OrderDAO {
 	 * @see org.openmrs.api.db.OrderDAO#getActiveOrders(org.openmrs.Patient, java.util.List,
 	 *      org.openmrs.CareSetting, java.util.Date)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Order> getActiveOrders(Patient patient, List<OrderType> orderTypes, CareSetting careSetting, Date asOfDate) {
 		Criteria crit = createOrderCriteria(patient, careSetting, orderTypes, false, false);
@@ -554,6 +561,7 @@ public class HibernateOrderDAO implements OrderDAO {
 	/**
 	 * @see org.openmrs.api.OrderService#saveOrderType(org.openmrs.OrderType)
 	 */
+	@Override
 	public OrderType saveOrderType(OrderType orderType) {
 		sessionFactory.getCurrentSession().saveOrUpdate(orderType);
 		return orderType;
@@ -562,6 +570,7 @@ public class HibernateOrderDAO implements OrderDAO {
 	/**
 	 * @see org.openmrs.api.OrderService#purgeOrderType(org.openmrs.OrderType)
 	 */
+	@Override
 	public void purgeOrderType(OrderType orderType) {
 		sessionFactory.getCurrentSession().delete(orderType);
 	}
@@ -569,6 +578,7 @@ public class HibernateOrderDAO implements OrderDAO {
 	/**
 	 * @see org.openmrs.api.OrderService#getSubtypes(org.openmrs.OrderType, boolean)
 	 */
+	@Override
 	public List<OrderType> getOrderSubtypes(OrderType orderType, boolean includeRetired) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(OrderType.class);
 		criteria.add(Restrictions.eq("parent", orderType));
@@ -578,6 +588,7 @@ public class HibernateOrderDAO implements OrderDAO {
 		return criteria.list();
 	}
 	
+	@Override
 	public boolean isOrderTypeInUse(OrderType orderType) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Order.class);
 		criteria.add(Restrictions.eq("orderType", orderType));

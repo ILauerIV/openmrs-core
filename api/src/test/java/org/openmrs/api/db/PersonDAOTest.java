@@ -19,7 +19,6 @@ import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 
 public class PersonDAOTest extends BaseContextSensitiveTest {
 	
@@ -32,7 +31,7 @@ public class PersonDAOTest extends BaseContextSensitiveTest {
 	 * @throws Exception
 	 */
 	@Before
-	public void runBeforeEachTest() throws Exception {
+	public void runBeforeEachTest() {
 		// fetch the dao from the spring application context 
 		// this bean name matches the name in /metadata/spring/applicationContext-service.xml 
 		dao = (PersonDAO) applicationContext.getBean("personDAO");
@@ -42,8 +41,7 @@ public class PersonDAOTest extends BaseContextSensitiveTest {
 	 * @see PersonDAO#getSavedPersonAttributeTypeName(org.openmrs.PersonAttributeType)
 	 */
 	@Test
-	@Verifies(value = "should get saved personAttributeType name from database", method = "getSavedPersonAttributeTypeName(org.openmrs.PersonAttributeType)")
-	public void getSavedPersonAttributeTypeName_shouldGetSavedPersonAttributeTypeNameFromDatabase() throws Exception {
+	public void getSavedPersonAttributeTypeName_shouldGetSavedPersonAttributeTypeNameFromDatabase() {
 		PersonAttributeType pat = Context.getPersonService().getPersonAttributeType(1);
 		
 		// save the name from the db for later checks
@@ -62,15 +60,13 @@ public class PersonDAOTest extends BaseContextSensitiveTest {
 	}
 	
 	@Test
-	@Verifies(value = "should return personName from the DB given valid person name id", method = "getPersonName(Integer)")
-	public void getPersonName_shouldGetSavedPersonNameById() throws Exception {
+	public void getPersonName_shouldGetSavedPersonNameById() {
 		PersonName personName = dao.getPersonName(2);
 		assertEquals(2, (int) personName.getId());
 	}
 	
 	@Test
-	@Verifies(value = "should return null from the DB given invalid person name id", method = "getPersonName(Integer)")
-	public void getPersonName_shouldNotGetPersonNameGivenInvalidId() throws Exception {
+	public void getPersonName_shouldNotGetPersonNameGivenInvalidId() {
 		PersonName personName = dao.getPersonName(-1);
 		assertNull(personName);
 	}

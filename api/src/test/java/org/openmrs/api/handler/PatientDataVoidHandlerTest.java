@@ -22,7 +22,6 @@ import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 
 /**
  * Contains the tests for the {@link PatientDataVoidHandler}
@@ -33,10 +32,9 @@ public class PatientDataVoidHandlerTest extends BaseContextSensitiveTest {
 	 * @see PatientDataVoidHandler#handle(Patient,User,Date,String)
 	 */
 	@Test
-	@Verifies(value = "should void the orders encounters and observations associated with the patient", method = "handle(Patient,User,Date,String)")
-	public void handle_shouldVoidTheOrdersEncountersAndObservationsAssociatedWithThePatient() throws Exception {
+	public void handle_shouldVoidTheOrdersEncountersAndObservationsAssociatedWithThePatient() {
 		Patient patient = Context.getPatientService().getPatient(7);
-		Assert.assertFalse(patient.isVoided());
+		Assert.assertFalse(patient.getVoided());
 		
 		List<Encounter> encounters = Context.getEncounterService().getEncountersByPatient(patient);
 		List<Obs> observations = Context.getObsService().getObservationsByPerson(patient);
@@ -68,21 +66,21 @@ public class PatientDataVoidHandlerTest extends BaseContextSensitiveTest {
 		
 		//all encounters void related fields should have been set
 		for (Encounter encounter : encounters) {
-			Assert.assertTrue(encounter.isVoided());
+			Assert.assertTrue(encounter.getVoided());
 			Assert.assertNotNull(encounter.getDateVoided());
 			Assert.assertNotNull(encounter.getVoidedBy());
 			Assert.assertNotNull(encounter.getVoidReason());
 		}
 		//all obs void related fields should have been set
 		for (Obs obs : observations) {
-			Assert.assertTrue(obs.isVoided());
+			Assert.assertTrue(obs.getVoided());
 			Assert.assertNotNull(obs.getDateVoided());
 			Assert.assertNotNull(obs.getVoidedBy());
 			Assert.assertNotNull(obs.getVoidReason());
 		}
 		//all order void related fields should have been set
 		for (Order order : orders) {
-			Assert.assertTrue(order.isVoided());
+			Assert.assertTrue(order.getVoided());
 			Assert.assertNotNull(order.getDateVoided());
 			Assert.assertNotNull(order.getVoidedBy());
 			Assert.assertNotNull(order.getVoidReason());

@@ -20,7 +20,6 @@ import org.openmrs.User;
 import org.openmrs.Voidable;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 
 /**
  * Tests for the {@link RequireVoidReasonVoidHandler} class.
@@ -31,8 +30,7 @@ public class RequireVoidReasonVoidHandlerTest extends BaseContextSensitiveTest {
 	 * @see RequireVoidReasonVoidHandler#handle(Voidable,User,Date,String)
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	@Verifies(value = "should throw IllegalArgumentException if Patient voidReason is null", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldThrowIllegalArgumentExceptionIfPatientVoidReasonIsNull() throws Exception {
+	public void handle_shouldThrowIllegalArgumentExceptionIfPatientVoidReasonIsNull() {
 		Patient p = Context.getPatientService().getPatient(2);
 		Context.getPatientService().voidPatient(p, null);
 	}
@@ -41,8 +39,7 @@ public class RequireVoidReasonVoidHandlerTest extends BaseContextSensitiveTest {
 	 * @see RequireVoidReasonVoidHandler#handle(Voidable,User,Date,String)
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	@Verifies(value = "should throw IllegalArgumentException if Encounter voidReason is empty", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldThrowIllegalArgumentExceptionIfEncounterVoidReasonIsEmpty() throws Exception {
+	public void handle_shouldThrowIllegalArgumentExceptionIfEncounterVoidReasonIsEmpty() {
 		Encounter e = Context.getEncounterService().getEncounter(3);
 		Context.getEncounterService().voidEncounter(e, "");
 	}
@@ -51,8 +48,7 @@ public class RequireVoidReasonVoidHandlerTest extends BaseContextSensitiveTest {
 	 * @see RequireVoidReasonVoidHandler#handle(Voidable,User,Date,String)
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	@Verifies(value = "should throw IllegalArgumentException if Obs voidReason is blank", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldThrowIllegalArgumentExceptionIfObsVoidReasonIsBlank() throws Exception {
+	public void handle_shouldThrowIllegalArgumentExceptionIfObsVoidReasonIsBlank() {
 		Obs o = Context.getObsService().getObs(7);
 		Context.getObsService().voidObs(o, "  ");
 	}
@@ -61,8 +57,7 @@ public class RequireVoidReasonVoidHandlerTest extends BaseContextSensitiveTest {
 	 * @see RequireVoidReasonVoidHandler#handle(Voidable,User,Date,String)
 	 */
 	@Test
-	@Verifies(value = "should not throw Exception if voidReason is not blank", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldNotThrowExceptionIfVoidReasonIsNotBlank() throws Exception {
+	public void handle_shouldNotThrowExceptionIfVoidReasonIsNotBlank() {
 		Obs o = Context.getObsService().getObs(7);
 		Context.getObsService().voidObs(o, "Some Reason");
 	}
@@ -71,8 +66,7 @@ public class RequireVoidReasonVoidHandlerTest extends BaseContextSensitiveTest {
 	 * @see RequireVoidReasonVoidHandler#handle(Voidable,User,Date,String)
 	 */
 	@Test
-	@Verifies(value = "not throw Exception if voidReason is null for unsupported types", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldNotThrowExceptionIfVoidReasonIsNullForUnsupportedTypes() throws Exception {
+	public void handle_shouldNotThrowExceptionIfVoidReasonIsNullForUnsupportedTypes() {
 		Person p = Context.getPersonService().getPerson(1);
 		Context.getPersonService().voidPerson(p, null);
 	}

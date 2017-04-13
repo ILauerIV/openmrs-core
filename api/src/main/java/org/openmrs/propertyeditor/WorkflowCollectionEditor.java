@@ -14,13 +14,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.Program;
 import org.openmrs.ProgramWorkflow;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.context.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -29,7 +29,7 @@ import org.springframework.util.StringUtils;
  */
 public class WorkflowCollectionEditor extends PropertyEditorSupport {
 	
-	private Log log = LogFactory.getLog(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	public WorkflowCollectionEditor() {
 	}
@@ -52,6 +52,7 @@ public class WorkflowCollectionEditor extends PropertyEditorSupport {
 	 * 
 	 * @should update workflows in program
 	 */
+	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
 		if (StringUtils.hasText(text)) {
 			ConceptService cs = Context.getConceptService();
@@ -84,7 +85,7 @@ public class WorkflowCollectionEditor extends PropertyEditorSupport {
 			for (ProgramWorkflow pw : oldSet) {
 				if (!newConceptIds.contains(pw.getConcept().getConceptId())) {
 					pw.setRetired(true);
-				} else if (newConceptIds.contains(pw.getConcept().getConceptId()) && pw.isRetired()) {
+				} else if (newConceptIds.contains(pw.getConcept().getConceptId()) && pw.getRetired()) {
 					pw.setRetired(false);
 				}
 				alreadyDone.add(pw.getConcept().getConceptId());
@@ -110,6 +111,7 @@ public class WorkflowCollectionEditor extends PropertyEditorSupport {
 	 * 
 	 * @see java.beans.PropertyEditorSupport#getAsText()
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public String getAsText() {
 		Collection<ProgramWorkflow> pws = (Collection<ProgramWorkflow>) getValue();

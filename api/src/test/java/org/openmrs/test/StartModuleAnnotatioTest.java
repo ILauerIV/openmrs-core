@@ -9,16 +9,15 @@
  */
 package org.openmrs.test;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.api.context.Context;
-
-import org.junit.Assert;
 
 @StartModule( { "org/openmrs/module/include/dssmodule-1.44.omod", "org/openmrs/module/include/atdproducer-0.51.omod" })
 public class StartModuleAnnotatioTest extends BaseModuleContextSensitiveTest {
 	
 	@Test
-	public void shouldStartModules() throws Exception {
+	public void shouldStartModules() throws ClassNotFoundException {
 		
 		Class<?> atdServiceClass = Context.loadClass("org.openmrs.module.atdproducer.service.ATDService");
 		Class<?> dssServiceClass = Context.loadClass("org.openmrs.module.dssmodule.DssService");

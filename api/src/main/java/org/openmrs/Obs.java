@@ -22,8 +22,6 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.annotation.AllowDirectAccess;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
@@ -32,6 +30,8 @@ import org.openmrs.obs.ComplexObsHandler;
 import org.openmrs.util.Format;
 import org.openmrs.util.Format.FORMAT_TYPE;
 import org.openmrs.util.OpenmrsUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An observation is a single unit of clinical information. <br>
@@ -64,6 +64,38 @@ import org.openmrs.util.OpenmrsUtil;
  */
 public class Obs extends BaseOpenmrsData {
 	
+	/**
+	 * @since 2.1.0
+	 */
+	public enum Interpretation {
+		NORMAL,
+		ABNORMAL,
+		CRITICALLY_ABNORMAL,
+		NEGATIVE,
+		POSITIVE,
+		CRITICALLY_LOW,
+		LOW,
+		HIGH,
+		CRITICALLY_HIGH,
+		VERY_SUSCEPTIBLE,
+		SUSCEPTIBLE,
+		INTERMEDIATE,
+		RESISTANT,
+		SIGNIFICANT_CHANGE_DOWN,
+		SIGNIFICANT_CHANGE_UP,
+		OFF_SCALE_LOW,
+		OFF_SCALE_HIGH
+	}
+	
+	/**
+	 * @since 2.1.0
+	 */
+	public enum Status {
+		PRELIMINARY,
+		FINAL,
+		AMENDED
+	}
+	
 	private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm";
 	
 	private static final String TIME_PATTERN = "HH:mm";
@@ -72,7 +104,7 @@ public class Obs extends BaseOpenmrsData {
 	
 	public static final long serialVersionUID = 112342333L;
 	
-	private static final Log log = LogFactory.getLog(Obs.class);
+	private static final Logger log = LoggerFactory.getLogger(Obs.class);
 	
 	private static final String FORM_NAMESPACE_PATH_SEPARATOR = "^";
 	
@@ -140,6 +172,10 @@ public class Obs extends BaseOpenmrsData {
 	
 	private Boolean dirty = Boolean.FALSE;
 	
+	private Interpretation interpretation;
+	
+	private Status status = Status.FINAL;
+	
 	/** default constructor */
 	public Obs() {
 	}
@@ -196,6 +232,8 @@ public class Obs extends BaseOpenmrsData {
 		newObs.setVoidedBy(obsToCopy.getVoidedBy());
 		newObs.setDateVoided(obsToCopy.getDateVoided());
 		newObs.setVoidReason(obsToCopy.getVoidReason());
+		newObs.setStatus(obsToCopy.getStatus());
+		newObs.setInterpretation(obsToCopy.getInterpretation());
 		
 		newObs.setValueComplex(obsToCopy.getValueComplex());
 		newObs.setComplexData(obsToCopy.getComplexData());
@@ -385,7 +423,7 @@ public class Obs extends BaseOpenmrsData {
 	 * only returns non-voided group members. To get all group members, use
 	 * {@link #getGroupMembers(boolean)} with value true.
 	 * <p>
-	 * If it's not a group (i.e. {@link #getConcept()}.{@link org.openmrs.Concept#isSet()} is not
+	 * If it's not a group (i.e. {@link #getConcept()}.{@link org.openmrs.Concept#getSet()} is not
 	 * true, then this returns null.
 	 * 
 	 * @return a Set&lt;Obs&gt; of the members of this group.
@@ -418,7 +456,7 @@ public class Obs extends BaseOpenmrsData {
 		Iterator<Obs> i = nonVoided.iterator();
 		while (i.hasNext()) {
 			Obs obs = i.next();
-			if (obs.isVoided()) {
+			if (obs.getVoided()) {
 				i.remove();
 			}
 		}
@@ -428,7 +466,7 @@ public class Obs extends BaseOpenmrsData {
 	/**
 	 * Set the members of the obs group, if this obs is a group.
 	 * <p>
-	 * If it's not a group (i.e. {@link #getConcept()}.{@link org.openmrs.Concept#isSet()} is not
+	 * If it's not a group (i.e. {@link #getConcept()}.{@link org.openmrs.Concept#getSet()} is not
 	 * true, then this returns null.
 	 * 
 	 * @param groupMembers the groupedObs to set
@@ -970,7 +1008,7 @@ public class Obs extends BaseOpenmrsData {
 				} else {
 					if (getConcept() instanceof ConceptNumeric) {
 						ConceptNumeric cn = (ConceptNumeric) getConcept();
-						if (!cn.isAllowDecimal()) {
+						if (!cn.getAllowDecimal()) {
 							double d = getValueNumeric();
 							int i = (int) d;
 							return Integer.toString(i);
@@ -1089,6 +1127,7 @@ public class Obs extends BaseOpenmrsData {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		if (obsId == null) {
 			return "obs id is null";
@@ -1101,6 +1140,7 @@ public class Obs extends BaseOpenmrsData {
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#getId()
 	 */
+	@Override
 	public Integer getId() {
 		return getObsId();
 		
@@ -1110,6 +1150,7 @@ public class Obs extends BaseOpenmrsData {
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#setId(java.lang.Integer)
 	 */
+	@Override
 	public void setId(Integer id) {
 		setObsId(id);
 		
@@ -1268,5 +1309,41 @@ public class Obs extends BaseOpenmrsData {
 		if (!isDirty() && obsId != null && !OpenmrsUtil.nullSafeEquals(oldValue, newValue)) {
 			dirty = true;
 		}
+	}
+	
+	/**
+	 * Similar to FHIR's Observation.interpretation. Supports a subset of FHIR's Observation Interpretation Codes.
+	 * See https://www.hl7.org/fhir/valueset-observation-interpretation.html
+	 * @since 2.1.0
+	 */
+	public Interpretation getInterpretation() {
+		return interpretation;
+	}
+	
+	/**
+	 * @since 2.1.0
+	 */
+	public void setInterpretation(Interpretation interpretation) {
+		markAsDirty(this.interpretation, interpretation);
+		this.interpretation = interpretation;
+	}
+	
+	/**
+	 * Similar to FHIR's Observation.status. Supports a subset of FHIR's ObservationStatus values.
+	 * At present OpenMRS does not support FHIR's REGISTERED and CANCELLED statuses, because we don't support obs with
+	 * null values.
+	 * See: https://www.hl7.org/fhir/valueset-observation-status.html
+	 * @since 2.1.0
+	 */
+	public Status getStatus() {
+		return status;
+	}
+	
+	/**
+	 * @since 2.1.0
+	 */
+	public void setStatus(Status status) {
+		markAsDirty(this.status, status);
+		this.status = status;
 	}
 }

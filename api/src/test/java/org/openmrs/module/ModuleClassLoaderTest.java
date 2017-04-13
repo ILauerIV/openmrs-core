@@ -12,6 +12,7 @@ package org.openmrs.module;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,15 +30,16 @@ public class ModuleClassLoaderTest extends BaseContextSensitiveTest {
 	@Before
 	public void before() {
 		mockModule = new Module("mockmodule", "mockmodule", "org.openmrs.module.mockmodule", "author", "description", "1.0");
-		mockModules = new HashMap<String, String>();
+		mockModules = new HashMap<>();
 	}
 	
 	/**
-	 * @verifies return true if file matches and openmrs version matches
+	 * @throws MalformedURLException
 	 * @see ModuleClassLoader#shouldResourceBeIncluded(Module, java.net.URL, String, java.util.Map)
 	 */
 	@Test
-	public void shouldResourceBeIncluded_shouldReturnTrueIfFileMatchesAndOpenmrsVersionMatches() throws Exception {
+	public void shouldResourceBeIncluded_shouldReturnTrueIfFileMatchesAndOpenmrsVersionMatches()
+	        throws MalformedURLException {
 		ModuleConditionalResource resource = new ModuleConditionalResource();
 		resource.setPath("lib/mockmodule-api-1.10.jar");
 		resource.setOpenmrsPlatformVersion("1.7-1.8,1.10-1.11");
@@ -51,11 +53,12 @@ public class ModuleClassLoaderTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @verifies return false if file matches but openmrs version does not
+	 * @throws MalformedURLException
 	 * @see ModuleClassLoader#shouldResourceBeIncluded(Module, java.net.URL, String, java.util.Map)
 	 */
 	@Test
-	public void shouldResourceBeIncluded_shouldReturnFalseIfFileMatchesButOpenmrsVersionDoesNot() throws Exception {
+	public void shouldResourceBeIncluded_shouldReturnFalseIfFileMatchesButOpenmrsVersionDoesNot()
+	        throws MalformedURLException {
 		ModuleConditionalResource resource = new ModuleConditionalResource();
 		resource.setPath("lib/mockmodule-api-1.10.jar");
 		resource.setOpenmrsPlatformVersion("1.7-1.8, 1.10-1.11");
@@ -69,11 +72,12 @@ public class ModuleClassLoaderTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @verifies return true if file does not match and openmrs version does not match
+	 * @throws MalformedURLException
 	 * @see ModuleClassLoader#shouldResourceBeIncluded(Module, java.net.URL, String, java.util.Map)
 	 */
 	@Test
-	public void shouldResourceBeIncluded_shouldReturnTrueIfFileDoesNotMatchAndOpenmrsVersionDoesNotMatch() throws Exception {
+	public void shouldResourceBeIncluded_shouldReturnTrueIfFileDoesNotMatchAndOpenmrsVersionDoesNotMatch()
+	        throws MalformedURLException {
 		ModuleConditionalResource resource = new ModuleConditionalResource();
 		resource.setPath("lib/mockmodule-api.jar");
 		resource.setOpenmrsPlatformVersion("1.10-1.11");
@@ -87,11 +91,12 @@ public class ModuleClassLoaderTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @verifies return true if file matches and module version matches
+	 * @throws MalformedURLException
 	 * @see ModuleClassLoader#shouldResourceBeIncluded(Module, java.net.URL, String, java.util.Map)
 	 */
 	@Test
-	public void shouldResourceBeIncluded_shouldReturnTrueIfFileMatchesAndModuleVersionMatches() throws Exception {
+	public void shouldResourceBeIncluded_shouldReturnTrueIfFileMatchesAndModuleVersionMatches()
+	        throws MalformedURLException {
 		ModuleConditionalResource resource = new ModuleConditionalResource();
 		resource.setPath("lib/mockmodule-api-1.10.jar");
 		
@@ -111,11 +116,12 @@ public class ModuleClassLoaderTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @verifies return false if file matches and module version does not match
+	 * @throws MalformedURLException
 	 * @see ModuleClassLoader#shouldResourceBeIncluded(Module, java.net.URL, String, java.util.Map)
 	 */
 	@Test
-	public void shouldResourceBeIncluded_shouldReturnFalseIfFileMatchesAndModuleVersionDoesNotMatch() throws Exception {
+	public void shouldResourceBeIncluded_shouldReturnFalseIfFileMatchesAndModuleVersionDoesNotMatch()
+	        throws MalformedURLException {
 		ModuleConditionalResource resource = new ModuleConditionalResource();
 		resource.setPath("lib/mockmodule-api-1.10.jar");
 		
@@ -135,12 +141,12 @@ public class ModuleClassLoaderTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @verifies return false if file matches and openmrs version matches but module version does not match
+	 * @throws MalformedURLException
 	 * @see ModuleClassLoader#shouldResourceBeIncluded(Module, java.net.URL, String, java.util.Map)
 	 */
 	@Test
 	public void shouldResourceBeIncluded_shouldReturnFalseIfFileMatchesAndOpenmrsVersionMatchesButModuleVersionDoesNotMatch()
-	        throws Exception {
+	        throws MalformedURLException {
 		ModuleConditionalResource resource = new ModuleConditionalResource();
 		resource.setPath("lib/mockmodule-api-1.10.jar");
 		resource.setOpenmrsPlatformVersion("1.10");
@@ -161,11 +167,11 @@ public class ModuleClassLoaderTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @verifies return false if file matches and module not found
+	 * @throws MalformedURLException
 	 * @see ModuleClassLoader#shouldResourceBeIncluded(Module, java.net.URL, String, java.util.Map)
 	 */
 	@Test
-	public void shouldResourceBeIncluded_shouldReturnFalseIfFileMatchesAndModuleNotFound() throws Exception {
+	public void shouldResourceBeIncluded_shouldReturnFalseIfFileMatchesAndModuleNotFound() throws MalformedURLException {
 		ModuleConditionalResource resource = new ModuleConditionalResource();
 		resource.setPath("lib/mockmodule-api-1.10.jar");
 		
@@ -185,11 +191,12 @@ public class ModuleClassLoaderTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @verifies return true if file does not match and module version does not match
+	 * @throws MalformedURLException
 	 * @see ModuleClassLoader#shouldResourceBeIncluded(Module, java.net.URL, String, java.util.Map)
 	 */
 	@Test
-	public void shouldResourceBeIncluded_shouldReturnTrueIfFileDoesNotMatchAndModuleVersionDoesNotMatch() throws Exception {
+	public void shouldResourceBeIncluded_shouldReturnTrueIfFileDoesNotMatchAndModuleVersionDoesNotMatch()
+	        throws MalformedURLException {
 		ModuleConditionalResource resource = new ModuleConditionalResource();
 		resource.setPath("lib/mockmodule-api.jar");
 		

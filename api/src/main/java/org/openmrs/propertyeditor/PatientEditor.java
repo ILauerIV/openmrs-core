@@ -11,11 +11,11 @@ package org.openmrs.propertyeditor;
 
 import java.beans.PropertyEditorSupport;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
  */
 public class PatientEditor extends PropertyEditorSupport {
 	
-	private Log log = LogFactory.getLog(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	/**
 	 * @should set using id
@@ -36,6 +36,7 @@ public class PatientEditor extends PropertyEditorSupport {
 	 * 
 	 * @see java.beans.PropertyEditorSupport#setAsText(java.lang.String)
 	 */
+	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
 		PatientService ps = Context.getPatientService();
 		if (StringUtils.hasText(text)) {
@@ -58,6 +59,7 @@ public class PatientEditor extends PropertyEditorSupport {
 	/**
 	 * @see java.beans.PropertyEditorSupport#getAsText()
 	 */
+	@Override
 	public String getAsText() {
 		Patient t = (Patient) getValue();
 		if (t == null) {

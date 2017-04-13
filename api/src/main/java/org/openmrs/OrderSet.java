@@ -134,10 +134,12 @@ public class OrderSet extends BaseOpenmrsMetadata {
 		this.addOrderSetMember(orderSetMember, null);
 	}
 	
+	@Override
 	public Integer getId() {
 		return getOrderSetId();
 	}
 	
+	@Override
 	public void setId(Integer id) {
 		setOrderSetId(id);
 	}
@@ -150,7 +152,7 @@ public class OrderSet extends BaseOpenmrsMetadata {
 	public List<OrderSetMember> getUnRetiredOrderSetMembers() {
 		List<OrderSetMember> osm = new ArrayList<OrderSetMember>();
 		for (OrderSetMember orderSetMember : getOrderSetMembers()) {
-			if (!orderSetMember.isRetired()) {
+			if (!orderSetMember.getRetired()) {
 				osm.add(orderSetMember);
 			}
 		}

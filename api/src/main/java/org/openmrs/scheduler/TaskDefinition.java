@@ -13,16 +13,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.BaseOpenmrsMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Represents the metadata for a task that can be scheduled.
  */
 public class TaskDefinition extends BaseOpenmrsMetadata {
 	
-	private Log log = LogFactory.getLog(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	// Task metadata
 	private Integer id;
@@ -78,6 +78,7 @@ public class TaskDefinition extends BaseOpenmrsMetadata {
 	 * 
 	 * @return <code>Integer</code> identifier of the task
 	 */
+	@Override
 	public Integer getId() {
 		return this.id;
 	}
@@ -87,6 +88,7 @@ public class TaskDefinition extends BaseOpenmrsMetadata {
 	 * 
 	 * @param id
 	 */
+	@Override
 	public void setId(Integer id) {
 		this.id = id;
 	}

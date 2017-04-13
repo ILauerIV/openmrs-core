@@ -15,8 +15,6 @@ import java.util.Comparator;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Boost;
 import org.hibernate.search.annotations.DocumentId;
@@ -28,6 +26,8 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.db.hibernate.search.LuceneAnalyzers;
 import org.openmrs.util.OpenmrsClassLoader;
 import org.openmrs.util.OpenmrsUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A PersonAttribute is meant as way for implementations to add arbitrary information about a
@@ -45,7 +45,7 @@ public class PersonAttribute extends BaseOpenmrsData implements java.io.Serializ
 	
 	public static final long serialVersionUID = 11231211232111L;
 	
-	private static final Log log = LogFactory.getLog(PersonAttribute.class);
+	private static final Logger log = LoggerFactory.getLogger(PersonAttribute.class);
 	
 	// Fields
 	@DocumentId
@@ -109,7 +109,7 @@ public class PersonAttribute extends BaseOpenmrsData implements java.io.Serializ
 		target.setChangedBy(getChangedBy());
 		target.setDateChanged(getDateChanged());
 		target.setVoidedBy(getVoidedBy());
-		target.setVoided(isVoided());
+		target.setVoided(getVoided());
 		target.setDateVoided(getDateVoided());
 		target.setVoidReason(getVoidReason());
 		return target;
@@ -210,7 +210,7 @@ public class PersonAttribute extends BaseOpenmrsData implements java.io.Serializ
 	 * @see java.lang.Object#toString()
 	 * @should return toString of hydrated value
 	 */
-	@SuppressWarnings("unchecked")
+	@Override
 	public String toString() {
 		Object o = getHydratedObject();
 		if (o instanceof Attributable) {
@@ -304,6 +304,7 @@ public class PersonAttribute extends BaseOpenmrsData implements java.io.Serializ
 	 * @should not throw exception if attribute type is null
 	 * Note: this comparator imposes orderings that are inconsistent with equals
 	 */
+	@Override
 	public int compareTo(PersonAttribute other) {
 		DefaultComparator paDComparator = new DefaultComparator();
 		return paDComparator.compare(this, other);
@@ -313,6 +314,7 @@ public class PersonAttribute extends BaseOpenmrsData implements java.io.Serializ
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#getId()
 	 */
+	@Override
 	public Integer getId() {
 		
 		return getPersonAttributeId();
@@ -322,6 +324,7 @@ public class PersonAttribute extends BaseOpenmrsData implements java.io.Serializ
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#setId(java.lang.Integer)
 	 */
+	@Override
 	public void setId(Integer id) {
 		setPersonAttributeId(id);
 		
@@ -340,7 +343,7 @@ public class PersonAttribute extends BaseOpenmrsData implements java.io.Serializ
 				return retValue;
 			}
 			
-			if ((retValue = pa1.isVoided().compareTo(pa2.isVoided())) != 0) {
+			if ((retValue = pa1.getVoided().compareTo(pa2.getVoided())) != 0) {
 				return retValue;
 			}
 			

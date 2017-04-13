@@ -33,8 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -57,6 +55,8 @@ import org.openmrs.web.filter.initialization.InitializationFilter;
 import org.openmrs.web.filter.update.UpdateFilter;
 import org.openmrs.web.filter.util.FilterUtil;
 import org.openmrs.web.filter.util.LocalizationTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract class used when a small wizard is needed before Spring, jsp, etc has been started up.
@@ -66,7 +66,7 @@ import org.openmrs.web.filter.util.LocalizationTool;
  */
 public abstract class StartupFilter implements Filter {
 	
-	protected final Log log = LogFactory.getLog(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
 	protected static VelocityEngine velocityEngine = null;
 	
@@ -99,6 +99,7 @@ public abstract class StartupFilter implements Filter {
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
 	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
+	@Override
 	public final void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 	    ServletException {
 		if (skipFilter((HttpServletRequest) request)) {
@@ -277,6 +278,7 @@ public abstract class StartupFilter implements Filter {
 	/**
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
+	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		this.filterConfig = filterConfig;
 		initializeVelocity();
@@ -285,6 +287,7 @@ public abstract class StartupFilter implements Filter {
 	/**
 	 * @see javax.servlet.Filter#destroy()
 	 */
+	@Override
 	public void destroy() {
 	}
 	

@@ -11,11 +11,11 @@ package org.openmrs.propertyeditor;
 
 import java.beans.PropertyEditorSupport;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.ConceptSource;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
  */
 public class ConceptSourceEditor extends PropertyEditorSupport {
 	
-	private Log log = LogFactory.getLog(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	public ConceptSourceEditor() {
 	}
@@ -37,6 +37,7 @@ public class ConceptSourceEditor extends PropertyEditorSupport {
 	 * @should set using id
 	 * @should set using uuid
 	 */
+	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
 		log.debug("Setting text: " + text);
 		ConceptService cs = Context.getConceptService();
@@ -57,6 +58,7 @@ public class ConceptSourceEditor extends PropertyEditorSupport {
 		}
 	}
 	
+	@Override
 	public String getAsText() {
 		ConceptSource t = (ConceptSource) getValue();
 		if (t == null) {

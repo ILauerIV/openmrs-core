@@ -46,8 +46,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleException;
@@ -63,6 +61,8 @@ import org.openmrs.util.OpenmrsUtil;
 import org.openmrs.util.PrivilegeConstants;
 import org.openmrs.web.DispatcherServlet;
 import org.openmrs.web.StaticDispatcherServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.w3c.dom.Document;
@@ -76,7 +76,7 @@ import org.xml.sax.SAXException;
 
 public class WebModuleUtil {
 	
-	private static Log log = LogFactory.getLog(WebModuleUtil.class);
+	private static Logger log = LoggerFactory.getLogger(WebModuleUtil.class);
 	
 	private static DispatcherServlet dispatcherServlet = null;
 	
@@ -570,7 +570,7 @@ public class WebModuleUtil {
 	public static void unloadFilters(Module module) {
 		
 		// Unload Filter Mappings
-		for (java.util.Iterator<ModuleFilterMapping> mapIter = moduleFilterMappings.iterator(); mapIter.hasNext();) {
+		for (Iterator<ModuleFilterMapping> mapIter = moduleFilterMappings.iterator(); mapIter.hasNext();) {
 			ModuleFilterMapping mapping = mapIter.next();
 			if (module.equals(mapping.getModule())) {
 				mapIter.remove();
@@ -971,10 +971,10 @@ public class WebModuleUtil {
 			
 		}
 		catch (ParserConfigurationException pce) {
-			log.error(pce);
+			log.error("Failed to parse document", pce);
 		}
 		catch (TransformerException tfe) {
-			log.error(tfe);
+			log.error("Failed to transorm xml source", tfe);
 		}
 	}
 	

@@ -36,7 +36,6 @@ public class Template extends BaseOpenmrsObject {
 	private String subject;
 	
 	// Not persisted
-	@SuppressWarnings("unchecked")
 	private Map data;
 	
 	private String content;
@@ -50,10 +49,12 @@ public class Template extends BaseOpenmrsObject {
 		this.template = template;
 	}
 	
+	@Override
 	public void setId(Integer id) {
 		this.id = id;
 	}
 	
+	@Override
 	public Integer getId() {
 		return id;
 	}
@@ -106,12 +107,10 @@ public class Template extends BaseOpenmrsObject {
 		return ordinal;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void setData(Map data) {
 		this.data = data;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Map getData() {
 		return this.data;
 	}

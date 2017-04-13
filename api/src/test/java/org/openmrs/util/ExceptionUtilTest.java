@@ -20,12 +20,10 @@ public class ExceptionUtilTest {
 	
 	/**
 	 * @see ExceptionUtil#rethrowIfCause(Throwable,Class)
-	 * @verifies allow an intermediate exception to be rethrown
 	 */
 	@Test
 	public void rethrowIfCause_shouldAllowAnIntermediateExceptionToBeRethrown() throws Exception {
 		try {
-			@SuppressWarnings("unchecked")
 			List<Class<? extends RuntimeException>> chain = Arrays.asList(NullPointerException.class,
 			    IllegalArgumentException.class, IllegalStateException.class);
 			throwExceptionChain(chain);

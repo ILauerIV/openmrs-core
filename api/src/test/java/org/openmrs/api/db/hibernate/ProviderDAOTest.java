@@ -38,37 +38,34 @@ public class ProviderDAOTest extends BaseContextSensitiveTest {
 	 * @throws Exception
 	 */
 	@Before
-	public void runBeforeEachTest() throws Exception {
+	public void runBeforeEachTest() {
 		executeDataSet(PROVIDERS_INITIAL_XML);
 	}
 	
 	/**
 	 * @see ProviderDAO#getProvidersByPerson(Person,boolean)
-	 * @verifies not return retired providers if includeRetired false
 	 */
 	@Test
-	public void getProvidersByPerson_shouldNotReturnRetiredProvidersIfIncludeRetiredFalse() throws Exception {
+	public void getProvidersByPerson_shouldNotReturnRetiredProvidersIfIncludeRetiredFalse() {
 		Collection<Provider> providers = providerDao.getProvidersByPerson(personDao.getPerson(2), false);
 		Assert.assertEquals(1, providers.size());
-		Assert.assertFalse(providers.iterator().next().isRetired());
+		Assert.assertFalse(providers.iterator().next().getRetired());
 	}
 	
 	/**
 	 * @see ProviderDAO#getProvidersByPerson(Person,boolean)
-	 * @verifies list retired providers at the end
 	 */
 	@Test
-	public void getProvidersByPerson_shouldListRetiredProvidersAtTheEnd() throws Exception {
+	public void getProvidersByPerson_shouldListRetiredProvidersAtTheEnd() {
 		List<Provider> providers = (List<Provider>) providerDao.getProvidersByPerson(personDao.getPerson(2), true);
 		Assert.assertEquals(true, providers.get(1).getRetired());
 	}
 	
 	/**
 	 * @see ProviderDAO#getProvidersByPerson(Person,boolean)
-	 * @verifies return all providers if includeRetired true
 	 */
 	@Test
-	public void getProvidersByPerson_shouldReturnAllProvidersIfIncludeRetiredTrue() throws Exception {
+	public void getProvidersByPerson_shouldReturnAllProvidersIfIncludeRetiredTrue() {
 		Assert.assertEquals(2, providerDao.getProvidersByPerson(personDao.getPerson(2), true).size());
 	}
 }

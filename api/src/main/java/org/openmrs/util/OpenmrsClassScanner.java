@@ -15,8 +15,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -34,7 +34,7 @@ import org.springframework.core.type.filter.TypeFilter;
  */
 public class OpenmrsClassScanner {
 	
-	protected final Log log = LogFactory.getLog(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
 	private final MetadataReaderFactory metadataReaderFactory;
 	
@@ -90,7 +90,6 @@ public class OpenmrsClassScanner {
 					if (typeFilter.match(metadataReader, metadataReaderFactory)) {
 						String classname = metadataReader.getClassMetadata().getClassName();
 						try {
-							@SuppressWarnings("unchecked")
 							Class<?> metadata = (Class<?>) OpenmrsClassLoader.getInstance().loadClass(classname);
 							types.add(metadata);
 						}

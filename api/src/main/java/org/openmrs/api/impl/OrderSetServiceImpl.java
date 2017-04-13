@@ -29,6 +29,7 @@ public class OrderSetServiceImpl extends BaseOpenmrsService implements OrderSetS
 	/**
 	 * @see org.openmrs.api.OrderSetService#setOrderSetDAO(org.openmrs.api.db.OrderSetDAO)
 	 */
+	@Override
 	public void setOrderSetDAO(OrderSetDAO dao) {
 		this.dao = dao;
 	}
@@ -76,7 +77,7 @@ public class OrderSetServiceImpl extends BaseOpenmrsService implements OrderSetS
 			}
 		}
 		for (OrderSetMember orderSetMember : orderSet.getOrderSetMembers()) {
-			if (orderSetMember.isRetired()) {
+			if (orderSetMember.getRetired()) {
 				orderSetMember.setRetiredBy(Context.getAuthenticatedUser());
 				orderSetMember.setDateRetired(new Date());
 			}

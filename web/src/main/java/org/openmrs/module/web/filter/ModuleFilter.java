@@ -18,9 +18,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.web.WebModuleUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This filter provides a mechanism for modules to plug-in their own custom filters. It is started
@@ -28,11 +28,12 @@ import org.openmrs.module.web.WebModuleUtil;
  */
 public class ModuleFilter implements Filter {
 	
-	protected final Log log = LogFactory.getLog(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
 	/**
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
+	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		log.debug("Initializating ModuleFilter");
 	}
@@ -40,6 +41,7 @@ public class ModuleFilter implements Filter {
 	/**
 	 * @see javax.servlet.Filter#destroy()
 	 */
+	@Override
 	public void destroy() {
 		log.debug("Destroying the ModuleFilter");
 	}
@@ -48,6 +50,7 @@ public class ModuleFilter implements Filter {
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
 	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
+	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 	        ServletException {
 		ModuleFilterChain moduleChain = ModuleFilterChain.getInstance(WebModuleUtil.getFiltersForRequest(request), chain);

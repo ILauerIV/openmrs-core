@@ -15,7 +15,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.Order;
-import org.openmrs.api.APIException;
+import org.openmrs.api.UnchangeableObjectException;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseContextSensitiveTest;
 
@@ -59,28 +59,27 @@ public class ImmutableEntityInterceptorTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @verifies fail if an entity has a changed property
 	 * @see ImmutableEntityInterceptor#onFlushDirty(Object, java.io.Serializable, Object[],
 	 *      Object[], String[], org.hibernate.type.Type[])
 	 */
 	@Test
-	public void onFlushDirty_shouldFailIfAnEntityHasAChangedProperty() throws Exception {
+	public void onFlushDirty_shouldFailIfAnEntityHasAChangedProperty() {
 		String[] propertyNames = new String[] { SomeImmutableEntityInterceptor.IMMUTABLE_FIELD_NAME };
 		String[] previousState = new String[] { "old" };
 		String[] currentState = new String[] { "new" };
 		ImmutableEntityInterceptor interceptor = new SomeImmutableEntityInterceptor();
-		expectedException.expect(APIException.class);
-		expectedException.expectMessage(is(Context.getMessageSourceService().getMessage("editing.fields.not.allowed", new Object[] { "[immutable]", Order.class.getSimpleName() },  null)));
+		expectedException.expect(UnchangeableObjectException.class);
+		expectedException.expectMessage(is(Context.getMessageSourceService().getMessage("editing.fields.not.allowed",
+		    new Object[] { "[immutable]", Order.class.getSimpleName() }, null)));
 		interceptor.onFlushDirty(new Order(), null, currentState, previousState, propertyNames, null);
 	}
 	
 	/**
-	 * @verifies pass if an entity has changes for an allowed mutable property
 	 * @see ImmutableEntityInterceptor#onFlushDirty(Object, java.io.Serializable, Object[],
 	 *      Object[], String[], org.hibernate.type.Type[])
 	 */
 	@Test
-	public void onFlushDirty_shouldPassIfAnEntityHasChangesForAnAllowedMutableProperty() throws Exception {
+	public void onFlushDirty_shouldPassIfAnEntityHasChangesForAnAllowedMutableProperty() {
 		String[] propertyNames = new String[] { SomeImmutableEntityInterceptor.MUTABLE_FIELD_NAME };
 		String[] previousState = new String[] { "old" };
 		String[] currentState = new String[] { "new" };
@@ -89,30 +88,29 @@ public class ImmutableEntityInterceptorTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @verifies fail if the edited object is voided or retired and ignore is set to false
 	 * @see ImmutableEntityInterceptor#onFlushDirty(Object, java.io.Serializable, Object[],
 	 *      Object[], String[], org.hibernate.type.Type[])
 	 */
 	@Test
-	public void onFlushDirty_shouldFailIfTheEditedObjectIsVoidedOrRetiredAndIgnoreIsSetToFalse() throws Exception {
+	public void onFlushDirty_shouldFailIfTheEditedObjectIsVoidedOrRetiredAndIgnoreIsSetToFalse() {
 		String[] propertyNames = new String[] { SomeImmutableEntityInterceptor.IMMUTABLE_FIELD_NAME };
 		String[] previousState = new String[] { "old" };
 		String[] currentState = new String[] { "new" };
 		ImmutableEntityInterceptor interceptor = new SomeImmutableEntityInterceptor();
-		expectedException.expect(APIException.class);
-		expectedException.expectMessage(is(Context.getMessageSourceService().getMessage("editing.fields.not.allowed", new Object[] { "[immutable]", Order.class.getSimpleName() },  null)));
+		expectedException.expect(UnchangeableObjectException.class);
+		expectedException.expectMessage(is(Context.getMessageSourceService().getMessage("editing.fields.not.allowed",
+		    new Object[] { "[immutable]", Order.class.getSimpleName() }, null)));
 		Order order = new Order();
 		order.setVoided(true);
 		interceptor.onFlushDirty(order, null, currentState, previousState, propertyNames, null);
 	}
 	
 	/**
-	 * @verifies pass if the edited object is voided or retired and ignore is set to true
 	 * @see ImmutableEntityInterceptor#onFlushDirty(Object, java.io.Serializable, Object[],
 	 *      Object[], String[], org.hibernate.type.Type[])
 	 */
 	@Test
-	public void onFlushDirty_shouldPassIfTheEditedObjectIsVoidedOrRetiredAndIgnoreIsSetToTrue() throws Exception {
+	public void onFlushDirty_shouldPassIfTheEditedObjectIsVoidedOrRetiredAndIgnoreIsSetToTrue() {
 		String[] propertyNames = new String[] { SomeImmutableEntityInterceptor.IMMUTABLE_FIELD_NAME };
 		String[] previousState = new String[] { "old" };
 		String[] currentState = new String[] { "new" };

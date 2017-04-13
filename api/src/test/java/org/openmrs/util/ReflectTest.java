@@ -16,14 +16,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.Visit;
-import org.openmrs.test.Verifies;
 import org.springframework.util.ReflectionUtils;
-
-import org.junit.Assert;
 
 /**
  * Tests the {@link Reflect} class.
@@ -34,8 +32,7 @@ public class ReflectTest {
 	 * @see Reflect#hasField(Field)
 	 */
 	@Test
-	@Verifies(value = "should return true if given field is declared in parameterized class or its sub classes", method = "hasField(Field)")
-	public void xhasField_shouldReturnTrueIfGivenFieldIsDeclaredInParameterizedClassOrSubClass() throws Exception {
+	public void xhasField_shouldReturnTrueIfGivenFieldIsDeclaredInParameterizedClassOrSubClass() {
 		Reflect reflect = new Reflect(OpenmrsObject.class);
 		List<Field> allFields = Reflect.getAllFields(OpenmrsObjectImp.class);
 		
@@ -47,8 +44,7 @@ public class ReflectTest {
 	 * @see Reflect#hasField(Field)
 	 */
 	@Test
-	@Verifies(value = "should return false if given field is not declared in parameterized class or its sub classes", method = "hasField(Field)")
-	public void xhasField_shouldReturnFalseIfGivenFieldIsNotDeclaredInParameterizedClassOrItsSubClass() throws Exception {
+	public void xhasField_shouldReturnFalseIfGivenFieldIsNotDeclaredInParameterizedClassOrItsSubClass() {
 		Reflect reflect = new Reflect(OpenmrsObject.class);
 		List<Field> allFields = Reflect.getAllFields(OpenmrsObjectImp.class);
 		
@@ -70,8 +66,7 @@ public class ReflectTest {
 	 * @see Reflect#getAllFields(Class<*>)
 	 */
 	@Test
-	@Verifies(value = "should return all fields include private and super classes", method = "getAllFields(Class<*>)")
-	public void getAllFields_shouldReturnAllFieldsIncludePrivateAndSuperClasses() throws Exception {
+	public void getAllFields_shouldReturnAllFieldsIncludePrivateAndSuperClasses() {
 		List<Field> allFields = Reflect.getAllFields(OpenmrsObjectImp.class);
 		
 		findFieldByName(allFields, "subClassField");
@@ -84,8 +79,7 @@ public class ReflectTest {
 	 * @see Reflect#isCollection(Class<*>)
 	 */
 	@Test
-	@Verifies(value = "should return false if given fieldClass is not a Collection class", method = "isCollection(Class<*>)")
-	public void isCollection_shouldReturnFalseIfGivenFieldClassIsNotACollectionClass() throws Exception {
+	public void isCollection_shouldReturnFalseIfGivenFieldClassIsNotACollectionClass() {
 		Reflect reflect = new Reflect(OpenmrsObject.class);
 		List<Field> allFields = Reflect.getAllFields(OpenmrsObjectImp.class);
 		
@@ -97,8 +91,7 @@ public class ReflectTest {
 	 * @see Reflect#isCollection(Class<*>)
 	 */
 	@Test
-	@Verifies(value = "should return true if given fieldClass is Collection class", method = "isCollection(Class<*>)")
-	public void isCollection_shouldReturnTrueIfGivenFieldClassIsCollectionClass() throws Exception {
+	public void isCollection_shouldReturnTrueIfGivenFieldClassIsCollectionClass() {
 		Assert.assertTrue(Reflect.isCollection(ArrayList.class));
 	}
 	
@@ -106,8 +99,7 @@ public class ReflectTest {
 	 * @see Reflect#isCollection(Object)
 	 */
 	@Test
-	@Verifies(value = "should return false if given object is not a Collection", method = "isCollection(Object)")
-	public void isCollection_shouldReturnFalseIfGivenObjectIsNotACollection() throws Exception {
+	public void isCollection_shouldReturnFalseIfGivenObjectIsNotACollection() {
 		Assert.assertFalse(Reflect.isCollection(new NormalClass()));
 	}
 	
@@ -115,17 +107,15 @@ public class ReflectTest {
 	 * @see Reflect#isCollection(Object)
 	 */
 	@Test
-	@Verifies(value = "should return true if given object is Collection class", method = "isCollection(Object)")
-	public void isCollection_shouldReturnTrueIfGivenObjectIsCollectionClass() throws Exception {
-		Assert.assertTrue(Reflect.isCollection(new ArrayList<Object>()));
+	public void isCollection_shouldReturnTrueIfGivenObjectIsCollectionClass() {
+		Assert.assertTrue(Reflect.isCollection(new ArrayList<>()));
 	}
 	
 	/**
 	 * @see Reflect#Reflect(Class)
 	 */
 	@Test(expected = NullPointerException.class)
-	@Verifies(value = "should throw exception when null is passed", method = "Reflect(Class)")
-	public void Reflect_shouldThrowExceptionWhenNullIsPassed() throws Exception {
+	public void Reflect_shouldThrowExceptionWhenNullIsPassed() {
 		new Reflect(null);
 	}
 	
@@ -133,8 +123,7 @@ public class ReflectTest {
 	 * @see Reflect#getInheritedFields(Class)
 	 */
 	@Test
-	@Verifies(value = "should return only the sub class fields of given parameterized class", method = "getInheritedFields(Class)")
-	public void getInheritedFields_shouldReturnOnlyTheSubClassFieldsOfGivenParameterizedClass() throws Exception {
+	public void getInheritedFields_shouldReturnOnlyTheSubClassFieldsOfGivenParameterizedClass() {
 		Reflect reflect = new Reflect(OpenmrsObject.class);
 		List<Field> fields = reflect.getInheritedFields(OpenmrsObjectImp.class);
 		
@@ -152,9 +141,8 @@ public class ReflectTest {
 	 * @see Reflect#isCollectionField(Field)
 	 */
 	@Test
-	@Verifies(value = "should return true if given field is Collection and its element type is given parameterized", method = "isCollectionField(Field)")
 	public void isCollectionField_shouldReturnTrueIfGivenFieldIsCollectionAndItsElementTypeIsGivenParameterized()
-	        throws Exception {
+	{
 		Reflect reflect = new Reflect(OpenmrsObject.class);
 		List<Field> allFields = Reflect.getAllFields(OpenmrsObjectImp.class);
 		
@@ -166,8 +154,7 @@ public class ReflectTest {
 	 * @see Reflect#isCollectionField(Field)
 	 */
 	@Test
-	@Verifies(value = "should return false if given field is not a Collection", method = "isCollectionField(Field)")
-	public void isCollectionField_shouldReturnFalseIfGivenFieldIsNotACollection() throws Exception {
+	public void isCollectionField_shouldReturnFalseIfGivenFieldIsNotACollection() {
 		Assert.assertFalse(Reflect.isCollection(NormalClass.class));
 	}
 	
@@ -175,8 +162,7 @@ public class ReflectTest {
 	 * @see Reflect#isCollectionField(Field)
 	 */
 	@Test
-	@Verifies(value = "should return false if given field is Collection and element type is other than given", method = "isCollectionField(Field)")
-	public void isCollectionField_shouldReturnFalseIfGivenFieldIsCollectionAndElementTypeIsOtherThanGiven() throws Exception {
+	public void isCollectionField_shouldReturnFalseIfGivenFieldIsCollectionAndElementTypeIsOtherThanGiven() {
 		Reflect reflect = new Reflect(OpenmrsObject.class);
 		List<Field> allFields = Reflect.getAllFields(OpenmrsObjectImp.class);
 		
@@ -188,8 +174,7 @@ public class ReflectTest {
 	 * @see Reflect#isSuperClass(Class)
 	 */
 	@Test
-	@Verifies(value = "should return false if given subClass is not accessible from given parameterized class", method = "isSuperClass(Class)")
-	public void isSuperClass_shouldReturnFalseIfGivenSubClassIsNotAccessibleFromGivenParameterizedClass() throws Exception {
+	public void isSuperClass_shouldReturnFalseIfGivenSubClassIsNotAccessibleFromGivenParameterizedClass() {
 		Reflect reflect = new Reflect(OpenmrsObject.class);
 		
 		Assert.assertFalse(reflect.isSuperClass(new NormalClass()));
@@ -199,8 +184,7 @@ public class ReflectTest {
 	 * @see Reflect#isSuperClass(Class)
 	 */
 	@Test
-	@Verifies(value = "should return true if given subClass is accessible from given parameterized class", method = "isSuperClass(Class)")
-	public void isSuperClass_shouldReturnTrueIfGivenSubClassIsAccessibleFromGivenParameterizedClass() throws Exception {
+	public void isSuperClass_shouldReturnTrueIfGivenSubClassIsAccessibleFromGivenParameterizedClass() {
 		Reflect reflect = new Reflect(OpenmrsObject.class);
 		
 		Assert.assertTrue(reflect.isSuperClass(OpenmrsObjectImp.class));
@@ -210,8 +194,7 @@ public class ReflectTest {
 	 * @see Reflect#isSuperClass(Object)
 	 */
 	@Test
-	@Verifies(value = "should return false if given object is not accessible from given parameterized class", method = "isSuperClass(Object)")
-	public void isSuperClass_shouldReturnFalseIfGivenObjectIsNotAccessibleFromGivenParameterizedClass() throws Exception {
+	public void isSuperClass_shouldReturnFalseIfGivenObjectIsNotAccessibleFromGivenParameterizedClass() {
 		Reflect reflect = new Reflect(OpenmrsObject.class);
 		
 		Assert.assertFalse(reflect.isSuperClass(NormalClass.class));
@@ -221,8 +204,7 @@ public class ReflectTest {
 	 * @see Reflect#isSuperClass(Object)
 	 */
 	@Test
-	@Verifies(value = "should return true if given object is accessible from given parameterized class", method = "isSuperClass(Object)")
-	public void isSuperClass_shouldReturnTrueIfGivenObjectIsAccessibleFromGivenParameterizedClass() throws Exception {
+	public void isSuperClass_shouldReturnTrueIfGivenObjectIsAccessibleFromGivenParameterizedClass() {
 		Reflect reflect = new Reflect(OpenmrsObject.class);
 		
 		Assert.assertTrue(reflect.isSuperClass(new OpenmrsObjectImp()));
@@ -230,10 +212,9 @@ public class ReflectTest {
 	
 	/**
 	 * @see Reflect#isSuperClass(Type)
-	 * @verifies return true for a generic whose bound is a subclass
 	 */
 	@Test
-	public void isSuperClass_shouldReturnTrueForAGenericWhoseBoundIsASubclass() throws Exception {
+	public void isSuperClass_shouldReturnTrueForAGenericWhoseBoundIsASubclass() {
 		Reflect reflect = new Reflect(OpenmrsObject.class);
 		Field field = ReflectionUtils.findField(Visit.class, "attributes");
 		ParameterizedType setOfAttr = (ParameterizedType) field.getGenericType();
@@ -243,10 +224,9 @@ public class ReflectTest {
 	
 	/**
 	 * @see Reflect#isSuperClass(Type)
-	 * @verifies return false for a generic whose bound is not a subclass
 	 */
 	@Test
-	public void isSuperClass_shouldReturnFalseForAGenericWhoseBoundIsNotASubclass() throws Exception {
+	public void isSuperClass_shouldReturnFalseForAGenericWhoseBoundIsNotASubclass() {
 		Reflect reflect = new Reflect(Number.class);
 		Field field = ReflectionUtils.findField(Visit.class, "attributes");
 		ParameterizedType setOfAttr = (ParameterizedType) field.getGenericType();
@@ -276,20 +256,23 @@ class OpenmrsObjectImp extends NormalClass implements OpenmrsObject {
 	@SuppressWarnings("unused")
 	private String nonCollectionField;
 	
-	@SuppressWarnings("unchecked")
 	Collection genericCollectionField;
 	
+	@Override
 	public Integer getId() {
 		return null;
 	}
 	
+	@Override
 	public String getUuid() {
 		return null;
 	}
 	
+	@Override
 	public void setId(Integer id) {
 	}
 	
+	@Override
 	public void setUuid(String uuid) {
 	}
 	

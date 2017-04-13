@@ -11,11 +11,11 @@ package org.openmrs.propertyeditor;
 
 import java.beans.PropertyEditorSupport;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.ConceptName;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
  */
 public class ConceptNameEditor extends PropertyEditorSupport {
 	
-	private Log log = LogFactory.getLog(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	public ConceptNameEditor() {
 	}
@@ -39,6 +39,7 @@ public class ConceptNameEditor extends PropertyEditorSupport {
 	 * 
 	 * @see java.beans.PropertyEditorSupport#setAsText(java.lang.String)
 	 */
+	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
 		ConceptService cs = Context.getConceptService();
 		if (StringUtils.hasText(text)) {
@@ -61,6 +62,7 @@ public class ConceptNameEditor extends PropertyEditorSupport {
 	/**
 	 * @see java.beans.PropertyEditorSupport#getAsText()
 	 */
+	@Override
 	public String getAsText() {
 		ConceptName cn = (ConceptName) getValue();
 		if (cn == null) {

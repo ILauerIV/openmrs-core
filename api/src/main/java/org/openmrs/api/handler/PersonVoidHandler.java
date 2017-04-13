@@ -44,10 +44,11 @@ public class PersonVoidHandler implements VoidHandler<Person> {
 	 * @should not set the personVoidReason if already personVoided
 	 * @should retire users
 	 */
+	@Override
 	public void handle(Person person, User voidingUser, Date voidedDate, String voidReason) {
 		
 		// skip over all work if the object is already voided
-		if (!person.isPersonVoided()) {
+		if (!person.getPersonVoided()) {
 			if (person.getPersonId() != null) {
 				// Skip if person is not persisted
 				UserService us = Context.getUserService();

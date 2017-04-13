@@ -65,9 +65,7 @@ public class PatientIdentifierType extends BaseOpenmrsMetadata {
 	private Boolean required = Boolean.FALSE;
 	
 	private String formatDescription;
-	
-	private Boolean checkDigit = Boolean.FALSE;
-	
+
 	private String validator;
 	
 	private LocationBehavior locationBehavior;
@@ -189,6 +187,7 @@ public class PatientIdentifierType extends BaseOpenmrsMetadata {
 	/** 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return getName();
 	}
@@ -197,6 +196,7 @@ public class PatientIdentifierType extends BaseOpenmrsMetadata {
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#getId()
 	 */
+	@Override
 	public Integer getId() {
 		return getPatientIdentifierTypeId();
 	}
@@ -205,6 +205,7 @@ public class PatientIdentifierType extends BaseOpenmrsMetadata {
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#setId(java.lang.Integer)
 	 */
+	@Override
 	public void setId(Integer id) {
 		setPatientIdentifierTypeId(id);
 		

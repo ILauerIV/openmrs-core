@@ -29,13 +29,13 @@ import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.ModuleUtil;
 import org.openmrs.module.OpenmrsCoreModuleException;
 import org.openmrs.web.Listener;
 import org.openmrs.web.filter.StartupFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the second filter that is processed. It is only active when OpenMRS has some liquibase
@@ -44,7 +44,7 @@ import org.openmrs.web.filter.StartupFilter;
  */
 public class StartupErrorFilter extends StartupFilter {
 	
-	protected final Log log = LogFactory.getLog(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
 	/**
 	 * The velocity macro page to redirect to if an error occurs or on initial startup
@@ -57,6 +57,7 @@ public class StartupErrorFilter extends StartupFilter {
 	 * @param httpRequest
 	 * @param httpResponse
 	 */
+	@Override
 	protected void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws IOException,
 	        ServletException {
 		
@@ -109,6 +110,7 @@ public class StartupErrorFilter extends StartupFilter {
 	/**
 	 * @see org.openmrs.web.filter.StartupFilter#getModel()
 	 */
+	@Override
 	protected StartupErrorFilterModel getModel() {
 		// this object was initialized in the #init(FilterConfig) method
 		return new StartupErrorFilterModel(Listener.getErrorAtStartup());
@@ -117,6 +119,7 @@ public class StartupErrorFilter extends StartupFilter {
 	/**
 	 * @see org.openmrs.web.filter.StartupFilter#skipFilter(HttpServletRequest)
 	 */
+	@Override
 	public boolean skipFilter(HttpServletRequest request) {
 		return !Listener.errorOccurredAtStartup();
 	}
@@ -124,6 +127,7 @@ public class StartupErrorFilter extends StartupFilter {
 	/**
 	 * @see org.openmrs.web.filter.StartupFilter#getTemplatePrefix()
 	 */
+	@Override
 	protected String getTemplatePrefix() {
 		return "org/openmrs/web/filter/startuperror/";
 	}

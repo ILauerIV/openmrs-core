@@ -63,7 +63,6 @@ import org.openmrs.api.handler.UnvoidHandler;
 import org.openmrs.api.handler.VoidHandler;
 import org.openmrs.api.impl.ConceptServiceImpl;
 import org.openmrs.test.BaseContextMockTest;
-import org.openmrs.test.Verifies;
 import org.openmrs.util.HandlerUtil;
 import org.openmrs.util.Reflect;
 import org.openmrs.util.RoleConstants;
@@ -97,13 +96,10 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 	@Before
 	public void setUp() {
 
-		context.setUserContext(userContext);
+		Context.setUserContext(userContext);
 		context.setServiceContext(serviceContext);
-		context.setContext(serviceContext);
+		Context.setContext(serviceContext);
 		serviceContext.setApplicationContext(applicationContext);
-		
-		//when(context.getUserContext()).thenReturn(userContext);
-		//when(serviceContext.getApplicationContext()).thenReturn(applicationContext);
 		
 		User user = new User();
 		user.setUuid("1010d442-e134-11de-babe-001e378eb67e");
@@ -146,10 +142,12 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 			this.locations = locs;
 		}
 		
+		@Override
 		public Integer getId() {
 			return null;
 		}
 		
+		@Override
 		public void setId(Integer id) {
 		}
 	}
@@ -158,7 +156,6 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 	 * @see RequiredDataAdvice#getChildCollection(OpenmrsObject, Field)
 	 */
 	@Test
-	@Verifies(value = "should get value of given child collection on given field", method = "getChildCollection(OpenmrsObject,Field)")
 	public void getChildCollection_shouldGetValueOfGivenChildCollectionOnGivenField() throws Exception {
 		MiniOpenmrsObject oo = new MiniOpenmrsObject();
 		List<Location> locs = new ArrayList<Location>();
@@ -172,7 +169,6 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RequiredDataAdvice#getChildCollection(OpenmrsObject,Field)
-	 * @verifies should be able to get annotated private fields
 	 */
 	@Test
 	public void getChildCollection_shouldShouldBeAbleToGetAnnotatedPrivateFields() throws Exception {
@@ -197,10 +193,12 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 			this.locations = locs;
 		}
 		
+		@Override
 		public Integer getId() {
 			return null;
 		}
 		
+		@Override
 		public void setId(Integer id) {
 		}
 	}
@@ -209,7 +207,6 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 	 * @see RequiredDataAdvice#getChildCollection(OpenmrsObject, Field)
 	 */
 	@Test(expected = APIException.class)
-	@Verifies(value = "should throw APIException if getter method not found", method = "getChildCollection(OpenmrsObject,Field)")
 	public void getChildCollection_shouldThrowAPIExceptionIfGetterMethodNotFound() throws Exception {
 		ClassWithBadGetter oo = new ClassWithBadGetter();
 		oo.setMyLocations(new HashSet<Location>());
@@ -244,10 +241,12 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 			this.locales = locs;
 		}
 		
+		@Override
 		public Integer getId() {
 			return id;
 		}
 		
+		@Override
 		public void setId(Integer id) {
 			this.id = id;
 		}
@@ -257,7 +256,6 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 	 * @see RequiredDataAdvice#isOpenmrsObjectCollection(Field)
 	 */
 	@Test
-	@Verifies(value = "should return false if field is collection of other objects", method = "isOpenmrsObjectCollection(Field)")
 	public void isOpenmrsObjectCollection_shouldReturnFalseIfFieldIsCollectionOfOtherObjects() throws Exception {
 		Assert.assertFalse(RequiredDataAdvice.isOpenmrsObjectCollection(ClassWithOtherFields.class
 		        .getDeclaredField("locales")));
@@ -271,7 +269,6 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 	 * @see RequiredDataAdvice#isOpenmrsObjectCollection(Field)
 	 */
 	@Test
-	@Verifies(value = "should return false if field is collection of parameterized type", method = "isOpenmrsObjectCollection(Field)")
 	public void isOpenmrsObjectCollection_shouldReturnFalseIfFieldIsCollectionOfParameterizedType() throws Exception {
 		Assert.assertFalse(RequiredDataAdvice.isOpenmrsObjectCollection(ClassWithOtherFields.class
 		        .getDeclaredField("nestedGenericProperty")));
@@ -281,7 +278,6 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 	 * @see RequiredDataAdvice#isOpenmrsObjectCollection(Field)
 	 */
 	@Test
-	@Verifies(value = "should return false if field is not a collection", method = "isOpenmrsObjectCollection(Field)")
 	public void isOpenmrsObjectCollection_shouldReturnFalseIfFieldIsNotACollection() throws Exception {
 		Assert.assertFalse(RequiredDataAdvice.isOpenmrsObjectCollection(ClassWithOtherFields.class.getDeclaredField("id")));
 	}
@@ -290,7 +286,6 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 	 * @see RequiredDataAdvice#isOpenmrsObjectCollection(Class<*>,Object)
 	 */
 	@Test
-	@Verifies(value = "should return true if class is openmrsObject list", method = "isOpenmrsObjectCollection(Object)")
 	public void isOpenmrsObjectCollection_shouldReturnTrueIfClassIsOpenmrsObjectList() throws Exception {
 		List<Location> locations = new ArrayList<Location>();
 		Location location = new Location();
@@ -302,7 +297,6 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 	 * @see RequiredDataAdvice#isOpenmrsObjectCollection(Class<*>,Object)
 	 */
 	@Test
-	@Verifies(value = "should return true if class is openmrsObject set", method = "isOpenmrsObjectCollection(Object)")
 	public void isOpenmrsObjectCollection_shouldReturnTrueIfClassIsOpenmrsObjectSet() throws Exception {
 		Set<Location> locations = new HashSet<Location>();
 		Location location = new Location();
@@ -314,7 +308,6 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 	 * @see RequiredDataAdvice#isOpenmrsObjectCollection(Class<*>,Object)
 	 */
 	@Test
-	@Verifies(value = "should return false if collection is empty regardless of type held", method = "isOpenmrsObjectCollection(Object)")
 	public void isOpenmrsObjectCollection_shouldReturnFalseIfCollectionIsEmptyRegardlessOfTypeHeld() throws Exception {
 		Set<Location> locations = new HashSet<Location>();
 		Assert.assertFalse(RequiredDataAdvice.isOpenmrsObjectCollection(locations));
@@ -346,10 +339,12 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 			this.notAnnotatedPersons = notAnnotatedPersons;
 		}
 		
+		@Override
 		public Integer getId() {
 			return null;
 		}
 		
+		@Override
 		public void setId(Integer id) {
 		}
 	}
@@ -433,10 +428,12 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 			this.notAnnotatedPersons = notAnnotatedPersons;
 		}
 		
+		@Override
 		public Integer getId() {
 			return null;
 		}
 		
+		@Override
 		public void setId(Integer id) {
 		}
 	}
@@ -479,10 +476,12 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 			this.concepts = concepts;
 		}
 		
+		@Override
 		public Integer getId() {
 			return null;
 		}
 		
+		@Override
 		public void setId(Integer id) {
 		}
 	}
@@ -525,7 +524,6 @@ public class RequiredDataAdviceTest extends BaseContextMockTest {
 	 * @see RequiredDataAdvice#before(Method, null, Object)
 	 */
 	@Test
-	@Verifies(value = "should not fail on update method with no arguments", method = "before(Method,null,Object)")
 	public void before_shouldNotFailOnUpdateMethodWithNoArguments() throws Throwable {
 		Method method = ConceptServiceImpl.class.getMethod("updateConceptIndexes", (Class[]) null);
 		requiredDataAdvice.before(method, null, new ConceptServiceImpl());

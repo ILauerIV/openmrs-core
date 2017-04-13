@@ -63,11 +63,11 @@ public class ConceptComplex extends Concept {
 		this.setDatatype(c.getDatatype());
 		this.setDateChanged(c.getDateChanged());
 		this.setDateCreated(c.getDateCreated());
-		this.setSet(c.isSet());
+		this.setSet(c.getSet());
 		this.setNames(c.getNames());
 		this.setDescriptions(c.getDescriptions());
 		this.setConceptMappings(c.getConceptMappings());
-		this.setRetired(c.isRetired());
+		this.setRetired(c.getRetired());
 		this.setVersion(c.getVersion());
 		this.setUuid(c.getUuid());
 		

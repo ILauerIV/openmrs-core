@@ -83,6 +83,7 @@ public class RequiredDataAdvice implements MethodBeforeAdvice {
 	 *      java.lang.Object[], java.lang.Object)
 	 * @should not fail on update method with no arguments
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void before(Method method, Object[] args, Object target) throws Throwable {
 		String methodName = method.getName();
@@ -218,7 +219,6 @@ public class RequiredDataAdvice implements MethodBeforeAdvice {
 	 *            void/retire reason)
 	 * @see #recursivelyHandle(Class, OpenmrsObject, User, Date, String, List)
 	 */
-	@SuppressWarnings("unchecked")
 	public static <H extends RequiredDataHandler> void recursivelyHandle(Class<H> handlerType, OpenmrsObject openmrsObject,
 	        String reason) {
 		recursivelyHandle(handlerType, openmrsObject, Context.getAuthenticatedUser(), new Date(), reason, null);

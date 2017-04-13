@@ -25,6 +25,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.openmrs.Person;
 import org.openmrs.Provider;
 import org.openmrs.ProviderAttribute;
@@ -63,6 +64,7 @@ public class HibernateProviderDAO implements ProviderDAO {
 	/**
 	 * @see org.openmrs.api.db.ProviderDAO#saveProvider(org.openmrs.Provider)
 	 */
+	@Override
 	public Provider saveProvider(Provider provider) {
 		getSession().saveOrUpdate(provider);
 		return provider;
@@ -184,14 +186,15 @@ public class HibernateProviderDAO implements ProviderDAO {
 		}
 		
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Provider.class).createAlias("person", "p",
-		    Criteria.LEFT_JOIN);
+		    JoinType.LEFT_OUTER_JOIN);
+		
 		if (!includeRetired) {
 			criteria.add(Restrictions.eq("retired", false));
 		}
 		
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		
-		criteria.createAlias("p.names", "personName", Criteria.LEFT_JOIN);
+		criteria.createAlias("p.names", "personName", JoinType.LEFT_OUTER_JOIN);
 		
 		Disjunction or = Restrictions.disjunction();
 		or.add(Restrictions.ilike("identifier", name, getMatchMode()));

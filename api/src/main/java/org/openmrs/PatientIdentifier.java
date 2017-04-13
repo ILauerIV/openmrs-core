@@ -13,8 +13,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Comparator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Boost;
@@ -25,6 +23,8 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.openmrs.api.db.hibernate.search.LuceneAnalyzers;
 import org.openmrs.util.OpenmrsUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A <code>Patient</code> can have zero to n identifying PatientIdentifier(s). PatientIdentifiers
@@ -39,7 +39,7 @@ public class PatientIdentifier extends BaseOpenmrsData implements java.io.Serial
 	
 	public static final long serialVersionUID = 1123121L;
 	
-	private static final Log log = LogFactory.getLog(PatientIdentifier.class);
+	private static final Logger log = LoggerFactory.getLogger(PatientIdentifier.class);
 	
 	// Fields
 	
@@ -223,6 +223,8 @@ public class PatientIdentifier extends BaseOpenmrsData implements java.io.Serial
 	 * @deprecated since 1.12. Use DefaultComparator instead.
 	 * Note: this comparator imposes orderings that are inconsistent with equals.
 	 */
+	@Deprecated
+	@Override
 	@SuppressWarnings("squid:S1210")
 	public int compareTo(PatientIdentifier other) {
 		DefaultComparator piDefaultComparator = new DefaultComparator();
@@ -233,6 +235,7 @@ public class PatientIdentifier extends BaseOpenmrsData implements java.io.Serial
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#getId()
 	 */
+	@Override
 	public Integer getId() {
 		return getPatientIdentifierId();
 	}
@@ -241,6 +244,7 @@ public class PatientIdentifier extends BaseOpenmrsData implements java.io.Serial
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#setId(java.lang.Integer)
 	 */
+	@Override
 	public void setId(Integer id) {
 		setPatientIdentifierId(id);
 	}
@@ -267,10 +271,11 @@ public class PatientIdentifier extends BaseOpenmrsData implements java.io.Serial
 	 **/
 	public static class DefaultComparator implements Comparator<PatientIdentifier> {
 		
+		@Override
 		public int compare(PatientIdentifier pi1, PatientIdentifier pi2) {
 			int retValue = 0;
 			if (pi2 != null) {
-				retValue = pi1.isVoided().compareTo(pi2.isVoided());
+				retValue = pi1.getVoided().compareTo(pi2.getVoided());
 				if (retValue == 0) {
 					retValue = pi1.isPreferred().compareTo(pi2.isPreferred());
 				}

@@ -20,13 +20,13 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.openmrs.util.OpenmrsUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -41,7 +41,7 @@ public class Person extends BaseOpenmrsData {
 	
 	public static final long serialVersionUID = 2L;
 	
-	protected final Log log = LogFactory.getLog(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
 	@DocumentId
 	protected Integer personId;
@@ -144,7 +144,7 @@ public class Person extends BaseOpenmrsData {
 		setPersonDateCreated(person.getPersonDateCreated());
 		setPersonChangedBy(person.getPersonChangedBy());
 		setPersonDateChanged(person.getPersonDateChanged());
-		setPersonVoided(person.isPersonVoided());
+		setPersonVoided(person.getPersonVoided());
 		setPersonVoidedBy(person.getPersonVoidedBy());
 		setPersonDateVoided(person.getPersonDateVoided());
 		setPersonVoidReason(person.getPersonVoidReason());
@@ -214,9 +214,6 @@ public class Person extends BaseOpenmrsData {
 	@Deprecated
 	@JsonIgnore
 	public Boolean isBirthdateEstimated() {
-		// if (this.birthdateEstimated == null) {
-		// return new Boolean(false);
-		// }
 		return getBirthdateEstimated();
 	}
 	
@@ -260,7 +257,7 @@ public class Person extends BaseOpenmrsData {
             try {
                 return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(birthDateString + " " + birthTimeString);
             } catch (ParseException e) {
-                log.error(e);
+				log.error("Failed to parse birth date string", e);
             }
         }
         return null;
@@ -392,7 +389,7 @@ public class Person extends BaseOpenmrsData {
 	public List<PersonAttribute> getActiveAttributes() {
 		List<PersonAttribute> attrs = new Vector<PersonAttribute>();
 		for (PersonAttribute attr : getAttributes()) {
-			if (!attr.isVoided()) {
+			if (!attr.getVoided()) {
 				attrs.add(attr);
 			}
 		}
@@ -443,7 +440,7 @@ public class Person extends BaseOpenmrsData {
 				
 				// if the to-be-added attribute isn't already voided itself
 				// and if we have the same type, different value
-				if (!newAttribute.isVoided() || newIsNull) {
+				if (!newAttribute.getVoided() || newIsNull) {
 					if (currentAttribute.getCreator() != null) {
 						currentAttribute.voidAttribute("New value: " + newAttribute.getValue());
 					} else {
@@ -495,7 +492,7 @@ public class Person extends BaseOpenmrsData {
 	public PersonAttribute getAttribute(PersonAttributeType pat) {
 		if (pat != null) {
 			for (PersonAttribute attribute : getAttributes()) {
-				if (pat.equals(attribute.getAttributeType()) && !attribute.isVoided()) {
+				if (pat.equals(attribute.getAttributeType()) && !attribute.getVoided()) {
 					return attribute;
 				}
 			}
@@ -520,7 +517,7 @@ public class Person extends BaseOpenmrsData {
 		if (attributeName != null) {
 			for (PersonAttribute attribute : getAttributes()) {
 				PersonAttributeType type = attribute.getAttributeType();
-				if (type != null && attributeName.equals(type.getName()) && !attribute.isVoided()) {
+				if (type != null && attributeName.equals(type.getName()) && !attribute.getVoided()) {
 					return attribute;
 				}
 			}
@@ -601,7 +598,7 @@ public class Person extends BaseOpenmrsData {
 	public List<PersonAttribute> getAttributes(PersonAttributeType personAttributeType) {
 		List<PersonAttribute> ret = new Vector<PersonAttribute>();
 		for (PersonAttribute attribute : getAttributes()) {
-			if (personAttributeType.equals(attribute.getAttributeType()) && !attribute.isVoided()) {
+			if (personAttributeType.equals(attribute.getAttributeType()) && !attribute.getVoided()) {
 				ret.add(attribute);
 			}
 		}
@@ -663,7 +660,7 @@ public class Person extends BaseOpenmrsData {
 		
 		for (PersonAttribute attribute : getAttributes()) {
 			s.append(attribute.getAttributeType()).append(" : ").append(attribute.getValue()).append(" : voided? ").append(
-			    attribute.isVoided()).append("\n");
+			    attribute.getVoided()).append("\n");
 		}
 		
 		return s.toString();
@@ -742,7 +739,7 @@ public class Person extends BaseOpenmrsData {
 	 * 
 	 * @return the "preferred" person name.
 	 * @see #getNames()
-	 * @see PersonName#isPreferred()
+	 * @see PersonName#getPreferred()
 	 * @should get preferred and not-voided person name if exist
 	 * @should get not-voided person name if preferred address does not exist
 	 * @should get voided person address if person is voided and not-voided address does not exist
@@ -753,17 +750,17 @@ public class Person extends BaseOpenmrsData {
 		// has fetched a Person, changed their names around, and then calls this method, so we have to be careful.
 		if (getNames() != null && !getNames().isEmpty()) {
 			for (PersonName name : getNames()) {
-				if (name.isPreferred() && !name.isVoided()) {
+				if (name.getPreferred() && !name.getVoided()) {
 					return name;
 				}
 			}
 			for (PersonName name : getNames()) {
-				if (!name.isVoided()) {
+				if (!name.getVoided()) {
 					return name;
 				}
 			}
 			
-			if (isVoided()) {
+			if (getVoided()) {
 				return getNames().iterator().next();
 			}
 		}
@@ -813,7 +810,8 @@ public class Person extends BaseOpenmrsData {
 	}
 	
 	/**
-	 * Convenience method to get the {@link PersonAddress} object that is marked as "preferred". <br>
+	 * Convenience method to get the {@link PersonAddress} object that is marked as "preferred".
+	 * <br>
 	 * <br>
 	 * If two addresses are marked as preferred (or no addresses), the database ordering comes into
 	 * effect and the one that was created most recently will be returned. <br>
@@ -824,7 +822,7 @@ public class Person extends BaseOpenmrsData {
 	 * 
 	 * @return the "preferred" person address.
 	 * @see #getAddresses()
-	 * @see PersonAddress#isPreferred()
+	 * @see PersonAddress#getPreferred()
 	 * @should get preferred and not-voided person address if exist
 	 * @should get not-voided person address if preferred address does not exist
 	 * @should get voided person address if person is voided and not-voided address does not exist
@@ -835,17 +833,17 @@ public class Person extends BaseOpenmrsData {
 		// has fetched a Person, changed their addresses around, and then calls this method, so we have to be careful.
 		if (getAddresses() != null && !getAddresses().isEmpty()) {
 			for (PersonAddress addr : getAddresses()) {
-				if (addr.isPreferred() && !addr.isVoided()) {
+				if (addr.getPreferred() && !addr.getVoided()) {
 					return addr;
 				}
 			}
 			for (PersonAddress addr : getAddresses()) {
-				if (!addr.isVoided()) {
+				if (!addr.getVoided()) {
 					return addr;
 				}
 			}
 			
-			if (isVoided()) {
+			if (getVoided()) {
 				return getAddresses().iterator().next();
 			}
 		}
@@ -1036,7 +1034,6 @@ public class Person extends BaseOpenmrsData {
 	 * 
 	 * @param isPatient whether this person is a patient or not
 	 */
-	@SuppressWarnings("unused")
 	protected void setPatient(boolean isPatient) {
 		this.isPatient = isPatient;
 	}
@@ -1044,6 +1041,7 @@ public class Person extends BaseOpenmrsData {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return "Person(personId=" + personId + ")";
 	}
@@ -1052,6 +1050,7 @@ public class Person extends BaseOpenmrsData {
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#getId()
 	 */
+	@Override
 	public Integer getId() {
 		
 		return getPersonId();
@@ -1061,6 +1060,7 @@ public class Person extends BaseOpenmrsData {
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#setId(java.lang.Integer)
 	 */
+	@Override
 	public void setId(Integer id) {
 		setPersonId(id);
 		

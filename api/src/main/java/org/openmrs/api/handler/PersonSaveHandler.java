@@ -37,6 +37,7 @@ public class PersonSaveHandler implements SaveHandler<Person> {
 	 * @see org.openmrs.api.handler.SaveHandler#handle(org.openmrs.OpenmrsObject, org.openmrs.User,
 	 *      java.util.Date, java.lang.String)
 	 */
+	@Override
 	public void handle(Person person, User creator, Date dateCreated, String other) {
 		
 		// address collection
@@ -65,12 +66,12 @@ public class PersonSaveHandler implements SaveHandler<Person> {
 		}
 		
 		//if the patient was marked as dead and reversed, drop the cause of death
-		if (!person.isDead() && person.getCauseOfDeath() != null) {
+		if (!person.getDead() && person.getCauseOfDeath() != null) {
 			person.setCauseOfDeath(null);
 		}
 		
 		// do the checks for voided attributes (also in PersonVoidHandler)
-		if (person.isPersonVoided()) {
+		if (person.getPersonVoided()) {
 			
 			if (!StringUtils.hasLength(person.getPersonVoidReason())) {
 				throw new APIException("Person.voided.bit", new Object[] { person });

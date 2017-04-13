@@ -17,8 +17,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Boost;
@@ -30,6 +28,8 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 import org.openmrs.api.db.hibernate.search.LuceneAnalyzers;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -40,7 +40,7 @@ public class PersonName extends BaseOpenmrsData implements java.io.Serializable,
 	
 	public static final long serialVersionUID = 4353L;
 
-	private static final Log log = LogFactory.getLog(PersonName.class);
+	private static final Logger log = LoggerFactory.getLogger(PersonName.class);
 
 	// Fields
 	@DocumentId
@@ -122,7 +122,6 @@ public class PersonName extends BaseOpenmrsData implements java.io.Serializable,
 	 * @return boolean true/false whether or not they are the same names
 	 * @should return true if given middle and family name are equal
 	 */
-	@SuppressWarnings("unchecked")
 	public boolean equalsContent(PersonName otherName) {
 		return new EqualsBuilder().append(defaultString(otherName.getPrefix()), defaultString(prefix)).append(
 		    defaultString(otherName.getGivenName()), defaultString(givenName)).append(
@@ -452,6 +451,7 @@ public class PersonName extends BaseOpenmrsData implements java.io.Serializable,
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#getId()
 	 */
+	@Override
 	public Integer getId() {
 		return getPersonNameId();
 	}
@@ -473,6 +473,7 @@ public class PersonName extends BaseOpenmrsData implements java.io.Serializable,
 	 * @should return negative if other dateCreated is greater
 	 * Note: this comparator imposes orderings that are inconsistent with equals.
 	 */
+	@Override
 	public int compareTo(PersonName other) {
 		DefaultComparator pnDefaultComparator = new DefaultComparator();
 		return pnDefaultComparator.compare(this, other);
@@ -482,6 +483,7 @@ public class PersonName extends BaseOpenmrsData implements java.io.Serializable,
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#setId(java.lang.Integer)
 	 */
+	@Override
 	public void setId(Integer id) {
 		setPersonNameId(id);
 		
@@ -505,8 +507,9 @@ public class PersonName extends BaseOpenmrsData implements java.io.Serializable,
 	 **/
 	public static class DefaultComparator implements Comparator<PersonName> {
 		
+		@Override
 		public int compare(PersonName pn1, PersonName pn2) {
-			int ret = pn1.isVoided().compareTo(pn2.isVoided());
+			int ret = pn1.getVoided().compareTo(pn2.getVoided());
 			if (ret == 0) {
 				ret = pn2.isPreferred().compareTo(pn1.isPreferred());
 			}

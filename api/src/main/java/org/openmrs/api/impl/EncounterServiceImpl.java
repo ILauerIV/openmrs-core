@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Cohort;
 import org.openmrs.Encounter;
@@ -63,13 +64,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EncounterServiceImpl extends BaseOpenmrsService implements EncounterService {
 	
-	// private Log log = LogFactory.getLog(this.getClass());
-	
 	private EncounterDAO dao;
 	
 	/**
 	 * @see org.openmrs.api.EncounterService#setEncounterDAO(org.openmrs.api.db.EncounterDAO)
 	 */
+	@Override
 	public void setEncounterDAO(EncounterDAO dao) {
 		this.dao = dao;
 	}
@@ -91,6 +91,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#saveEncounter(org.openmrs.Encounter)
 	 */
+	@Override
 	public Encounter saveEncounter(Encounter encounter) throws APIException {
 		
 		// if authenticated user is not supposed to edit encounter of certain type
@@ -182,10 +183,10 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 				o.setPatient(p);
 			}
 		}
-		
+
 		// do the actual saving to the database
 		dao.saveEncounter(encounter);
-		
+
 		// save the new orderGroups
 		for (OrderGroup orderGroup : encounter.getOrderGroups()) {
 			Context.getOrderService().saveOrderGroup(orderGroup);
@@ -200,8 +201,8 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 		// save the Obs
 		String changeMessage = Context.getMessageSourceService().getMessage("Obs.void.reason.default");
 		ObsService os = Context.getObsService();
-		List<Obs> toRemove = new ArrayList<>();
-		List<Obs> toAdd = new ArrayList<>();
+		List<Obs> obsToRemove = new ArrayList<>();
+		List<Obs> obsToAdd = new ArrayList<>();
 		for (Obs o : encounter.getObsAtTopLevel(true)) {
 			if (o.getId() == null) {
 				os.saveObs(o, null);
@@ -210,25 +211,53 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 				//The logic in saveObs evicts the old obs instance, so we need to update the collection
 				//with the newly loaded and voided instance, apparently reloading the encounter
 				//didn't do the tick
-				toRemove.add(o);
-				toAdd.add(os.getObs(o.getId()));
-				toAdd.add(newObs);
+				obsToRemove.add(o);
+				obsToAdd.add(os.getObs(o.getId()));
+				obsToAdd.add(newObs);
 			}
 		}
-		
-		for (Obs o : toRemove) {
-			encounter.removeObs(o);
-		}
-		for (Obs o : toAdd) {
-			encounter.addObs(o);
-		}
-		
+
+		removeGivenObsAndTheirGroupMembersFromEncounter(obsToRemove, encounter);
+		addGivenObsAndTheirGroupMembersToEncounter(obsToAdd, encounter);
 		return encounter;
 	}
-	
+
+	/**
+	 * This method will remove given Collection of obs and their group members from encounter
+	 *
+	 * @param obsToRemove Collection of obs that need to be removed recursively
+	 * @param encounter the encounter from which the obs will be removed
+	 */
+	private void removeGivenObsAndTheirGroupMembersFromEncounter(Collection<Obs> obsToRemove, Encounter encounter) {
+		for (Obs o : obsToRemove) {
+			encounter.removeObs(o);
+			Set<Obs> groupMembers = o.getGroupMembers(true);
+			if (CollectionUtils.isNotEmpty(groupMembers)) {
+				removeGivenObsAndTheirGroupMembersFromEncounter(groupMembers, encounter);
+			}
+		}
+	}
+
+	/**
+	 * This method will add given Collection of obs and their group members to encounter
+	 *
+	 * @param obsToAdd Collection of obs that need to be added recursively
+	 * @param encounter the encounter to which the obs will be added
+	 */
+	private void addGivenObsAndTheirGroupMembersToEncounter(Collection<Obs> obsToAdd, Encounter encounter) {
+		for (Obs o : obsToAdd) {
+			encounter.addObs(o);
+			Set<Obs> groupMembers = o.getGroupMembers(true);
+			if (CollectionUtils.isNotEmpty(groupMembers)) {
+				addGivenObsAndTheirGroupMembersToEncounter(groupMembers, encounter);
+			}
+		}
+	}
+
 	/**
 	 * @see org.openmrs.api.EncounterService#getEncounter(java.lang.Integer)
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public Encounter getEncounter(Integer encounterId) throws APIException {
 		Encounter encounter = dao.getEncounter(encounterId);
@@ -245,6 +274,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#getEncountersByPatient(org.openmrs.Patient)
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public List<Encounter> getEncountersByPatient(Patient patient) throws APIException {
 		if (patient == null) {
@@ -260,6 +290,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#getEncountersByPatient(String)
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public List<Encounter> getEncountersByPatient(String query) throws APIException {
 		
@@ -269,6 +300,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#getEncountersByPatientId(java.lang.Integer)
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public List<Encounter> getEncountersByPatientId(Integer patientId) throws APIException {
 		if (patientId == null) {
@@ -281,6 +313,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#getEncountersByPatientIdentifier(java.lang.String)
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public List<Encounter> getEncountersByPatientIdentifier(String identifier) throws APIException {
 		if (identifier == null) {
@@ -319,6 +352,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#getEncounters(org.openmrs.parameter.EncounterSearchCriteria)
 	 */
+	@Override
 	public List<Encounter> getEncounters(EncounterSearchCriteria encounterSearchCriteria) {
 		// the second search parameter is null as it defaults to authenticated user from context
 		return Context.getEncounterService().filterEncountersByViewPermissions(dao.getEncounters(encounterSearchCriteria),
@@ -328,6 +362,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#voidEncounter(org.openmrs.Encounter, java.lang.String)
 	 */
+	@Override
 	public Encounter voidEncounter(Encounter encounter, String reason) {
 		
 		// if authenticated user is not supposed to edit encounter of certain type
@@ -342,14 +377,14 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 		
 		ObsService os = Context.getObsService();
 		for (Obs o : encounter.getObsAtTopLevel(false)) {
-			if (!o.isVoided()) {
+			if (!o.getVoided()) {
 				os.voidObs(o, reason);
 			}
 		}
 		
 		OrderService orderService = Context.getOrderService();
 		for (Order o : encounter.getOrders()) {
-			if (!o.isVoided()) {
+			if (!o.getVoided()) {
 				orderService.voidOrder(o, reason);
 			}
 		}
@@ -370,6 +405,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#unvoidEncounter(org.openmrs.Encounter)
 	 */
+	@Override
 	public Encounter unvoidEncounter(Encounter encounter) throws APIException {
 		
 		// if authenticated user is not supposed to edit encounter of certain type
@@ -408,6 +444,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#purgeEncounter(org.openmrs.Encounter)
 	 */
+	@Override
 	public void purgeEncounter(Encounter encounter) throws APIException {
 		// if authenticated user is not supposed to edit encounter of certain type
 		if (!canEditEncounter(encounter, null)) {
@@ -420,6 +457,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#purgeEncounter(Encounter, boolean)
 	 */
+	@Override
 	public void purgeEncounter(Encounter encounter, boolean cascade) throws APIException {
 		
 		// if authenticated user is not supposed to edit encounter of certain type
@@ -449,6 +487,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#saveEncounterType(org.openmrs.EncounterType)
 	 */
+	@Override
 	public EncounterType saveEncounterType(EncounterType encounterType) {
 		//make sure the user has not turned off encounter types editing
 		Context.getEncounterService().checkIfEncounterTypesAreLocked();
@@ -460,6 +499,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#getEncounterType(java.lang.Integer)
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public EncounterType getEncounterType(Integer encounterTypeId) throws APIException {
 		return dao.getEncounterType(encounterTypeId);
@@ -468,6 +508,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#getEncounterType(java.lang.String)
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public EncounterType getEncounterType(String name) throws APIException {
 		return dao.getEncounterType(name);
@@ -476,6 +517,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#getAllEncounterTypes()
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public List<EncounterType> getAllEncounterTypes() throws APIException {
 		return dao.getAllEncounterTypes(true);
@@ -484,6 +526,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#getAllEncounterTypes(boolean)
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public List<EncounterType> getAllEncounterTypes(boolean includeRetired) throws APIException {
 		return dao.getAllEncounterTypes(includeRetired);
@@ -492,6 +535,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#findEncounterTypes(java.lang.String)
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public List<EncounterType> findEncounterTypes(String name) throws APIException {
 		return dao.findEncounterTypes(name);
@@ -500,6 +544,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#retireEncounterType(EncounterType, String)
 	 */
+	@Override
 	public EncounterType retireEncounterType(EncounterType encounterType, String reason) throws APIException {
 		if (reason == null) {
 			throw new IllegalArgumentException("The 'reason' for retiring is required");
@@ -516,6 +561,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#unretireEncounterType(org.openmrs.EncounterType)
 	 */
+	@Override
 	public EncounterType unretireEncounterType(EncounterType encounterType) throws APIException {
 		Context.getEncounterService().checkIfEncounterTypesAreLocked();
 		
@@ -526,6 +572,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#purgeEncounterType(org.openmrs.EncounterType)
 	 */
+	@Override
 	public void purgeEncounterType(EncounterType encounterType) throws APIException {
 		//make sure the user has not turned off encounter types editing
 		Context.getEncounterService().checkIfEncounterTypesAreLocked();
@@ -536,6 +583,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#getEncounterByUuid(java.lang.String)
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public Encounter getEncounterByUuid(String uuid) throws APIException {
 		return dao.getEncounterByUuid(uuid);
@@ -544,6 +592,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#getEncounterTypeByUuid(java.lang.String)
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public EncounterType getEncounterTypeByUuid(String uuid) throws APIException {
 		return dao.getEncounterTypeByUuid(uuid);
@@ -877,6 +926,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	/**
 	 * @see org.openmrs.api.EncounterService#checkIfEncounterTypesAreLocked()
 	 */
+	@Override
 	@Transactional(readOnly = true)
 	public void checkIfEncounterTypesAreLocked() {
 		String locked = Context.getAdministrationService().getGlobalProperty(

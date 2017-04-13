@@ -12,11 +12,11 @@ package org.openmrs.propertyeditor;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorSupport;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.VisitType;
 import org.openmrs.api.VisitService;
 import org.openmrs.api.context.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
  */
 public class VisitTypeEditor extends PropertyEditorSupport {
 	
-	private static final Log log = LogFactory.getLog(VisitTypeEditor.class);
+	private static final Logger log = LoggerFactory.getLogger(VisitTypeEditor.class);
 	
 	public VisitTypeEditor() {
 	}
@@ -35,6 +35,7 @@ public class VisitTypeEditor extends PropertyEditorSupport {
 	 * @should set using id
 	 * @should set using uuid
 	 */
+	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
 		VisitService vs = Context.getVisitService();
 		if (StringUtils.hasText(text)) {
@@ -53,6 +54,7 @@ public class VisitTypeEditor extends PropertyEditorSupport {
 		}
 	}
 	
+	@Override
 	public String getAsText() {
 		VisitType vt = (VisitType) getValue();
 		if (vt == null) {

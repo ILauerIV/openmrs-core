@@ -11,8 +11,8 @@ package org.openmrs.scheduler.tasks;
 
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of a task that writes "Hello World" to a log file.
@@ -20,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class HelloWorldTask extends AbstractTask {
 	
-	private static Log log = LogFactory.getLog(HelloWorldTask.class);
+	private static Logger log = LoggerFactory.getLogger(HelloWorldTask.class);
 	
 	/**
 	 * Public constructor.
@@ -29,11 +29,13 @@ public class HelloWorldTask extends AbstractTask {
 		log.debug("hello world task created at " + new Date());
 	}
 	
+	@Override
 	public void execute() {
 		log.debug("executing hello world task");
 		super.startExecuting();
 	}
 	
+	@Override
 	public void shutdown() {
 		log.debug("shutting down hello world task");
 		this.stopExecuting();

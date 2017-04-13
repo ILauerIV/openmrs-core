@@ -71,7 +71,7 @@ public class Relationship extends BaseOpenmrsData {
 		target.personB = getPersonB();
 		target.setCreator(getCreator());
 		target.setDateCreated(getDateCreated());
-		target.setVoided(isVoided());
+		target.setVoided(getVoided());
 		target.setVoidedBy(getVoidedBy());
 		target.setDateVoided(getDateVoided());
 		target.setVoidReason(getVoidReason());
@@ -170,6 +170,7 @@ public class Relationship extends BaseOpenmrsData {
 		this.endDate = endDate;
 	}
 	
+	@Override
 	public String toString() {
 		String relType = getRelationshipType() == null ? "NULL" : getRelationshipType().getaIsToB();
 		return personA + " is the " + relType + " of " + personB;
@@ -179,6 +180,7 @@ public class Relationship extends BaseOpenmrsData {
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#getId()
 	 */
+	@Override
 	public Integer getId() {
 		
 		return getRelationshipId();
@@ -188,6 +190,7 @@ public class Relationship extends BaseOpenmrsData {
 	 * @since 1.5
 	 * @see org.openmrs.OpenmrsObject#setId(java.lang.Integer)
 	 */
+	@Override
 	public void setId(Integer id) {
 		setRelationshipId(id);
 		

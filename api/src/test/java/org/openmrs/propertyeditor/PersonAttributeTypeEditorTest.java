@@ -17,10 +17,9 @@ public class PersonAttributeTypeEditorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PersonAttributeTypeEditor#setAsText(String)
-	 * @verifies set using id
 	 */
 	@Test
-	public void setAsText_shouldSetUsingId() throws Exception {
+	public void setAsText_shouldSetUsingId() {
 		PersonAttributeTypeEditor editor = new PersonAttributeTypeEditor();
 		editor.setAsText("1");
 		Assert.assertNotNull(editor.getValue());
@@ -28,10 +27,9 @@ public class PersonAttributeTypeEditorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PersonAttributeTypeEditor#setAsText(String)
-	 * @verifies set using uuid
 	 */
 	@Test
-	public void setAsText_shouldSetUsingUuid() throws Exception {
+	public void setAsText_shouldSetUsingUuid() {
 		PersonAttributeTypeEditor editor = new PersonAttributeTypeEditor();
 		editor.setAsText("b3b6d540-a32e-44c7-91b3-292d97667518");
 		Assert.assertNotNull(editor.getValue());

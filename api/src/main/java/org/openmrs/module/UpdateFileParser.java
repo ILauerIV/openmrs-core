@@ -16,9 +16,9 @@ import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.util.OpenmrsConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -32,7 +32,7 @@ import org.xml.sax.InputSource;
  */
 public class UpdateFileParser {
 	
-	private static Log log = LogFactory.getLog(UpdateFileParser.class);
+	private static Logger log = LoggerFactory.getLogger(UpdateFileParser.class);
 	
 	private String content;
 	
@@ -75,6 +75,7 @@ public class UpdateFileParser {
 				// Disable resolution of external entities. See TRUNK-3942 
 				db.setEntityResolver(new EntityResolver() {
 					
+					@Override
 					public InputSource resolveEntity(String publicId, String systemId) {
 						return new InputSource(new StringReader(""));
 					}

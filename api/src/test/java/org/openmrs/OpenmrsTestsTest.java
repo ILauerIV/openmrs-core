@@ -28,7 +28,6 @@ import org.openmrs.util.OpenmrsUtil;
  * assert* in them. This would help prevent people from making tests that just print results to the
  * screen
  */
-@SuppressWarnings("unchecked")
 public class OpenmrsTestsTest {
 	
 	private ClassLoader classLoader = this.getClass().getClassLoader();
@@ -41,7 +40,7 @@ public class OpenmrsTestsTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void shouldHaveAtLeastOneTest() throws Exception {
+	public void shouldHaveAtLeastOneTest() {
 		List<Class<?>> classes = getTestClasses();
 		
 		assertTrue("There should be more than one class but there was only " + classes.size(), classes.size() > 1);
@@ -53,7 +52,7 @@ public class OpenmrsTestsTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void shouldStartWithShould() throws Exception {
+	public void shouldStartWithShould() {
 		
 		List<Class<?>> classes = getTestClasses();
 		
@@ -81,7 +80,7 @@ public class OpenmrsTestsTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void shouldHaveTestAnnotationWhenStartingWithShould() throws Exception {
+	public void shouldHaveTestAnnotationWhenStartingWithShould() {
 		// loop over all methods in all test classes
 		for (Class<?> currentClass : getTestClasses()) {
 			for (Method method : currentClass.getMethods()) {
@@ -107,7 +106,7 @@ public class OpenmrsTestsTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void shouldHaveClassNameEndWithTestIfContainsMethodTestAnnotations() throws Exception {
+	public void shouldHaveClassNameEndWithTestIfContainsMethodTestAnnotations() {
 		// loop over all methods that _don't_ end in Test.class
 		for (Class<?> currentClass : getClasses("^.*(?<!Test|IT|PT)\\.class$")) {
 			

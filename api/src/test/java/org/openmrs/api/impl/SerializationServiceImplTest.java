@@ -18,7 +18,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openmrs.serialization.OpenmrsSerializer;
 import org.openmrs.serialization.SerializationException;
-import org.openmrs.test.Verifies;
 
 /**
  * Tests the {@link SerializationServiceImpl} class
@@ -44,8 +43,7 @@ public class SerializationServiceImplTest {
 	 * @see SerializationServiceImpl#setSerializers(List<OpenmrsSerializer>)
 	 */
 	@Test
-	@Verifies(value = "should not reset serializers list when called multiple times", method = "setSerializers(List<+QOpenmrsSerializer;>)")
-	public void setSerializers_shouldNotResetSerializersListWhenCalledMultipleTimes() throws Exception {
+	public void setSerializers_shouldNotResetSerializersListWhenCalledMultipleTimes() {
 		SerializationServiceImpl ssi = new SerializationServiceImpl();
 		Assert.assertEquals(0, ssi.getSerializers().size());
 		
@@ -65,6 +63,7 @@ public class SerializationServiceImplTest {
 		 * @see org.openmrs.serialization.OpenmrsSerializer#deserialize(java.lang.String,
 		 *      java.lang.Class)
 		 */
+		@Override
 		public <T> T deserialize(String serializedObject, Class<? extends T> clazz) throws SerializationException {
 			return null;
 		}
@@ -72,6 +71,7 @@ public class SerializationServiceImplTest {
 		/**
 		 * @see org.openmrs.serialization.OpenmrsSerializer#serialize(java.lang.Object)
 		 */
+		@Override
 		public String serialize(Object o) throws SerializationException {
 			return null;
 		}
@@ -87,6 +87,7 @@ public class SerializationServiceImplTest {
 		 * @see org.openmrs.serialization.OpenmrsSerializer#deserialize(java.lang.String,
 		 *      java.lang.Class)
 		 */
+		@Override
 		public <T> T deserialize(String serializedObject, Class<? extends T> clazz) throws SerializationException {
 			return null;
 		}
@@ -94,6 +95,7 @@ public class SerializationServiceImplTest {
 		/**
 		 * @see org.openmrs.serialization.OpenmrsSerializer#serialize(java.lang.Object)
 		 */
+		@Override
 		public String serialize(Object o) throws SerializationException {
 			return null;
 		}
