@@ -23,10 +23,9 @@ public class PatientIdentifierTypeDefaultComparatorTest {
 	 * Simplified test.
 	 * 
 	 * @see PatientIdentifierTypeDefaultComparator#compare(PatientIdentifierType,PatientIdentifierType)
-	 * @verifies order properly
 	 */
 	@Test
-	public void compare_shouldOrderProperly() throws Exception {
+	public void compare_shouldOrderProperly() {
 		PatientIdentifierType requiredNotRetired = new PatientIdentifierType();
 		requiredNotRetired.setRequired(true);
 		requiredNotRetired.setRetired(null);

@@ -9,6 +9,7 @@
  */
 package org.openmrs.web;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Locale;
 
@@ -23,93 +24,84 @@ public class WebUtilTest {
 
 	/**
 	 * @see org.openmrs.web.WebUtil#getContextPath()
-	 * @verifies should return empty string if webappname is null
 	 */
 	@Test
-	public void getContextPath_shouldReturnEmptyStringWhenWebAppNameIsNull() throws Exception {
+	public void getContextPath_shouldReturnEmptyStringWhenWebAppNameIsNull() {
 		WebConstants.WEBAPP_NAME = null;
 		Assert.assertEquals("", WebUtil.getContextPath());
 	}
 	
 	/**
 	 * @see org.openmrs.web.WebUtil#getContextPath()
-	 * @verifies should return empty string if webappname is empty string
 	 */
 	@Test
-	public void getContextPath_shouldReturnEmptyStringWhenWebAppNameIsEmptyString() throws Exception {
+	public void getContextPath_shouldReturnEmptyStringWhenWebAppNameIsEmptyString() {
 		WebConstants.WEBAPP_NAME = "";
 		Assert.assertEquals("", WebUtil.getContextPath());
 	}
 	
 	/**
 	 * @see org.openmrs.web.WebUtil#getContextPath()
-	 * @verifies should return webappname with leading slash if webappname has a value
 	 */
 	@Test
-	public void getContextPath_shouldReturnValueSpecifiedInWebAppName() throws Exception {
+	public void getContextPath_shouldReturnValueSpecifiedInWebAppName() {
 		WebConstants.WEBAPP_NAME = "Value";
 		Assert.assertEquals("/Value", WebUtil.getContextPath());
 	}
 	
 	/**
 	 * @see WebUtil#normalizeLocale(String)
-	 * @verifies ignore leading spaces
 	 */
 	@Test
-	public void normalizeLocale_shouldIgnoreLeadingSpaces() throws Exception {
+	public void normalizeLocale_shouldIgnoreLeadingSpaces() {
 		Assert.assertEquals(Locale.ITALIAN, WebUtil.normalizeLocale(" it"));
 	}
 	
 	/**
 	 * @see WebUtil#normalizeLocale(String)
-	 * @verifies accept language only locales
 	 */
 	@Test
-	public void normalizeLocale_shouldAcceptLanguageOnlyLocales() throws Exception {
+	public void normalizeLocale_shouldAcceptLanguageOnlyLocales() {
 		Assert.assertEquals(Locale.FRENCH, WebUtil.normalizeLocale("fr"));
 	}
 	
 	/**
 	 * @see WebUtil#normalizeLocale(String)
-	 * @verifies not accept invalid locales
 	 */
 	@Test
-	public void normalizeLocale_shouldNotAcceptInvalidLocales() throws Exception {
+	public void normalizeLocale_shouldNotAcceptInvalidLocales() {
 		Assert.assertNull(WebUtil.normalizeLocale("ptrg"));
 		Assert.assertNull(WebUtil.normalizeLocale("usaa"));
 	}
 	
 	/**
 	 * @see WebUtil#normalizeLocale(String)
-	 * @verifies not fail with empty strings
 	 */
 	@Test
-	public void normalizeLocale_shouldNotFailWithEmptyStrings() throws Exception {
+	public void normalizeLocale_shouldNotFailWithEmptyStrings() {
 		Assert.assertNull(WebUtil.normalizeLocale(""));
 	}
 	
 	/**
 	 * @see WebUtil#normalizeLocale(String)
-	 * @verifies not fail with whitespace only
 	 */
 	@Test
-	public void normalizeLocale_shouldNotFailWithWhitespaceOnly() throws Exception {
+	public void normalizeLocale_shouldNotFailWithWhitespaceOnly() {
 		Assert.assertNull(WebUtil.normalizeLocale("      "));
 	}
 
 	/**
+	 * @throws UnsupportedEncodingException
 	 * @see WebUtil#normalizeLocale(String)
-	 * @verifies does not fail with "\t"
 	 */
 	@Test
-	public void normalizeLocale_shouldNotFailWithTab() throws Exception {
+	public void normalizeLocale_shouldNotFailWithTab() throws UnsupportedEncodingException {
 		String s = new String(new byte[]{0x9}, "ASCII");
 		Assert.assertNull(WebUtil.normalizeLocale(s));
 	}
 
 	/**
 	 * @see WebUtil#normalizeLocale(String)
-	 * @verifies does not fail with "Ši"
 	 */
 	@Test
 	public void normalizeLocale_shouldNotFailWithUnicode() {
@@ -118,7 +110,6 @@ public class WebUtilTest {
 
 	/**
 	 * @see WebUtil#normalizeLocale(String)
-	 * @verifies does not fail with "s"
 	 */
 	@Test
 	public void normalizeLocale_shouldNotFailWithSingleChar() {
@@ -126,30 +117,28 @@ public class WebUtilTest {
 	}
 
 	/**
+	 * @throws UnsupportedEncodingException
 	 * @see WebUtil#normalizeLocale(String)
-	 * @verifies does not fail with "_"
 	 */
 	@Test
-	public void normalizeLocale_shouldNotFailWithUnderline() throws Exception {
+	public void normalizeLocale_shouldNotFailWithUnderline() throws UnsupportedEncodingException {
 		String s = new String(new byte[]{0x5f}, "ASCII");
 		Assert.assertNull(WebUtil.normalizeLocale(s));
 	}
 
 	/**
 	 * @see WebUtil#sanitizeLocales(String)
-	 * @verifies skip over invalid locales
 	 */
 	@Test
-	public void sanitizeLocales_shouldSkipOverInvalidLocales() throws Exception {
+	public void sanitizeLocales_shouldSkipOverInvalidLocales() {
 		Assert.assertEquals("fr_RW, it, en", WebUtil.sanitizeLocales("és, qqqq, fr_RW, it, enñ"));
 	}
 	
 	/**
 	 * @see WebUtil#sanitizeLocales(String)
-	 * @verifies not fail with empty string
 	 */
 	@Test
-	public void sanitizeLocales_shouldNotFailWithEmptyString() throws Exception {
+	public void sanitizeLocales_shouldNotFailWithEmptyString() {
 		Assert.assertNull(null, WebUtil.sanitizeLocales(""));
 	}
 	

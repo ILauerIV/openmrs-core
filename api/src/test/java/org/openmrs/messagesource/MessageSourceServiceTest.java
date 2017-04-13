@@ -17,7 +17,6 @@ import org.junit.Test;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.impl.MessageSourceServiceImpl;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.validation.MapBindingResult;
 
@@ -32,8 +31,7 @@ public class MessageSourceServiceTest extends BaseContextSensitiveTest {
 	 * @see MessageSourceServiceImpl#getMessage(MessageSourceResolvable resolvable, Locale locale)
 	 */
 	@Test
-	@Verifies(value = "getMessage_shouldReturnTheLastErrorCodeIfnoLocalizationIsFound", method = "getMessage(MessageSourceResolvable resolvable, Locale locale)")
-	public void getMessage_shouldReturnTheLastErrorCodeIfnoLocalizationIsFound() throws Exception {
+	public void getMessage_shouldReturnTheLastErrorCodeIfnoLocalizationIsFound() {
 		MapBindingResult errors = new MapBindingResult(new HashMap<String, Object>(), "request");
 		errors.rejectValue("myField", "myErrorCode");
 		MessageSourceResolvable fieldError = errors.getFieldError("myField");

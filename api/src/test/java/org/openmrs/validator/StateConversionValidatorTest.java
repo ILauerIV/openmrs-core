@@ -15,7 +15,6 @@ import org.openmrs.ConceptStateConversion;
 import org.openmrs.ProgramWorkflow;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 
@@ -28,8 +27,7 @@ public class StateConversionValidatorTest extends BaseContextSensitiveTest {
 	 * @see StateConversionValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if concept is null or empty or whitespace", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfConceptIsNullOrEmptyOrWhitespace() throws Exception {
+	public void validate_shouldFailValidationIfConceptIsNullOrEmptyOrWhitespace() {
 		ConceptStateConversion csc = new ConceptStateConversion();
 		ProgramWorkflow workflow = Context.getProgramWorkflowService().getProgram(1).getAllWorkflows().iterator().next();
 		csc.setProgramWorkflow(workflow);
@@ -45,8 +43,7 @@ public class StateConversionValidatorTest extends BaseContextSensitiveTest {
 	 * @see StateConversionValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if programWorkflow is null or empty or whitespace", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfProgramWorkflowIsNullOrEmptyOrWhitespace() throws Exception {
+	public void validate_shouldFailValidationIfProgramWorkflowIsNullOrEmptyOrWhitespace() {
 		ConceptStateConversion csc = new ConceptStateConversion();
 		csc.setProgramWorkflow(null);
 		
@@ -64,8 +61,7 @@ public class StateConversionValidatorTest extends BaseContextSensitiveTest {
 	 * @see StateConversionValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if programWorkflowState is null or empty or whitespace", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfProgramWorkflowStateIsNullOrEmptyOrWhitespace() throws Exception {
+	public void validate_shouldFailValidationIfProgramWorkflowStateIsNullOrEmptyOrWhitespace() {
 		ConceptStateConversion csc = new ConceptStateConversion();
 		
 		ProgramWorkflow workflow = Context.getProgramWorkflowService().getProgram(1).getAllWorkflows().iterator().next();
@@ -83,8 +79,7 @@ public class StateConversionValidatorTest extends BaseContextSensitiveTest {
 	 * @see StateConversionValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if all required fields have proper values", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfAllRequiredFieldsHaveProperValues() throws Exception {
+	public void validate_shouldPassValidationIfAllRequiredFieldsHaveProperValues() {
 		ConceptStateConversion csc = new ConceptStateConversion();
 		ProgramWorkflow workflow = Context.getProgramWorkflowService().getProgram(1).getAllWorkflows().iterator().next();
 		csc.setConcept(Context.getConceptService().getConcept(3));

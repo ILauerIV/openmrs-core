@@ -59,12 +59,11 @@ public class ImmutableEntityInterceptorTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @verifies fail if an entity has a changed property
 	 * @see ImmutableEntityInterceptor#onFlushDirty(Object, java.io.Serializable, Object[],
 	 *      Object[], String[], org.hibernate.type.Type[])
 	 */
 	@Test
-	public void onFlushDirty_shouldFailIfAnEntityHasAChangedProperty() throws Exception {
+	public void onFlushDirty_shouldFailIfAnEntityHasAChangedProperty() {
 		String[] propertyNames = new String[] { SomeImmutableEntityInterceptor.IMMUTABLE_FIELD_NAME };
 		String[] previousState = new String[] { "old" };
 		String[] currentState = new String[] { "new" };
@@ -76,12 +75,11 @@ public class ImmutableEntityInterceptorTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @verifies pass if an entity has changes for an allowed mutable property
 	 * @see ImmutableEntityInterceptor#onFlushDirty(Object, java.io.Serializable, Object[],
 	 *      Object[], String[], org.hibernate.type.Type[])
 	 */
 	@Test
-	public void onFlushDirty_shouldPassIfAnEntityHasChangesForAnAllowedMutableProperty() throws Exception {
+	public void onFlushDirty_shouldPassIfAnEntityHasChangesForAnAllowedMutableProperty() {
 		String[] propertyNames = new String[] { SomeImmutableEntityInterceptor.MUTABLE_FIELD_NAME };
 		String[] previousState = new String[] { "old" };
 		String[] currentState = new String[] { "new" };
@@ -90,12 +88,11 @@ public class ImmutableEntityInterceptorTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @verifies fail if the edited object is voided or retired and ignore is set to false
 	 * @see ImmutableEntityInterceptor#onFlushDirty(Object, java.io.Serializable, Object[],
 	 *      Object[], String[], org.hibernate.type.Type[])
 	 */
 	@Test
-	public void onFlushDirty_shouldFailIfTheEditedObjectIsVoidedOrRetiredAndIgnoreIsSetToFalse() throws Exception {
+	public void onFlushDirty_shouldFailIfTheEditedObjectIsVoidedOrRetiredAndIgnoreIsSetToFalse() {
 		String[] propertyNames = new String[] { SomeImmutableEntityInterceptor.IMMUTABLE_FIELD_NAME };
 		String[] previousState = new String[] { "old" };
 		String[] currentState = new String[] { "new" };
@@ -109,12 +106,11 @@ public class ImmutableEntityInterceptorTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @verifies pass if the edited object is voided or retired and ignore is set to true
 	 * @see ImmutableEntityInterceptor#onFlushDirty(Object, java.io.Serializable, Object[],
 	 *      Object[], String[], org.hibernate.type.Type[])
 	 */
 	@Test
-	public void onFlushDirty_shouldPassIfTheEditedObjectIsVoidedOrRetiredAndIgnoreIsSetToTrue() throws Exception {
+	public void onFlushDirty_shouldPassIfTheEditedObjectIsVoidedOrRetiredAndIgnoreIsSetToTrue() {
 		String[] propertyNames = new String[] { SomeImmutableEntityInterceptor.IMMUTABLE_FIELD_NAME };
 		String[] previousState = new String[] { "old" };
 		String[] currentState = new String[] { "new" };

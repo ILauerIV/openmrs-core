@@ -13,7 +13,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.Privilege;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 
@@ -26,8 +25,7 @@ public class PrivilegeValidatorTest extends BaseContextSensitiveTest {
 	 * @see PrivilegeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if privilege is null or empty or whitespace", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfPrivilegeIsNullOrEmptyOrWhitespace() throws Exception {
+	public void validate_shouldFailValidationIfPrivilegeIsNullOrEmptyOrWhitespace() {
 		Privilege priv = new Privilege();
 		priv.setPrivilege(null);
 		priv.setDescription("some text");
@@ -51,8 +49,7 @@ public class PrivilegeValidatorTest extends BaseContextSensitiveTest {
 	 * @see PrivilegeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if description is null or empty or whitespace", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfDescriptionIsNullOrEmptyOrWhitespace() throws Exception {
+	public void validate_shouldPassValidationIfDescriptionIsNullOrEmptyOrWhitespace() {
 		Privilege priv = new Privilege();
 		priv.setPrivilege("Wallhacking");
 		priv.setDescription(null);
@@ -76,8 +73,7 @@ public class PrivilegeValidatorTest extends BaseContextSensitiveTest {
 	 * @see PrivilegeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if all required fields have proper values", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfAllRequiredFieldsHaveProperValues() throws Exception {
+	public void validate_shouldPassValidationIfAllRequiredFieldsHaveProperValues() {
 		Privilege priv = new Privilege();
 		priv.setPrivilege("Wallhacking");
 		priv.setDescription("idspispopd");
@@ -94,8 +90,7 @@ public class PrivilegeValidatorTest extends BaseContextSensitiveTest {
 	 * @see PrivilegeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if field lengths are correct", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfFieldLengthsAreCorrect() throws Exception {
+	public void validate_shouldPassValidationIfFieldLengthsAreCorrect() {
 		Privilege priv = new Privilege();
 		priv.setPrivilege("Wallhacking");
 		priv.setDescription("description");
@@ -110,8 +105,7 @@ public class PrivilegeValidatorTest extends BaseContextSensitiveTest {
 	 * @see PrivilegeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if field lengths are not correct", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() throws Exception {
+	public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() {
 		Privilege priv = new Privilege();
 		priv
 		        .setPrivilege("too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text");

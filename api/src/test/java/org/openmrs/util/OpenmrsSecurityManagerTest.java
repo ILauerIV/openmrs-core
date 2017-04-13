@@ -20,10 +20,9 @@ public class OpenmrsSecurityManagerTest {
 	
 	/**
 	 * @see OpenmrsSecurityManager#getCallerClass(int)
-	 * @verifies get the most recently called method
 	 */
 	@Test
-	public void getCallerClass_shouldGetTheMostRecentlyCalledMethod() throws Exception {
+	public void getCallerClass_shouldGetTheMostRecentlyCalledMethod() {
 		OpenmrsSecurityManager openmrsSecurityManager = new OpenmrsSecurityManager();
 		Class<?> callerClass = openmrsSecurityManager.getCallerClass(0);
 		Assert.assertTrue("Oops, didn't get a junit type of class: " + callerClass, callerClass.getPackage().getName()
@@ -32,10 +31,9 @@ public class OpenmrsSecurityManagerTest {
 	
 	/**
 	 * @see OpenmrsSecurityManager#getCallerClass(int)
-	 * @verifies throw an error if given a subzero call stack level
 	 */
 	@Test(expected = APIException.class)
-	public void getCallerClass_shouldThrowAnErrorIfGivenASubzeroCallStackLevel() throws Exception {
+	public void getCallerClass_shouldThrowAnErrorIfGivenASubzeroCallStackLevel() {
 		new OpenmrsSecurityManager().getCallerClass(-1);
 	}
 }

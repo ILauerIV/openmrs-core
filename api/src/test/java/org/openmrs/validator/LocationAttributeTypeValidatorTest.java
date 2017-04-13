@@ -15,7 +15,6 @@ import org.junit.Test;
 import org.openmrs.LocationAttributeType;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 
@@ -34,7 +33,7 @@ public class LocationAttributeTypeValidatorTest extends BaseContextSensitiveTest
 	 * @throws Exception
 	 */
 	@Before
-	public void runBeforeEachTest() throws Exception {
+	public void runBeforeEachTest() {
 		executeDataSet(LOC_ATTRIBUTE_DATA_XML);
 	}
 	
@@ -42,8 +41,7 @@ public class LocationAttributeTypeValidatorTest extends BaseContextSensitiveTest
 	 * @see LocationAttributeTypeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if name is null or empty or whitespace", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfNameIsNullOrEmptyOrWhitespace() throws Exception {
+	public void validate_shouldFailValidationIfNameIsNullOrEmptyOrWhitespace() {
 		LocationAttributeType type = new LocationAttributeType();
 		type.setName(null);
 		type.setDescription("description");
@@ -67,8 +65,7 @@ public class LocationAttributeTypeValidatorTest extends BaseContextSensitiveTest
 	 * @see LocationAttributeTypeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if all required fields have proper values", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfAllRequiredFieldsHaveProperValues() throws Exception {
+	public void validate_shouldPassValidationIfAllRequiredFieldsHaveProperValues() {
 		LocationAttributeType type = new LocationAttributeType();
 		type.setName("name");
 		type.setDatatypeClassname("org.openmrs.customdatatype.datatype.FreeTextDatatype");
@@ -83,8 +80,7 @@ public class LocationAttributeTypeValidatorTest extends BaseContextSensitiveTest
 	 * @see LocationAttributeTypeValidator#validate(Object, Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail if location attribute type name is duplicate", method = "validate(Object,Errors)")
-	public void validate_shouldFailIfLocationAttributeTypeNameIsDuplicate() throws Exception {
+	public void validate_shouldFailIfLocationAttributeTypeNameIsDuplicate() {
 		
 		Assert.assertNotNull(Context.getLocationService().getLocationAttributeTypeByName("Audit Date"));
 		
@@ -101,8 +97,7 @@ public class LocationAttributeTypeValidatorTest extends BaseContextSensitiveTest
 	 * @see LocationAttributeTypeValidator#validate(Object, Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass editing location attribute type name", method = "validate(Object,Errors)")
-	public void validate_shouldPassEditingLocationAttributeTypeName() throws Exception {
+	public void validate_shouldPassEditingLocationAttributeTypeName() {
 		
 		LocationAttributeType et = Context.getLocationService().getLocationAttributeTypeByName("Audit Date");
 		Assert.assertNotNull(et);
@@ -116,8 +111,7 @@ public class LocationAttributeTypeValidatorTest extends BaseContextSensitiveTest
 	 * @see LocationAttributeTypeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if field lengths are correct", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfFieldLengthsAreCorrect() throws Exception {
+	public void validate_shouldPassValidationIfFieldLengthsAreCorrect() {
 		LocationAttributeType type = new LocationAttributeType();
 		type.setName("name");
 		type.setDatatypeClassname("org.openmrs.customdatatype.datatype.FreeTextDatatype");
@@ -134,8 +128,7 @@ public class LocationAttributeTypeValidatorTest extends BaseContextSensitiveTest
 	 * @see LocationAttributeTypeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if field lengths are not correct", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() throws Exception {
+	public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() {
 		LocationAttributeType type = new LocationAttributeType();
 		type
 		        .setName("too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text");

@@ -17,10 +17,9 @@ public class ProgramEditorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProgramEditor#setAsText(String)
-	 * @verifies set using concept id
 	 */
 	@Test
-	public void setAsText_shouldSetUsingConceptId() throws Exception {
+	public void setAsText_shouldSetUsingConceptId() {
 		ProgramEditor editor = new ProgramEditor();
 		editor.setAsText("concept.9");
 		Assert.assertNotNull(editor.getValue());
@@ -28,10 +27,9 @@ public class ProgramEditorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProgramEditor#setAsText(String)
-	 * @verifies set using concept uuid
 	 */
 	@Test
-	public void setAsText_shouldSetUsingConceptUuid() throws Exception {
+	public void setAsText_shouldSetUsingConceptUuid() {
 		ProgramEditor editor = new ProgramEditor();
 		editor.setAsText("concept.0a9afe04-088b-44ca-9291-0a8c3b5c96fa");
 		Assert.assertNotNull(editor.getValue());
@@ -39,10 +37,9 @@ public class ProgramEditorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProgramEditor#setAsText(String)
-	 * @verifies set using program id
 	 */
 	@Test
-	public void setAsText_shouldSetUsingProgramId() throws Exception {
+	public void setAsText_shouldSetUsingProgramId() {
 		ProgramEditor editor = new ProgramEditor();
 		editor.setAsText("1");
 		Assert.assertNotNull(editor.getValue());
@@ -50,10 +47,9 @@ public class ProgramEditorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProgramEditor#setAsText(String)
-	 * @verifies set using program uuid
 	 */
 	@Test
-	public void setAsText_shouldSetUsingProgramUuid() throws Exception {
+	public void setAsText_shouldSetUsingProgramUuid() {
 		ProgramEditor editor = new ProgramEditor();
 		editor.setAsText("da4a0391-ba62-4fad-ad66-1e3722d16380");
 		Assert.assertNotNull(editor.getValue());

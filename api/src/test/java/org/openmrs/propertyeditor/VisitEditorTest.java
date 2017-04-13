@@ -17,10 +17,9 @@ public class VisitEditorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see VisitEditor#setAsText(String)
-	 * @verifies set using id
 	 */
 	@Test
-	public void setAsText_shouldSetUsingId() throws Exception {
+	public void setAsText_shouldSetUsingId() {
 		VisitEditor editor = new VisitEditor();
 		editor.setAsText("1");
 		Assert.assertNotNull(editor.getValue());
@@ -28,10 +27,9 @@ public class VisitEditorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see VisitEditor#setAsText(String)
-	 * @verifies set using uuid
 	 */
 	@Test
-	public void setAsText_shouldSetUsingUuid() throws Exception {
+	public void setAsText_shouldSetUsingUuid() {
 		VisitEditor editor = new VisitEditor();
 		editor.setAsText("1e5d5d48-6b78-11e0-93c3-18a905e044dc");
 		Assert.assertNotNull(editor.getValue());

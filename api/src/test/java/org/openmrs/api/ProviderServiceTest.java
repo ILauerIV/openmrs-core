@@ -15,6 +15,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,7 +38,6 @@ import org.openmrs.ProviderAttributeType;
 import org.openmrs.api.context.Context;
 import org.openmrs.customdatatype.datatype.FreeTextDatatype;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 import org.openmrs.util.OpenmrsConstants;
 
 /**
@@ -56,7 +56,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	private ProviderService service;
 	
 	@Before
-	public void before() throws Exception {
+	public void before() {
 		service = Context.getProviderService();
 		executeDataSet(PROVIDERS_INITIAL_XML);
 		executeDataSet(PROVIDER_ATTRIBUTE_TYPES_XML);
@@ -64,91 +64,82 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#getAllProviderAttributeTypes(boolean)
-	 * @verifies get all provider attribute types excluding retired
 	 */
 	@Test
-	public void getAllProviderAttributeTypes_shouldGetAllProviderAttributeTypesExcludingRetired() throws Exception {
+	public void getAllProviderAttributeTypes_shouldGetAllProviderAttributeTypesExcludingRetired() {
 		List<ProviderAttributeType> types = service.getAllProviderAttributeTypes(false);
 		assertEquals(2, types.size());
 	}
 	
 	/**
 	 * @see ProviderService#getAllProviderAttributeTypes(boolean)
-	 * @verifies get all provider attribute types including retired
 	 */
 	@Test
-	public void getAllProviderAttributeTypes_shouldGetAllProviderAttributeTypesIncludingRetired() throws Exception {
+	public void getAllProviderAttributeTypes_shouldGetAllProviderAttributeTypesIncludingRetired() {
 		List<ProviderAttributeType> types = service.getAllProviderAttributeTypes(true);
 		assertEquals(3, types.size());
 	}
 	
 	/**
 	 * @see ProviderService#getAllProviderAttributeTypes()
-	 * @verifies get all provider attribute types including retired by default
 	 */
 	@Test
-	public void getAllProviderAttributeTypes_shouldGetAllProviderAttributeTypesIncludingRetiredByDefault() throws Exception {
+	public void getAllProviderAttributeTypes_shouldGetAllProviderAttributeTypesIncludingRetiredByDefault() {
 		List<ProviderAttributeType> types = service.getAllProviderAttributeTypes();
 		assertEquals(3, types.size());
 	}
 	
 	/**
 	 * @see ProviderService#getAllProviders()
-	 * @verifies get all providers
 	 */
 	@Test
-	public void getAllProviders_shouldGetAllProviders() throws Exception {
+	public void getAllProviders_shouldGetAllProviders() {
 		List<Provider> providers = service.getAllProviders();
 		assertEquals(9, providers.size());
 	}
 	
 	/**
 	 * @see ProviderService#getAllProviders(boolean)
-	 * @verifies get all providers that are unretired
 	 */
 	@Test
-	public void getAllProviders_shouldGetAllProvidersThatAreUnretired() throws Exception {
+	public void getAllProviders_shouldGetAllProvidersThatAreUnretired() {
 		List<Provider> providers = service.getAllProviders(false);
 		assertEquals(7, providers.size());
 	}
 	
 	/**
 	 * @see ProviderService#getProvider(Integer)
-	 * @verifies get provider given ID
 	 */
 	@Test
-	public void getProvider_shouldGetProviderGivenID() throws Exception {
+	public void getProvider_shouldGetProviderGivenID() {
 		Provider provider = service.getProvider(2);
 		assertEquals("Mr. Horatio Test Hornblower", provider.getName());
 	}
 	
 	/**
 	 * @see ProviderService#getProviderAttribute(Integer)
-	 * @verifies get providerAttribute given ID
 	 */
 	@Test
-	public void getProviderAttribute_shouldGetProviderAttributeGivenID() throws Exception {
+	public void getProviderAttribute_shouldGetProviderAttributeGivenID() {
 		ProviderAttribute providerAttribute = service.getProviderAttribute(321);
 		assertEquals("Mr. Horatio Test Hornblower", providerAttribute.getProvider().getName());
 	}
 	
 	/**
 	 * @see ProviderService#getProviderAttributeByUuid(String)
-	 * @verifies get providerAttribute given Uuid
 	 */
 	
 	@Test
-	public void getProviderAttributeByUuid_shouldGetProviderAttributeGivenUuid() throws Exception {
+	public void getProviderAttributeByUuid_shouldGetProviderAttributeGivenUuid() {
 		ProviderAttribute providerAttribute = service.getProviderAttributeByUuid("823382cd-5faa-4b57-8b34-fed33b9c8c65");
 		assertEquals("Mr. Horatio Test Hornblower", providerAttribute.getProvider().getName());
 	}
 	
 	/**
 	 * @see ProviderService#getProviderAttributeType(Integer)
-	 * @verifies get provider attribute type for the given id
 	 */
 	@Test
-	public void getProviderAttributeType_shouldGetProviderAttributeTypeForTheGivenId() throws Exception {
+	public void getProviderAttributeType_shouldGetProviderAttributeTypeForTheGivenId() {
 		ProviderAttributeType providerAttributeType = service.getProviderAttributeType(1);
 		assertEquals("Audit Date", providerAttributeType.getName());
 		assertEquals("9516cc50-6f9f-11e0-8414-001e378eb67e", providerAttributeType.getUuid());
@@ -156,10 +147,9 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#getProviderAttributeTypeByUuid(String)
-	 * @verifies get the provider attribute type by it's uuid
 	 */
 	@Test
-	public void getProviderAttributeTypeByUuid_shouldGetTheProviderAttributeTypeByItsUuid() throws Exception {
+	public void getProviderAttributeTypeByUuid_shouldGetTheProviderAttributeTypeByItsUuid() {
 		ProviderAttributeType providerAttributeType = service
 		        .getProviderAttributeTypeByUuid("9516cc50-6f9f-11e0-8414-001e378eb67e");
 		assertEquals("Audit Date", providerAttributeType.getName());
@@ -167,10 +157,9 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#getProviderByUuid(String)
-	 * @verifies get provider given Uuid
 	 */
 	@Test
-	public void getProviderByUuid_shouldGetProviderGivenUuid() throws Exception {
+	public void getProviderByUuid_shouldGetProviderGivenUuid() {
 		Provider provider = service.getProviderByUuid("ba4781f4-6b94-11e0-93c3-18a905e044dc");
 		assertEquals("Collet Test Chebaskwony", provider.getName());
 		assertNotNull(provider);
@@ -178,57 +167,51 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#getProviders(String, Integer, Integer, java.util.Map)
-	 * @verifies fetch provider with given name with case in sensitive
 	 */
 	@Test
-	public void getProviders_shouldFetchProviderWithGivenNameWithCaseInSensitive() throws Exception {
+	public void getProviders_shouldFetchProviderWithGivenNameWithCaseInSensitive() {
 		List<Provider> providers = service.getProviders("colle", 0, null, null);
 		assertEquals(1, providers.size());
 	}
 	
 	/**
 	 * @see ProviderService#getProviders(String, Integer, Integer, java.util.Map)
-	 * @verifies fetch provider by matching query string with any unVoided PersonName's Given Name
 	 */
 	@Test
-	public void getProviders_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonNamesGivenName() throws Exception {
+	public void getProviders_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonNamesGivenName() {
 		assertEquals(1, service.getProviders("COL", 0, null, null).size());
 	}
 	
 	/**
 	 * @see ProviderService#getProviders(String, Integer, Integer, java.util.Map)
-	 * @verifies fetch provider by matching query string with any unVoided PersonName's middleName
 	 */
 	@Test
-	public void getProviders_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonNamesMiddleName() throws Exception {
+	public void getProviders_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonNamesMiddleName() {
 		assertEquals(6, service.getProviders("Tes", 0, null, null).size());
 	}
 	
 	/**
 	 * @see ProviderService#getProviders(String, Integer, Integer, java.util.Map)
-	 * @verifies fetch provider by matching query string with any unVoided Person's familyName
 	 */
 	@Test
-	public void getProviders_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonsFamilyName() throws Exception {
+	public void getProviders_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonsFamilyName() {
 		assertEquals(2, service.getProviders("Che", 0, null, null, true).size());
 	}
 	
 	/**
 	 * @see ProviderService#getProviders(String, Integer, Integer, java.util.Map)
-	 * @verifies not fetch provider if the query string matches with any voided Person name for that
 	 */
 	@Test
-	public void getProviders_shouldNotFetchProviderIfTheQueryStringMatchesWithAnyVoidedPersonNameForThat() throws Exception {
+	public void getProviders_shouldNotFetchProviderIfTheQueryStringMatchesWithAnyVoidedPersonNameForThat() {
 		assertEquals(0, service.getProviders("Hit", 0, null, null).size());
 		assertEquals(1, service.getProviders("coll", 0, null, null).size());
 	}
 	
 	/**
 	 * @see ProviderService#purgeProvider(Provider)
-	 * @verifies delete a provider
 	 */
 	@Test
-	public void purgeProvider_shouldDeleteAProvider() throws Exception {
+	public void purgeProvider_shouldDeleteAProvider() {
 		Provider provider = service.getProvider(2);
 		service.purgeProvider(provider);
 		assertEquals(8, Context.getProviderService().getAllProviders().size());
@@ -236,10 +219,9 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#purgeProviderAttributeType(ProviderAttributeType)
-	 * @verifies delete a provider attribute type
 	 */
 	@Test
-	public void purgeProviderAttributeType_shouldDeleteAProviderAttributeType() throws Exception {
+	public void purgeProviderAttributeType_shouldDeleteAProviderAttributeType() {
 		int size = service.getAllProviderAttributeTypes().size();
 		ProviderAttributeType providerAttributeType = service.getProviderAttributeType(2);
 		service.purgeProviderAttributeType(providerAttributeType);
@@ -248,10 +230,9 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#retireProvider(Provider,String)
-	 * @verifies retire a provider
 	 */
 	@Test
-	public void retireProvider_shouldRetireAProvider() throws Exception {
+	public void retireProvider_shouldRetireAProvider() {
 		Provider provider = service.getProvider(1);
 		assertFalse(provider.getRetired());
 		assertNull(provider.getRetireReason());
@@ -263,10 +244,9 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#retireProviderAttributeType(ProviderAttributeType,String)
-	 * @verifies retire provider type attribute
 	 */
 	@Test
-	public void retireProviderAttributeType_shouldRetireProviderTypeAttribute() throws Exception {
+	public void retireProviderAttributeType_shouldRetireProviderTypeAttribute() {
 		ProviderAttributeType providerAttributeType = service.getProviderAttributeType(1);
 		assertFalse(providerAttributeType.getRetired());
 		assertNull(providerAttributeType.getRetireReason());
@@ -279,10 +259,9 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#saveProvider(Provider)
-	 * @verifies save a Provider with Person alone
 	 */
 	@Test
-	public void saveProvider_shouldSaveAProviderWithPersonAlone() throws Exception {
+	public void saveProvider_shouldSaveAProviderWithPersonAlone() {
 		Provider provider = new Provider();
 		provider.setIdentifier("unique");
 		Person person = Context.getPersonService().getPerson(Integer.valueOf(999));
@@ -298,10 +277,9 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#saveProviderAttributeType(ProviderAttributeType)
-	 * @verifies save the provider attribute type
 	 */
 	@Test
-	public void saveProviderAttributeType_shouldSaveTheProviderAttributeType() throws Exception {
+	public void saveProviderAttributeType_shouldSaveTheProviderAttributeType() {
 		int size = service.getAllProviderAttributeTypes().size();
 		ProviderAttributeType providerAttributeType = new ProviderAttributeType();
 		providerAttributeType.setName("new");
@@ -313,10 +291,9 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#unretireProvider(Provider)
-	 * @verifies unretire a provider
 	 */
 	@Test
-	public void unretireProvider_shouldUnretireAProvider() throws Exception {
+	public void unretireProvider_shouldUnretireAProvider() {
 		Provider provider = service.getProvider(1);
 		service.unretireProvider(provider);
 		assertFalse(provider.getRetired());
@@ -325,10 +302,9 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#unretireProviderAttributeType(ProviderAttributeType)
-	 * @verifies unretire a provider attribute type
 	 */
 	@Test
-	public void unretireProviderAttributeType_shouldUnretireAProviderAttributeType() throws Exception {
+	public void unretireProviderAttributeType_shouldUnretireAProviderAttributeType() {
 		ProviderAttributeType providerAttributeType = service.getProviderAttributeType(2);
 		assertTrue(providerAttributeType.getRetired());
 		service.unretireProviderAttributeType(providerAttributeType);
@@ -337,12 +313,12 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
+	 * @throws ParseException
 	 * @see ProviderService#getProviders(String, Integer, Integer, java.util.Map)
-	 * @verifies get all providers with given attribute values
 	 */
 	@Test
-	public void getProviders_shouldGetAllProvidersWithGivenAttributeValues() throws Exception {
-		Map<ProviderAttributeType, Object> attributes = new HashMap<ProviderAttributeType, Object>();
+	public void getProviders_shouldGetAllProvidersWithGivenAttributeValues() throws ParseException {
+		Map<ProviderAttributeType, Object> attributes = new HashMap<>();
 		attributes.put(service.getProviderAttributeType(1), new SimpleDateFormat("yyyy-MM-dd").parse("2011-04-25"));
 		List<Provider> providers = service.getProviders("RobertClive", 0, null, attributes);
 		Assert.assertEquals(1, providers.size());
@@ -350,12 +326,12 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
+	 * @throws ParseException
 	 * @see ProviderService#getProviders(String, Integer, Integer, java.util.Map)
-	 * @verifies not find any providers if none have given attribute values
 	 */
 	@Test
-	public void getProviders_shouldNotFindAnyProvidersIfNoneHaveGivenAttributeValues() throws Exception {
-		Map<ProviderAttributeType, Object> attributes = new HashMap<ProviderAttributeType, Object>();
+	public void getProviders_shouldNotFindAnyProvidersIfNoneHaveGivenAttributeValues() throws ParseException {
+		Map<ProviderAttributeType, Object> attributes = new HashMap<>();
 		attributes.put(service.getProviderAttributeType(1), new SimpleDateFormat("yyyy-MM-dd").parse("1411-04-25"));
 		List<Provider> providers = service.getProviders("RobertClive", 0, null, attributes);
 		Assert.assertEquals(0, providers.size());
@@ -363,30 +339,27 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#getProviders(String, Integer, Integer, java.util.Map)
-	 * @verifies finds retired providers by default
 	 */
 	@Test
-	public void getProviders_shouldReturnRetiredProvidersByDefault() throws Exception {
+	public void getProviders_shouldReturnRetiredProvidersByDefault() {
 		List<Provider> providers = service.getProviders(null, null, null, null);
 		Assert.assertEquals(9, providers.size());
 	}
 	
 	/**
 	 * @see ProviderService#getProviders(String, Integer, Integer, java.util.Map, boolean)
-	 * @verifies does not find retired providers if includeRetired is false
 	 */
 	@Test
-	public void getProviders_shouldNotReturnRetiredProvidersIfIncludeRetiredIsFalse() throws Exception {
+	public void getProviders_shouldNotReturnRetiredProvidersIfIncludeRetiredIsFalse() {
 		List<Provider> providers = service.getProviders(null, null, null, null, false);
 		Assert.assertEquals(7, providers.size());
 	}
 	
 	/**
 	 * @see ProviderService#getProvidersByPerson(Person)
-	 * @verifies fail if person is null
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getProvidersByPerson_shouldFailIfPersonIsNull() throws Exception {
+	public void getProvidersByPerson_shouldFailIfPersonIsNull() {
 		//given
 		
 		//when
@@ -398,10 +371,9 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#getProvidersByPerson(Person)
-	 * @verifies return provider for given person
 	 */
 	@Test
-	public void getProvidersByPerson_shouldReturnProvidersForGivenPerson() throws Exception {
+	public void getProvidersByPerson_shouldReturnProvidersForGivenPerson() {
 		//given
 		Person person = Context.getPersonService().getPerson(999);
 		Provider provider = new Provider();
@@ -419,10 +391,9 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#getProviders(String,Integer,Integer,Map)
-	 * @verifies return all providers if query is empty
 	 */
 	@Test
-	public void getProviders_shouldReturnAllProvidersIfQueryIsEmptyAndIncludeRetiredTrue() throws Exception {
+	public void getProviders_shouldReturnAllProvidersIfQueryIsEmptyAndIncludeRetiredTrue() {
 		//given
 		List<Provider> allProviders = service.getAllProviders();
 		
@@ -437,8 +408,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	 * @see ProviderService#isProviderIdentifierUnique(Provider)
 	 */
 	@Test
-	@Verifies(value = "should return false if the identifier is a duplicate", method = "isProviderIdentifierUnique(Provider)")
-	public void isProviderIdentifierUnique_shouldReturnFalseIfTheIdentifierIsADuplicate() throws Exception {
+	public void isProviderIdentifierUnique_shouldReturnFalseIfTheIdentifierIsADuplicate() {
 		executeDataSet(OTHERS_PROVIDERS_XML);
 		Provider duplicateProvider = service.getProvider(200);
 		
@@ -451,8 +421,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	 * @see ProviderService#getProviderByIdentifier(String)
 	 */
 	@Test
-	@Verifies(value = "should get a provider matching the specified identifier ignoring case", method = "getProviderByIdentifier(String)")
-	public void getProviderByIdentifier_shouldGetAProviderMatchingTheSpecifiedIdentifierIgnoringCase() throws Exception {
+	public void getProviderByIdentifier_shouldGetAProviderMatchingTheSpecifiedIdentifierIgnoringCase() {
 		String identifier = "8a760";
 		Provider provider = service.getProviderByIdentifier(identifier);
 		Assert.assertEquals("a2c3868a-6b90-11e0-93c3-18a905e044dc", provider.getUuid());
@@ -463,10 +432,9 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProviderService#getProviders(String,Integer,Integer,Map,boolean)
-	 * @verifies find provider by identifier
 	 */
 	@Test
-	public void getProviders_shouldFindProviderByIdentifier() throws Exception {
+	public void getProviders_shouldFindProviderByIdentifier() {
 		String identifier = "8a760";
 		List<Provider> providers = service.getProviders(identifier, null, null, null, true);
 		Provider provider = service.getProviderByIdentifier(identifier);
@@ -478,8 +446,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	 * @see ProviderService#isProviderIdentifierUnique(Provider)
 	 */
 	@Test
-	@Verifies(value = "should return true if the identifier is null", method = "isProviderIdentifierUnique(Provider)")
-	public void isProviderIdentifierUnique_shouldReturnTrueIfTheIdentifierIsNull() throws Exception {
+	public void isProviderIdentifierUnique_shouldReturnTrueIfTheIdentifierIsNull() {
 		Provider provider = new Provider();
 		Assert.assertTrue(service.isProviderIdentifierUnique(provider));
 	}
@@ -488,8 +455,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	 * @see ProviderService#isProviderIdentifierUnique(Provider)
 	 */
 	@Test
-	@Verifies(value = "should return true if the identifier is a blank string", method = "isProviderIdentifierUnique(Provider)")
-	public void isProviderIdentifierUnique_shouldReturnTrueIfTheIdentifierIsABlankString() throws Exception {
+	public void isProviderIdentifierUnique_shouldReturnTrueIfTheIdentifierIsABlankString() {
 		Provider provider = new Provider();
 		provider.setIdentifier("");
 		Assert.assertTrue(service.isProviderIdentifierUnique(provider));
@@ -499,8 +465,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	 * @see ProviderService#getCountOfProviders(String,null)
 	 */
 	@Test
-	@Verifies(value = "should fetch number of provider matching given query", method = "getCountOfProviders(String,null)")
-	public void getCountOfProviders_shouldFetchNumberOfProviderMatchingGivenQuery() throws Exception {
+	public void getCountOfProviders_shouldFetchNumberOfProviderMatchingGivenQuery() {
 		assertEquals(1, service.getCountOfProviders("Hippo").intValue());
 		Person person = Context.getPersonService().getPerson(502);
 		Set<PersonName> names = person.getNames();
@@ -521,8 +486,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	@Ignore
-	@Verifies(value = "should exclude retired providers", method = "getCountOfProviders(String)")
-	public void getCountOfProviders_shouldExcludeRetiredProviders() throws Exception {
+	public void getCountOfProviders_shouldExcludeRetiredProviders() {
 		assertEquals(2, service.getCountOfProviders("provider").intValue());
 	}
 	
@@ -531,17 +495,15 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	@Ignore
-	@Verifies(value = "should include retired providers if includeRetired is set to true", method = "getCountOfProviders(String,null)")
-	public void getCountOfProviders_shouldIncludeRetiredProvidersIfIncludeRetiredIsSetToTrue() throws Exception {
+	public void getCountOfProviders_shouldIncludeRetiredProvidersIfIncludeRetiredIsSetToTrue() {
 		assertEquals(4, service.getCountOfProviders("provider").intValue());
 	}
 	
 	/**
-	 * @verifies get the unknown provider account
 	 * @see ProviderService#getUnknownProvider()
 	 */
 	@Test
-	public void getUnknownProvider_shouldGetTheUnknownProviderAccount() throws Exception {
+	public void getUnknownProvider_shouldGetTheUnknownProviderAccount() {
 		Provider provider = new Provider();
 		
 		provider.setPerson(newPerson("Unknown Provider"));
@@ -555,7 +517,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	private Person newPerson(String name) {
 		Person person = new Person();
-		Set<PersonName> personNames = new TreeSet<PersonName>();
+		Set<PersonName> personNames = new TreeSet<>();
 		PersonName personName = new PersonName();
 		personName.setFamilyName(name);
 		personNames.add(personName);

@@ -14,6 +14,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Field;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -31,30 +32,34 @@ public class OrderUtilTest {
 		return order.isActive(asOfDate) && order.getAction() != Order.Action.DISCONTINUE;
 	}
 	
-	public static void setDateStopped(Order targetOrder, Date dateStopped) throws Exception {
-		Field field = null;
-		Boolean isAccessible = null;
+	public static void setDateStopped(Order targetOrder, Date dateStopped) {
 		try {
-			field = Order.class.getDeclaredField("dateStopped");
-			isAccessible = field.isAccessible();
-			if (!isAccessible) {
-				field.setAccessible(true);
+			Field field = null;
+			Boolean isAccessible = null;
+			try {
+				field = Order.class.getDeclaredField("dateStopped");
+				isAccessible = field.isAccessible();
+				if (!isAccessible) {
+					field.setAccessible(true);
+				}
+				field.set(targetOrder, dateStopped);
 			}
-			field.set(targetOrder, dateStopped);
+			finally {
+				if (field != null && isAccessible != null) {
+					field.setAccessible(isAccessible);
+				}
+			}
 		}
-		finally {
-			if (field != null && isAccessible != null) {
-				field.setAccessible(isAccessible);
-			}
+		catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
 	/**
-	 * @verifies true if orderType2 is the same or is a subtype of orderType1
 	 * @see OrderUtil#isType(org.openmrs.OrderType, org.openmrs.OrderType)
 	 */
 	@Test
-	public void isType_shouldTrueIfOrderType2IsTheSameOrIsASubtypeOfOrderType1() throws Exception {
+	public void isType_shouldTrueIfOrderType2IsTheSameOrIsASubtypeOfOrderType1() {
 		OrderType orderType = new OrderType();
 		OrderType subType1 = new OrderType();
 		OrderType subType2 = new OrderType();
@@ -66,39 +71,35 @@ public class OrderUtilTest {
 	}
 	
 	/**
-	 * @verifies return false if they are both null
 	 * @see OrderUtil#isType(org.openmrs.OrderType, org.openmrs.OrderType)
 	 */
 	@Test
-	public void isType_shouldReturnFalseIfTheyAreBothNull() throws Exception {
+	public void isType_shouldReturnFalseIfTheyAreBothNull() {
 		assertFalse(OrderUtil.isType(null, null));
 	}
 	
 	/**
-	 * @verifies return false if any is null and the other is not
 	 * @see OrderUtil#isType(org.openmrs.OrderType, org.openmrs.OrderType)
 	 */
 	@Test
-	public void isType_shouldReturnFalseIfAnyIsNullAndTheOtherIsNot() throws Exception {
+	public void isType_shouldReturnFalseIfAnyIsNullAndTheOtherIsNot() {
 		assertFalse(OrderUtil.isType(new OrderType(), null));
 		assertFalse(OrderUtil.isType(null, new OrderType()));
 	}
 	
 	/**
-	 * @verifies false if orderType2 is neither the same nor a subtype of orderType1
 	 * @see OrderUtil#isType(org.openmrs.OrderType, org.openmrs.OrderType)
 	 */
 	@Test
-	public void isType_shouldFalseIfOrderType2IsNeitherTheSameNorASubtypeOfOrderType1() throws Exception {
+	public void isType_shouldFalseIfOrderType2IsNeitherTheSameNorASubtypeOfOrderType1() {
 		assertFalse(OrderUtil.isType(new OrderType(), new OrderType()));
 	}
 	
 	/**
-	 * @verifies return true if order1 and order2 do not have end date
 	 * @see OrderUtil#checkScheduleOverlap(Order,Order)
 	 */
 	@Test
-	public void checkScheduleOverlap_shouldReturnTrueIfOrder1AndOrder2DoNotHaveEndDate() throws Exception {
+	public void checkScheduleOverlap_shouldReturnTrueIfOrder1AndOrder2DoNotHaveEndDate() {
 		Date date = new Date();
 		Order order1 = new Order();
 		order1.setScheduledDate(DateUtils.addDays(date, 4)); //Order1 scheduled after 4 days without stop date
@@ -114,11 +115,10 @@ public class OrderUtilTest {
 	}
 	
 	/**
-	 * @verifies return true if order1 and order2 have same start dates
 	 * @see OrderUtil#checkScheduleOverlap(Order,Order)
 	 */
 	@Test
-	public void checkScheduleOverlap_shouldReturnTrueIfOrder1AndOrder2HaveSameStartDates() throws Exception {
+	public void checkScheduleOverlap_shouldReturnTrueIfOrder1AndOrder2HaveSameStartDates() {
 		Date date = new Date();
 		Order order1 = new Order();
 		order1.setDateActivated(date);
@@ -136,11 +136,10 @@ public class OrderUtilTest {
 	}
 	
 	/**
-	 * @verifies return false if order1 ends before order2 starts Checks vice versa
 	 * @see OrderUtil#checkScheduleOverlap(Order,Order)
 	 */
 	@Test
-	public void checkScheduleOverlap_shouldReturnFalseIfOrder1EndsBeforeOrder2Starts() throws Exception {
+	public void checkScheduleOverlap_shouldReturnFalseIfOrder1EndsBeforeOrder2Starts() {
 		Date date = new Date();
 		Order order1 = new Order();
 		order1.setDateActivated(date);
@@ -155,11 +154,10 @@ public class OrderUtilTest {
 	}
 	
 	/**
-	 * @verifies return false if order1 starts after order2 Checks vice versa
 	 * @see OrderUtil#checkScheduleOverlap(Order,Order)
 	 */
 	@Test
-	public void checkScheduleOverlap_shouldReturnFalseIfOrder1StartsAfterOrder2() throws Exception {
+	public void checkScheduleOverlap_shouldReturnFalseIfOrder1StartsAfterOrder2() {
 		Date date = new Date();
 		Order order1 = new Order();
 		order1.setScheduledDate(DateUtils.addDays(date, 11)); //Order1 getting started after existing order's stop
@@ -174,12 +172,11 @@ public class OrderUtilTest {
 	}
 	
 	/**
-	 * @verifies return true if order1 stops after the order2 has already been activated Checks vice
 	 *           versa
 	 * @see OrderUtil#checkScheduleOverlap(Order,Order)
 	 */
 	@Test
-	public void checkScheduleOverlap_shouldReturnTrueIfOrder1StopsAfterTheOrder2HasAlreadyBeenActivated() throws Exception {
+	public void checkScheduleOverlap_shouldReturnTrueIfOrder1StopsAfterTheOrder2HasAlreadyBeenActivated() {
 		Date date = new Date();
 		Order order1 = new Order();
 		order1.setDateActivated(date); //Order1 scheduled today getting expired after 5 days
@@ -195,11 +192,10 @@ public class OrderUtilTest {
 	}
 	
 	/**
-	 * @verifies return true if order1 starts when the order2 is active
 	 * @see OrderUtil#checkScheduleOverlap(Order,Order)
 	 */
 	@Test
-	public void checkScheduleOverlap_shouldReturnTrueIfOrder1StartsWhenTheOrder2IsActive() throws Exception {
+	public void checkScheduleOverlap_shouldReturnTrueIfOrder1StartsWhenTheOrder2IsActive() {
 		Date date = new Date();
 		Order order1 = new Order();
 		order1.setScheduledDate(DateUtils.addDays(date, 3)); //Order1 scheduled after 3 days
@@ -214,11 +210,10 @@ public class OrderUtilTest {
 	}
 	
 	/**
-	 * @verifies return true if order1 starts before order2 and ends after order2
 	 * @see OrderUtil#checkScheduleOverlap(Order,Order)
 	 */
 	@Test
-	public void checkScheduleOverlap_shouldReturnTrueIfOrder1StartsBeforeOrder2AndEndsAfterOrder2() throws Exception {
+	public void checkScheduleOverlap_shouldReturnTrueIfOrder1StartsBeforeOrder2AndEndsAfterOrder2() {
 		Date date = new Date();
 		Order order1 = new Order();
 		order1.setScheduledDate(DateUtils.addDays(date, 4)); //Order1 scheduled after 4 days getting expired after 14 days
@@ -236,11 +231,11 @@ public class OrderUtilTest {
 	}
 	
 	/**
-	 * @verifies return true if order2 starts before order1 and ends after order1
+	 * @throws ParseException
 	 * @see OrderUtil#checkScheduleOverlap(org.openmrs.Order, org.openmrs.Order)
 	 */
 	@Test
-	public void checkScheduleOverlap_shouldReturnTrueIfOrder2StartsBeforeOrder1AndEndsAfterOrder1() throws Exception {
+	public void checkScheduleOverlap_shouldReturnTrueIfOrder2StartsBeforeOrder1AndEndsAfterOrder1() throws ParseException {
 		DateFormat df = new SimpleDateFormat("dd/MM/yyy");
 		Order order1 = new Order();
 		order1.setDateActivated(df.parse("03/08/2014"));
@@ -253,11 +248,11 @@ public class OrderUtilTest {
 	}
 	
 	/**
-	 * @verifies return true if order1 starts on the stop date of order2
+	 * @throws ParseException
 	 * @see OrderUtil#checkScheduleOverlap(org.openmrs.Order, org.openmrs.Order)
 	 */
 	@Test
-	public void checkScheduleOverlap_shouldReturnTrueIfOrder1StartsOnTheStopDateOfOrder2() throws Exception {
+	public void checkScheduleOverlap_shouldReturnTrueIfOrder1StartsOnTheStopDateOfOrder2() throws ParseException {
 		DateFormat df = new SimpleDateFormat("dd/MM/yyy");
 		Order order1 = new Order();
 		order1.setDateActivated(df.parse("13/08/2014"));
@@ -274,11 +269,11 @@ public class OrderUtilTest {
 	}
 	
 	/**
-	 * @verifies return true if order1 ends on the start date of order2
+	 * @throws ParseException
 	 * @see OrderUtil#checkScheduleOverlap(org.openmrs.Order, org.openmrs.Order)
 	 */
 	@Test
-	public void checkScheduleOverlap_shouldReturnTrueIfOrder1EndsOnTheStartDateOfOrder2() throws Exception {
+	public void checkScheduleOverlap_shouldReturnTrueIfOrder1EndsOnTheStartDateOfOrder2() throws ParseException {
 		DateFormat df = new SimpleDateFormat("dd/MM/yyy");
 		Order order1 = new Order();
 		order1.setDateActivated(df.parse("05/08/2014"));
@@ -295,11 +290,11 @@ public class OrderUtilTest {
 	}
 	
 	/**
-	 * @verifies return true if both orders start and end on same dates
+	 * @throws ParseException
 	 * @see OrderUtil#checkScheduleOverlap(org.openmrs.Order, org.openmrs.Order)
 	 */
 	@Test
-	public void checkScheduleOverlap_shouldReturnTrueIfBothOrdersStartAndEndOnSameDates() throws Exception {
+	public void checkScheduleOverlap_shouldReturnTrueIfBothOrdersStartAndEndOnSameDates() throws ParseException {
 		DateFormat df = new SimpleDateFormat("dd/MM/yyy");
 		Order order1 = new Order();
 		order1.setDateActivated(df.parse("05/08/2014"));

@@ -30,30 +30,27 @@ public class ModuleTest {
 	private Module testModule;
 
 	@Before
-	public void before() throws Exception {
+	public void before() {
 		testModule = new Module("test");
 	}
 
 	/*
-	 * @verifies throw exception when message is null
 	 * @see Module#setStartupErrorMessage(String)
 	 */
 	@Test(expected = ModuleException.class)
-	public void setStartupErrorMessage_shouldThrowExceptionWhenMessageIsNull() throws Exception {
+	public void setStartupErrorMessage_shouldThrowExceptionWhenMessageIsNull() {
 		testModule.setStartupErrorMessage(null);
 	}
 
 	/*
-	 * @verifies throw exception when throwable is null
 	 * @see Module#setStartupErrorMessage(String, Throwable)
 	 */
 	@Test(expected = ModuleException.class)
-	public void setStartupErrorMessage_shouldThrowExceptionWhenThrowableIsNull() throws Exception {
+	public void setStartupErrorMessage_shouldThrowExceptionWhenThrowableIsNull() {
 		testModule.setStartupErrorMessage("error", null);
 	}
 
 	/*
-	 * @verifies set startupErrorMessage when exceptionMessage is null
 	 * @see Module#setStartupErrorMessage(String, Throwable)
 	 */
 	@Test
@@ -68,7 +65,6 @@ public class ModuleTest {
 	}
 
 	/*
-	 * @verifies append the throwable's message to exceptionMessage
  	 * @see Module#setStartupErrorMessage(String, Throwable)
 	 */
 	@Test
@@ -82,7 +78,6 @@ public class ModuleTest {
 	}
 
 	/*
-	 * @verifies set modules when there is a null required modules map
 	 * @see Module#setRequiredModules(List<String>)
 	 */
 	@Test
@@ -90,8 +85,8 @@ public class ModuleTest {
 		testModule.setRequiredModulesMap(null);
 		assertNull(testModule.getRequiredModulesMap());
 
-		ArrayList<String> first = new ArrayList<String>();
-		ArrayList<String> second = new ArrayList<String>();
+		ArrayList<String> first = new ArrayList<>();
+		ArrayList<String> second = new ArrayList<>();
 
 		first.add("mod1");
 		first.add("mod2");
@@ -101,7 +96,7 @@ public class ModuleTest {
 		testModule.setRequiredModules(first);
 		testModule.setRequiredModules(second);
 
-		ArrayList<String> ret = new ArrayList<String>(testModule.getRequiredModules());
+		ArrayList<String> ret = new ArrayList<>(testModule.getRequiredModules());
 		assertTrue(ret.contains("mod1"));
 		assertTrue(ret.contains("mod2"));
 		assertTrue(ret.contains("mod3"));
@@ -109,7 +104,6 @@ public class ModuleTest {
 	}
 
 	/*
-	 * @verifies return null if no required modules exist
 	 * @see Module#getRequiredModuleVersion(String)
 	 */
 	@Test
@@ -122,12 +116,11 @@ public class ModuleTest {
 	}
 
 	/*
-	 * @verifies return null if no required module by given name exists
 	 * @see Module#getRequiredModuleVersion(String)
 	 */
 	@Test
 	public void getRequiredModuleVersion_shouldReturnNullIfNoRequiredModuleByGivenNameExists () {
-		IdentityHashMap<String, String> requiredModules = new IdentityHashMap<String, String>();
+		IdentityHashMap<String, String> requiredModules = new IdentityHashMap<>();
 		
 		requiredModules.put("mod1", "1.0");
 		testModule.setRequiredModulesMap(requiredModules);
@@ -137,7 +130,6 @@ public class ModuleTest {
 	}
 
 	/*
-	 * @verifies should add module to required modules map
 	 * @see Module#addRequiredModule(String, String)
 	 */
 	@Test
@@ -149,14 +141,13 @@ public class ModuleTest {
 	}
 
 	/*
-	 * @verifies dispose all classInstances, not AdvicePoints
 	 * @see Module#disposeAdvicePointsClassInstance()
 	 */
 	@Test
 	public void disposeAdvicePointsClassInstance_shouldDisposeAllClassInstancesNotAdvicePoints() {
-		ArrayList<AdvicePoint> points = new ArrayList<AdvicePoint>();
+		ArrayList<AdvicePoint> points = new ArrayList<>();
 		String obj1 = "string";
-		ArrayList<String> obj2 = new ArrayList<String>();
+		ArrayList<String> obj2 = new ArrayList<>();
 		AdvicePoint point1 = new AdvicePoint("point1", obj1.getClass());
 		AdvicePoint point2 = new AdvicePoint("point2", obj2.getClass());
 

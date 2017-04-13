@@ -46,9 +46,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.DatabaseUnitRuntimeException;
+import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.DefaultDataSet;
 import org.dbunit.dataset.DefaultTable;
 import org.dbunit.dataset.IDataSet;
@@ -234,7 +237,7 @@ public abstract class BaseContextSensitiveTest extends AbstractJUnit4SpringConte
 	 */
 	public void assumeOpenmrsProfile(String openmrsPlatformVersion, String... modules) {
 		OpenmrsProfileExcludeFilter filter = new OpenmrsProfileExcludeFilter();
-		Map<String, Object> profile = new HashMap<String, Object>();
+		Map<String, Object> profile = new HashMap<>();
 		profile.put("openmrsPlatformVersion", openmrsPlatformVersion);
 		if (modules != null) {
 			profile.put("modules", modules);
@@ -371,7 +374,7 @@ public abstract class BaseContextSensitiveTest extends AbstractJUnit4SpringConte
 	 * 
 	 * @throws Exception
 	 */
-	public void authenticate() throws Exception {
+	public void authenticate() {
 		if (Context.isAuthenticated() && Context.getAuthenticatedUser().equals(authenticatedUser)) {
 			return;
 		}
@@ -565,11 +568,14 @@ public abstract class BaseContextSensitiveTest extends AbstractJUnit4SpringConte
 	/**
 	 * This initializes the empty in-memory database with some rows in order to actually run some
 	 * tests
+	 * 
+	 * @throws SQLException
+	 * @throws Exception
 	 */
-	public void initializeInMemoryDatabase() throws Exception {
+	public void initializeInMemoryDatabase() throws SQLException {
 		//Don't allow the user to overwrite data
 		if (!useInMemoryDatabase())
-			throw new Exception(
+			throw new RuntimeException(
 			        "You shouldn't be initializing a NON in-memory database. Consider unoverriding useInMemoryDatabase");
 		/*
 		 * Hbm2ddl used in tests creates primary key columns, which are not auto incremented, if
@@ -618,7 +624,7 @@ public abstract class BaseContextSensitiveTest extends AbstractJUnit4SpringConte
 	 * Used by {@link #executeDataSet(String)} to cache the parsed xml files. This speeds up
 	 * subsequent runs of the dataset
 	 */
-	private static Map<String, IDataSet> cachedDatasets = new HashMap<String, IDataSet>();
+	private static Map<String, IDataSet> cachedDatasets = new HashMap<>();
 	
 	/**
 	 * Runs the flat xml data file at the classpath location specified by
@@ -630,7 +636,7 @@ public abstract class BaseContextSensitiveTest extends AbstractJUnit4SpringConte
 	 * @see #getConnection()
 	 * @see #executeDataSet(IDataSet)
 	 */
-	public void executeDataSet(String datasetFilename) throws Exception {
+	public void executeDataSet(String datasetFilename) {
 		
 		// try to get the given filename from the cache
 		IDataSet xmlDataSetToRun = cachedDatasets.get(datasetFilename);
@@ -642,23 +648,34 @@ public abstract class BaseContextSensitiveTest extends AbstractJUnit4SpringConte
 			InputStream fileInInputStreamFormat = null;
 			Reader reader = null;
 			try {
-				// try to load the file if its a straight up path to the file or
-				// if its a classpath path to the file
-				if (file.exists()) {
-					fileInInputStreamFormat = new FileInputStream(datasetFilename);
-				} else {
-					fileInInputStreamFormat = getClass().getClassLoader().getResourceAsStream(datasetFilename);
-					if (fileInInputStreamFormat == null)
-						throw new FileNotFoundException("Unable to find '" + datasetFilename + "' in the classpath");
+				try {
+					// try to load the file if its a straight up path to the file or
+					// if its a classpath path to the file
+					if (file.exists()) {
+						fileInInputStreamFormat = new FileInputStream(datasetFilename);
+					} else {
+						fileInInputStreamFormat = getClass().getClassLoader().getResourceAsStream(datasetFilename);
+						if (fileInInputStreamFormat == null)
+							throw new FileNotFoundException("Unable to find '" + datasetFilename + "' in the classpath");
+					}
+					
+					reader = new InputStreamReader(fileInInputStreamFormat);
+					ReplacementDataSet replacementDataSet = new ReplacementDataSet(
+					        new FlatXmlDataSet(reader, false, true, false));
+					replacementDataSet.addReplacementObject("[NULL]", null);
+					xmlDataSetToRun = replacementDataSet;
+					
+					reader.close();
 				}
-				
-				reader = new InputStreamReader(fileInInputStreamFormat);
-				ReplacementDataSet replacementDataSet = new ReplacementDataSet(
-				        new FlatXmlDataSet(reader, false, true, false));
-				replacementDataSet.addReplacementObject("[NULL]", null);
-				xmlDataSetToRun = replacementDataSet;
-				
-				reader.close();
+				catch (FileNotFoundException e) {
+					throw new DatabaseUnitRuntimeException(e);
+				}
+				catch (DataSetException e) {
+					throw new DatabaseUnitRuntimeException(e);
+				}
+				catch (IOException e) {
+					throw new DatabaseUnitRuntimeException(e);
+				}
 			}
 			finally {
 				IOUtils.closeQuietly(fileInInputStreamFormat);
@@ -767,14 +784,22 @@ public abstract class BaseContextSensitiveTest extends AbstractJUnit4SpringConte
 	 * @param dataset IDataSet to run on the current database used by Spring
 	 * @see #getConnection()
 	 */
-	public void executeDataSet(IDataSet dataset) throws Exception {
-		Connection connection = getConnection();
-		
-		IDatabaseConnection dbUnitConn = setupDatabaseConnection(connection);
-		
-		//Do the actual update/insert:
-		//insert new rows, update existing rows, and leave others alone
-		DatabaseOperation.REFRESH.execute(dbUnitConn, dataset);
+	public void executeDataSet(IDataSet dataset) {
+		try {
+			Connection connection = getConnection();
+			
+			IDatabaseConnection dbUnitConn = setupDatabaseConnection(connection);
+			
+			//Do the actual update/insert:
+			//insert new rows, update existing rows, and leave others alone
+			DatabaseOperation.REFRESH.execute(dbUnitConn, dataset);
+		}
+		catch (DatabaseUnitException e) {
+			throw new DatabaseUnitRuntimeException(e);
+		}
+		catch (SQLException e) {
+			throw new DatabaseUnitRuntimeException(e);
+		}
 	}
 	
 	private IDatabaseConnection setupDatabaseConnection(Connection connection) throws DatabaseUnitException {
@@ -796,33 +821,44 @@ public abstract class BaseContextSensitiveTest extends AbstractJUnit4SpringConte
 	 * 
 	 * @throws Exception
 	 */
-	public void deleteAllData() throws Exception {
-		Context.clearSession();
-		
-		Connection connection = getConnection();
-		
-		turnOffDBConstraints(connection);
-		
-		IDatabaseConnection dbUnitConn = setupDatabaseConnection(connection);
-		
-		// find all the tables for this connection
-		ResultSet resultSet = connection.getMetaData().getTables(null, "PUBLIC", "%", null);
-		DefaultDataSet dataset = new DefaultDataSet();
-		while (resultSet.next()) {
-			String tableName = resultSet.getString(3);
-			dataset.addTable(new DefaultTable(tableName));
+	public void deleteAllData() {
+		try {
+			Context.clearSession();
+			
+			Connection connection = getConnection();
+			
+			turnOffDBConstraints(connection);
+			
+			IDatabaseConnection dbUnitConn = setupDatabaseConnection(connection);
+			
+			// find all the tables for this connection
+			ResultSet resultSet = connection.getMetaData().getTables(null, "PUBLIC", "%", null);
+			DefaultDataSet dataset = new DefaultDataSet();
+			while (resultSet.next()) {
+				String tableName = resultSet.getString(3);
+				dataset.addTable(new DefaultTable(tableName));
+			}
+			
+			// do the actual deleting/truncating
+			DatabaseOperation.DELETE_ALL.execute(dbUnitConn, dataset);
+			
+			turnOnDBConstraints(connection);
+			
+			connection.commit();
+			
+			updateSearchIndex();
+			
+			isBaseSetup = false;
 		}
-		
-		// do the actual deleting/truncating
-		DatabaseOperation.DELETE_ALL.execute(dbUnitConn, dataset);
-		
-		turnOnDBConstraints(connection);
-		
-		connection.commit();
-		
-		updateSearchIndex();
-		
-		isBaseSetup = false;
+		catch (AmbiguousTableNameException e) {
+			throw new DatabaseUnitRuntimeException(e);
+		}
+		catch (SQLException e) {
+			throw new DatabaseUnitRuntimeException(e);
+		}
+		catch (DatabaseUnitException e) {
+			throw new DatabaseUnitRuntimeException(e);
+		}
 	}
 	
 	/**
@@ -846,14 +882,14 @@ public abstract class BaseContextSensitiveTest extends AbstractJUnit4SpringConte
 	 * If you annotate a test with "@SkipBaseSetup", this method will call {@link #deleteAllData()},
 	 * but only if you use the in memory DB.
 	 * 
+	 * @throws SQLException
 	 * @see SkipBaseSetup
 	 * @see SkipBaseSetupAnnotationExecutionListener
 	 * @see #initializeInMemoryDatabase()
 	 * @see #authenticate()
-	 * @throws Exception
 	 */
 	@Before
-	public void baseSetupWithStandardDataAndAuthentication() throws Exception {
+	public void baseSetupWithStandardDataAndAuthentication() throws SQLException {
 		// Open a session if needed
 		if (!Context.isSessionOpen()) {
 			Context.openSession();

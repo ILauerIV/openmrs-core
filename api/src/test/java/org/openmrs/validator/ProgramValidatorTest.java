@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.openmrs.Program;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
@@ -32,8 +31,7 @@ public class ProgramValidatorTest extends BaseContextSensitiveTest {
 	 * @see ProgramValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if name is null or empty or whitespace", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfNameIsNullOrEmptyOrWhitespace() throws Exception {
+	public void validate_shouldFailValidationIfNameIsNullOrEmptyOrWhitespace() {
 		Program prog = new Program();
 		prog.setName(null);
 		prog.setConcept(Context.getConceptService().getConcept(3));
@@ -57,8 +55,7 @@ public class ProgramValidatorTest extends BaseContextSensitiveTest {
 	 * @see ProgramValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if program name already in use", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfProgramNameAlreadyInUse() throws Exception {
+	public void validate_shouldFailValidationIfProgramNameAlreadyInUse() {
 		Program prog = new Program();
 		prog.setName("MDR-TB PROGRAM");
 		prog.setConcept(Context.getConceptService().getConcept(3));
@@ -72,8 +69,7 @@ public class ProgramValidatorTest extends BaseContextSensitiveTest {
 	 * @see ProgramValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if description is null or empty or whitespace", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfDescriptionIsNullOrEmptyOrWhitespace() throws Exception {
+	public void validate_shouldPassValidationIfDescriptionIsNullOrEmptyOrWhitespace() {
 		
 		Program prog = new Program();
 		prog.setDescription(null);
@@ -98,8 +94,7 @@ public class ProgramValidatorTest extends BaseContextSensitiveTest {
 	 * @see ProgramValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if concept is null or empty or whitespace", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfConceptIsNullOrEmptyOrWhitespace() throws Exception {
+	public void validate_shouldFailValidationIfConceptIsNullOrEmptyOrWhitespace() {
 		Program prog = new Program();
 		prog.setName("Hypochondriasis program");
 		prog.setConcept(null);
@@ -113,8 +108,7 @@ public class ProgramValidatorTest extends BaseContextSensitiveTest {
 	 * @see ProgramValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if all required fields have proper values", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfAllRequiredFieldsHaveProperValues() throws Exception {
+	public void validate_shouldPassValidationIfAllRequiredFieldsHaveProperValues() {
 		Program prog = new Program();
 		prog.setName("Hypochondriasis program");
 		prog.setDescription("This is Hypochondriasis program");
@@ -128,10 +122,9 @@ public class ProgramValidatorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see ProgramValidator#validate(Object,Errors)
-	 * @verifies pass validation and save edited program
 	 */
 	@Test
-	public void validate_shouldPassValidationAndSaveEditedProgram() throws Exception {
+	public void validate_shouldPassValidationAndSaveEditedProgram() {
 		Program program = Context.getProgramWorkflowService().getProgram(3);
 		program.setDescription("Edited description");
 		
@@ -150,8 +143,7 @@ public class ProgramValidatorTest extends BaseContextSensitiveTest {
 	 * @see ProgramValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if field lengths are correct", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfFieldLengthsAreCorrect() throws Exception {
+	public void validate_shouldPassValidationIfFieldLengthsAreCorrect() {
 		Program prog = new Program();
 		prog.setName("Hypochondriasis program");
 		prog.setConcept(Context.getConceptService().getConcept(3));
@@ -166,8 +158,7 @@ public class ProgramValidatorTest extends BaseContextSensitiveTest {
 	 * @see ProgramValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if field lengths are not correct", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() throws Exception {
+	public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() {
 		Program prog = new Program();
 		prog
 		        .setName("too long text too long text too long text too long text too long text too long text too long text too long text");

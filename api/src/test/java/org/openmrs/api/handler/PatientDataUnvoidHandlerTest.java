@@ -27,7 +27,6 @@ import org.openmrs.parameter.EncounterSearchCriteria;
 import org.openmrs.parameter.EncounterSearchCriteriaBuilder;
 import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.test.TestUtil;
-import org.openmrs.test.Verifies;
 
 /**
  * Contains the tests for the {@link PatientDataUnvoidHandler}
@@ -38,8 +37,7 @@ public class PatientDataUnvoidHandlerTest extends BaseContextSensitiveTest {
 	 * @see PatientDataUnvoidHandler#handle(Patient,User,Date,String)
 	 */
 	@Test
-	@Verifies(value = "should unvoid the orders and encounters associated with the patient", method = "handle(Patient,User,Date,String)")
-	public void handle_shouldUnvoidTheOrdersAndEncountersAssociatedWithThePatient() throws Exception {
+	public void handle_shouldUnvoidTheOrdersAndEncountersAssociatedWithThePatient() {
 		Patient patient = Context.getPatientService().getPatient(7);
 		patient = Context.getPatientService().voidPatient(patient, "Void Reason");
 		Assert.assertTrue(patient.getVoided());
@@ -92,8 +90,7 @@ public class PatientDataUnvoidHandlerTest extends BaseContextSensitiveTest {
 	 * @see PatientDataUnvoidHandler#handle(Patient,User,Date,String)
 	 */
 	@Test
-	@Verifies(value = "should not unvoid the orders and encounters that never got voided with the patient", method = "handle(Patient,User,Date,String)")
-	public void handle_shouldNotUnvoidTheOrdersAndEncountersThatNeverGotVoidedWithThePatient() throws Exception {
+	public void handle_shouldNotUnvoidTheOrdersAndEncountersThatNeverGotVoidedWithThePatient() {
 		executeDataSet("org/openmrs/api/include/OrderServiceTest-otherEncounters.xml");
 		Patient patient = Context.getPatientService().getPatient(7);
 		
@@ -120,7 +117,7 @@ public class PatientDataUnvoidHandlerTest extends BaseContextSensitiveTest {
 		Assert.assertTrue(testEncounter.getVoided());
 		Assert.assertTrue(testOrder.getVoided());
 		
-		List<Patient> patients = new ArrayList<Patient>();
+		List<Patient> patients = new ArrayList<>();
 		patients.add(patient);
 		
 		//wait a bit so that the patient isn't voided on the same millisecond

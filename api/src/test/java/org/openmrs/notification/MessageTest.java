@@ -14,7 +14,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.openmrs.test.Verifies;
 
 /**
  * Unit testing for the Message class
@@ -59,8 +58,7 @@ public class MessageTest {
 	 * @see Message#Message(Integer,String,String,String,String,String,String,String)
 	 */
 	@Test
-	@Verifies(value = "should fill in all parameters", method = "Message(Integer,String,String,String,String,String,String,String)")
-	public void Message_shouldFillInAllParameters() throws Exception {
+	public void Message_shouldFillInAllParameters() {
 		int id = 1;
 		String recipients = "recipient1@example.com,recipient2@example.com";
 		String sender = "foo@bar.com";
@@ -83,8 +81,7 @@ public class MessageTest {
 	 * @see Message#setRecipients(String)
 	 */
 	@Test
-	@Verifies(value = "should set multiple recipients", method = "setRecipients(String)")
-	public void setRecipients_shouldSetMultipleRecipients() throws Exception {
+	public void setRecipients_shouldSetMultipleRecipients() {
 		Message testMessage = createTestMessage1();
 		
 		String recipients = "recipient1@example.com,recipient2@example.com";
@@ -98,8 +95,7 @@ public class MessageTest {
 	 * @see Message#addRecipient(String)
 	 */
 	@Test
-	@Verifies(value = "should add new recipient", method = "addRecipient(String)")
-	public void addRecipient_shouldAddNewRecipient() throws Exception {
+	public void addRecipient_shouldAddNewRecipient() {
 		Message testMessage = createTestMessage1();
 		
 		String oldRecipients = testMessage.getRecipients();
@@ -114,8 +110,7 @@ public class MessageTest {
 	 * @see Message#hasAttachment()
 	 */
 	@Test
-	@Verifies(value = "should r return true if this message has an attachment", method = "hasAttachment()")
-	public void hasAttachment_shouldRReturnTrueIfThisMessageHasAnAttachment() throws Exception {
+	public void hasAttachment_shouldRReturnTrueIfThisMessageHasAnAttachment() {
 		Message testMessage1 = createTestMessage1();
 		Message testMessage2 = createTestMessage2();
 		

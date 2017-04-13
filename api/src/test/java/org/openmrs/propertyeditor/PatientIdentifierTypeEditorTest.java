@@ -17,10 +17,9 @@ public class PatientIdentifierTypeEditorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientIdentifierTypeEditor#setAsText(String)
-	 * @verifies set using id
 	 */
 	@Test
-	public void setAsText_shouldSetUsingId() throws Exception {
+	public void setAsText_shouldSetUsingId() {
 		PatientIdentifierTypeEditor editor = new PatientIdentifierTypeEditor();
 		editor.setAsText("1");
 		Assert.assertNotNull(editor.getValue());
@@ -28,10 +27,9 @@ public class PatientIdentifierTypeEditorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientIdentifierTypeEditor#setAsText(String)
-	 * @verifies set using uuid
 	 */
 	@Test
-	public void setAsText_shouldSetUsingUuid() throws Exception {
+	public void setAsText_shouldSetUsingUuid() {
 		PatientIdentifierTypeEditor editor = new PatientIdentifierTypeEditor();
 		editor.setAsText("1a339fe9-38bc-4ab3-b180-320988c0b968");
 		Assert.assertNotNull(editor.getValue());

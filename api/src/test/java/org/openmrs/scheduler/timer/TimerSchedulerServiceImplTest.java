@@ -15,10 +15,10 @@ import java.util.Calendar;
 
 import org.junit.Test;
 import org.openmrs.api.context.Context;
+import org.openmrs.scheduler.SchedulerException;
 import org.openmrs.scheduler.Task;
 import org.openmrs.scheduler.TaskDefinition;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 
 /**
  * Tests methods in TimerSchedulerServiceImpl
@@ -28,11 +28,11 @@ public class TimerSchedulerServiceImplTest extends BaseContextSensitiveTest {
 	/**
 	 * Tests whether the TimerScheduler schedules tasks even if the repeatInterval is zero.
 	 * 
+	 * @throws SchedulerException
 	 * @see TimerSchedulerServiceImpl#scheduleTask(TaskDefinition)
 	 */
 	@Test
-	@Verifies(value = "should handle zero repeat interval", method = "scheduleTask(TaskDefinition)")
-	public void scheduleTask_shouldHandleZeroRepeatInterval() throws Exception {
+	public void scheduleTask_shouldHandleZeroRepeatInterval() throws SchedulerException {
 		
 		// Represents the start time of the task (right now)
 		Calendar startTime = Calendar.getInstance();

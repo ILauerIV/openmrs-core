@@ -18,7 +18,6 @@ import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.BindException;
@@ -40,12 +39,10 @@ public class PersonValidatorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PersonValidator#validate(Object,Errors)
-	 * @verifies fail validation if birthdate is a future date
 	 */
 	
 	@Test
-	@Verifies(value = "should fail validation if birthdate is a future date", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfBirthdateIsAFutureDate() throws Exception {
+	public void validate_shouldFailValidationIfBirthdateIsAFutureDate() {
 		Patient pa = new Patient(1);
 		Calendar birth = Calendar.getInstance();
 		birth.setTime(new Date());
@@ -59,12 +56,10 @@ public class PersonValidatorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PersonValidator#validate(Object,Errors)
-	 * @verifies fail validation if deathdate is a future date
 	 */
 	
 	@Test
-	@Verifies(value = "should fail validation if deathdate is a future date", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfDeathDateIsAFutureDate() throws Exception {
+	public void validate_shouldFailValidationIfDeathDateIsAFutureDate() {
 		Patient pa = new Patient(1);
 		Calendar death = Calendar.getInstance();
 		death.setTime(new Date());
@@ -78,11 +73,9 @@ public class PersonValidatorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PersonValidator#validate(Object,Errors)
-	 * @verifies fail validation if birthdate makes patient older that 120 years old
 	 */
 	@Test
-	@Verifies(value = "should fail validation if birthdate makes patient older that 120 years old", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfBirthdateMakesPatientOlderThat120YearsOld() throws Exception {
+	public void validate_shouldFailValidationIfBirthdateMakesPatientOlderThat120YearsOld() {
 		Patient pa = new Patient(1);
 		Calendar birth = Calendar.getInstance();
 		birth.setTime(new Date());
@@ -96,11 +89,9 @@ public class PersonValidatorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PersonValidator#validate(Object,Errors)
-	 * @verifies fail validation if causeOfDeath is blank when patient is dead
 	 */
 	@Test
-	@Verifies(value = "should fail validation if causeOfDeath is blank when patient is dead", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfCauseOfDeathIsBlankWhenPatientIsDead() throws Exception {
+	public void validate_shouldFailValidationIfCauseOfDeathIsBlankWhenPatientIsDead() {
 		Patient pa = new Patient(1);
 		pa.setDead(true);
 		
@@ -112,11 +103,9 @@ public class PersonValidatorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PersonValidator#validate(Object,Errors)
-	 * @verifies fail validation if voidReason is blank when patient is voided
 	 */
 	@Test
-	@Verifies(value = "should fail validation if voidReason is blank when patient is voided", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfVoidReasonIsBlankWhenPatientIsVoided() throws Exception {
+	public void validate_shouldFailValidationIfVoidReasonIsBlankWhenPatientIsVoided() {
 		Patient pa = Context.getPatientService().getPatient(2);
 		pa.setVoided(true);
 		Errors errors = new BindException(pa, "patient");
@@ -126,11 +115,9 @@ public class PersonValidatorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PersonValidator#validate(Object,Errors)
-	 * @verifies fail validation if person does not have at least one non voided name
 	 */
 	@Test
-	@Verifies(value = "should fail validation if person does not have at least one non voided name", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfPersonDoesNotHaveAtleastOneNonVoidedName() throws Exception {
+	public void validate_shouldFailValidationIfPersonDoesNotHaveAtleastOneNonVoidedName() {
 		Patient pa = Context.getPatientService().getPatient(2);
 		pa.getNames().clear();
 		Errors errors = new BindException(pa, "patient");
@@ -140,11 +127,9 @@ public class PersonValidatorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see org.openmrs.validator.PersonValidator#validate(Object,Errors)
-	 * @verifies pass validation if gender is blank for Persons
 	 */
 	@Test
-	@Verifies(value = "should pass validation if gender is blank for Persons", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfGenderIsBlankForPersons() throws Exception {
+	public void validate_shouldPassValidationIfGenderIsBlankForPersons() {
 		Person person = new Person(1);
 		Errors errors = new BindException(person, "person");
 		PersonValidator personValidator = new PersonValidator();
@@ -155,10 +140,9 @@ public class PersonValidatorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see org.openmrs.validator.PersonValidator#validate(Object,Errors)
-	 * @verifies should pass validation if field lengths are correct
 	 */
 	@Test
-	public void validate_shouldPassValidationIfFieldLengthsAreCorrect() throws Exception {
+	public void validate_shouldPassValidationIfFieldLengthsAreCorrect() {
 		Person person = new Person(1);
 		person.setBirthdate(new Date());
 		person.setGender("g");
@@ -174,10 +158,9 @@ public class PersonValidatorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see org.openmrs.validator.PersonValidator#validate(Object,Errors)
-	 * @verifies should fail validation if field lengths are not correct
 	 */
 	@Test
-	public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() throws Exception {
+	public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() {
 		Person person = new Person(1);
 		person.setBirthdate(new Date());
 		person.setGender("too long text too long too long text too long text  too long text");
@@ -196,10 +179,9 @@ public class PersonValidatorTest extends BaseContextSensitiveTest {
 
 	/**
  	 * @see org.openmrs.validator.PersonValidator#validate(Object,Errors)
-	 * @verifies should fail validation if birthdate is after death date
      */
     @Test
-	public void shouldNotSetDeathBeforeBirth() throws Exception {
+	public void shouldNotSetDeathBeforeBirth() {
 		Patient pa = new Patient(1);
 		Calendar birth = Calendar.getInstance();
 		birth.setTime(new Date());

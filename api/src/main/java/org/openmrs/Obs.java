@@ -64,6 +64,38 @@ import org.slf4j.LoggerFactory;
  */
 public class Obs extends BaseOpenmrsData {
 	
+	/**
+	 * @since 2.1.0
+	 */
+	public enum Interpretation {
+		NORMAL,
+		ABNORMAL,
+		CRITICALLY_ABNORMAL,
+		NEGATIVE,
+		POSITIVE,
+		CRITICALLY_LOW,
+		LOW,
+		HIGH,
+		CRITICALLY_HIGH,
+		VERY_SUSCEPTIBLE,
+		SUSCEPTIBLE,
+		INTERMEDIATE,
+		RESISTANT,
+		SIGNIFICANT_CHANGE_DOWN,
+		SIGNIFICANT_CHANGE_UP,
+		OFF_SCALE_LOW,
+		OFF_SCALE_HIGH
+	}
+	
+	/**
+	 * @since 2.1.0
+	 */
+	public enum Status {
+		PRELIMINARY,
+		FINAL,
+		AMENDED
+	}
+	
 	private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm";
 	
 	private static final String TIME_PATTERN = "HH:mm";
@@ -140,6 +172,10 @@ public class Obs extends BaseOpenmrsData {
 	
 	private Boolean dirty = Boolean.FALSE;
 	
+	private Interpretation interpretation;
+	
+	private Status status = Status.FINAL;
+	
 	/** default constructor */
 	public Obs() {
 	}
@@ -196,6 +232,8 @@ public class Obs extends BaseOpenmrsData {
 		newObs.setVoidedBy(obsToCopy.getVoidedBy());
 		newObs.setDateVoided(obsToCopy.getDateVoided());
 		newObs.setVoidReason(obsToCopy.getVoidReason());
+		newObs.setStatus(obsToCopy.getStatus());
+		newObs.setInterpretation(obsToCopy.getInterpretation());
 		
 		newObs.setValueComplex(obsToCopy.getValueComplex());
 		newObs.setComplexData(obsToCopy.getComplexData());
@@ -970,7 +1008,7 @@ public class Obs extends BaseOpenmrsData {
 				} else {
 					if (getConcept() instanceof ConceptNumeric) {
 						ConceptNumeric cn = (ConceptNumeric) getConcept();
-						if (!cn.isAllowDecimal()) {
+						if (!cn.getAllowDecimal()) {
 							double d = getValueNumeric();
 							int i = (int) d;
 							return Integer.toString(i);
@@ -1271,5 +1309,41 @@ public class Obs extends BaseOpenmrsData {
 		if (!isDirty() && obsId != null && !OpenmrsUtil.nullSafeEquals(oldValue, newValue)) {
 			dirty = true;
 		}
+	}
+	
+	/**
+	 * Similar to FHIR's Observation.interpretation. Supports a subset of FHIR's Observation Interpretation Codes.
+	 * See https://www.hl7.org/fhir/valueset-observation-interpretation.html
+	 * @since 2.1.0
+	 */
+	public Interpretation getInterpretation() {
+		return interpretation;
+	}
+	
+	/**
+	 * @since 2.1.0
+	 */
+	public void setInterpretation(Interpretation interpretation) {
+		markAsDirty(this.interpretation, interpretation);
+		this.interpretation = interpretation;
+	}
+	
+	/**
+	 * Similar to FHIR's Observation.status. Supports a subset of FHIR's ObservationStatus values.
+	 * At present OpenMRS does not support FHIR's REGISTERED and CANCELLED statuses, because we don't support obs with
+	 * null values.
+	 * See: https://www.hl7.org/fhir/valueset-observation-status.html
+	 * @since 2.1.0
+	 */
+	public Status getStatus() {
+		return status;
+	}
+	
+	/**
+	 * @since 2.1.0
+	 */
+	public void setStatus(Status status) {
+		markAsDirty(this.status, status);
+		this.status = status;
 	}
 }
