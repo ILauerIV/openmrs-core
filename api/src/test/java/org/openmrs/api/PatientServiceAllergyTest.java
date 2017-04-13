@@ -34,10 +34,8 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	private static final String ALLERGY_OTHER_NONCODED_TEST_DATASET = "org/openmrs/api/include/otherNonCodedConcept.xml";
 	
 	private PatientService allergyService;
-	private String otherNonCodedConceptUuid;
-		
 	@Before
-	public void runBeforeAllTests() throws Exception {
+	public void runBeforeAllTests() {
 		if (allergyService == null) {
 			allergyService = Context.getPatientService();
 		}
@@ -51,20 +49,18 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientService#getAllergies(Patient)
-	 * @verifies get the allergy list and status
 	 */
 	@Test
-	public void getAllergyByUuid_shouldGetAllergyByUuid() throws Exception {
+	public void getAllergyByUuid_shouldGetAllergyByUuid() {
 		Allergy allergy = allergyService.getAllergyByUuid("21543629-7d8c-11e1-909d-c80aa9edcf4e");		
 		Assert.assertNotNull(allergy);
 	}
 	
 	/**
 	 * @see PatientService#getAllergies(Patient)
-	 * @verifies get the allergy list and status
 	 */
 	@Test
-	public void getAllergies_shouldGetTheAllergyListAndStatus() throws Exception {
+	public void getAllergies_shouldGetTheAllergyListAndStatus() {
 		//get a patient with some allergies
 		Patient patient = allergyService.getPatient(2);
 		Allergies allergies = allergyService.getAllergies(patient);
@@ -86,10 +82,9 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientService#setAllergies(Patient,Allergies)
-	 * @verifies save the allergy list and status
 	 */
 	@Test
-	public void setAllergies_shouldSaveTheAllergyListAndStatus() throws Exception {
+	public void setAllergies_shouldSaveTheAllergyListAndStatus() {
 		//get a patient without any allergies
 		Patient patient = allergyService.getPatient(7);
 		Allergies allergies = allergyService.getAllergies(patient);
@@ -115,12 +110,10 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientService#setAllergies(Patient,Allergies)
-	 * @verifies void removed allergies and maintain status as see list if some allergies are
-	 *           removed
 	 */
 	@Test
 	public void setAllergies_shouldVoidRemovedAllergiesAndMaintainStatusAsSeeListIfSomeAllergiesAreRemoved()
-	    throws Exception {
+	{
 		//get a patient with some allergies
 		Patient patient = allergyService.getPatient(2);
 		Allergies allergies = allergyService.getAllergies(patient);
@@ -150,10 +143,9 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientService#setAllergies(Patient,Allergies)
-	 * @verifies void all allergies and set status to unknown if all allergies are removed
 	 */
 	@Test
-	public void setAllergies_shouldVoidAllAllergiesAndSetStatusToUnknownIfAllAllergiesAreRemoved() throws Exception {
+	public void setAllergies_shouldVoidAllAllergiesAndSetStatusToUnknownIfAllAllergiesAreRemoved() {
 		//get a patient with some allergies
 		Patient patient = allergyService.getPatient(2);
 		Allergies allergies = allergyService.getAllergies(patient);
@@ -175,12 +167,10 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientService#setAllergies(Patient,Allergies)
-	 * @verifies void all allergies and set status to no known allergies if all allergies are
-	 *           removed and status set as such
 	 */
 	@Test
 	public void setAllergies_shouldVoidAllAllergiesAndSetStatusToNoKnownAllergiesIfAllAllergiesAreRemovedAndStatusSetAsSuch()
-	    throws Exception {
+	{
 		//get a patient with some allergies
 		Patient patient = allergyService.getPatient(2);
 		Allergies allergies = allergyService.getAllergies(patient);
@@ -204,11 +194,10 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientService#setAllergies(Patient,Allergies)
-	 * @verifies set status to no known allergies for patient without allergies
 	 */
 	@Test
 	public void setAllergies_shouldSetStatusToNoKnownAllergiesForPatientWithoutAllergies()
-	    throws Exception {
+	{
 		//get a patient without any allergies
 		Patient patient = allergyService.getPatient(7);
 		Allergies allergies = allergyService.getAllergies(patient);
@@ -228,11 +217,10 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientService#setAllergies(Patient,Allergies)
-	 * @verifies void allergies with edited comment
 	 */
 	@Test
 	public void setAllergies_shouldVoidAllergiesWithEditedComment()
-	    throws Exception {
+	{
 		
 		//get a patient with some allergies
 		Patient patient = allergyService.getPatient(2);
@@ -261,11 +249,10 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientService#setAllergies(Patient,Allergies)
-	 * @verifies void allergies with edited severity
 	 */
 	@Test
 	public void setAllergies_shouldVoidAllergiesWithEditedSeverity()
-	    throws Exception {
+	{
 		
 		//get a patient with some allergies
 		Patient patient = allergyService.getPatient(2);
@@ -294,11 +281,10 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientService#setAllergies(Patient,Allergies)
-	 * @verifies void allergies with edited coded allergen
 	 */
 	@Test
 	public void setAllergies_shouldVoidAllergiesWithEditedCodedAllergen()
-	    throws Exception {
+	{
 		
 		//get a patient with some allergies
 		Patient patient = allergyService.getPatient(2);
@@ -327,11 +313,10 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientService#setAllergies(Patient,Allergies)
-	 * @verifies void allergies with edited non coded allergen
 	 */
 	@Test
 	public void setAllergies_shouldVoidAllergiesWithEditedNonCodedAllergen()
-	    throws Exception {
+	{
 		
 		//get a patient with some allergies
 		Patient patient = allergyService.getPatient(2);
@@ -360,11 +345,10 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientService#setAllergies(Patient,Allergies)
-	 * @verifies void allergies with removed reactions
 	 */
 	@Test
 	public void setAllergies_shouldVoidAllergiesWithRemovedReactions()
-	    throws Exception {
+	{
 		
 		//get a patient with some allergies
 		Patient patient = allergyService.getPatient(2);
@@ -393,11 +377,10 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientService#setAllergies(Patient,Allergies)
-	 * @verifies void allergies with added reactions
 	 */
 	@Test
 	public void setAllergies_shouldVoidAllergiesWithAddedReactions()
-	    throws Exception {
+	{
 		
 		//get a patient with some allergies
 		Patient patient = allergyService.getPatient(2);
@@ -427,11 +410,10 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientService#setAllergies(Patient,Allergies)
-	 * @verifies void allergies with edited reaction coded
 	 */
 	@Test
 	public void setAllergies_shouldVoidAllergiesWithEditedReactionCoded()
-	    throws Exception {
+	{
 		
 		//get a patient with some allergies
 		Patient patient = allergyService.getPatient(2);
@@ -461,11 +443,10 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see PatientService#setAllergies(Patient,Allergies)
-	 * @verifies void allergies with edited reaction non coded
 	 */
 	@Test
 	public void setAllergies_shouldVoidAllergiesWithEditedReactionNonCoded()
-	    throws Exception {
+	{
 		
 		//get a patient with some allergies
 		Patient patient = allergyService.getPatient(2);
@@ -494,7 +475,7 @@ public class PatientServiceAllergyTest extends BaseContextSensitiveTest {
 	}
 
 	@Test
-    public void setAllergies_shouldSetTheNonCodedConceptForNonCodedAllergenIfNotSpecified() throws Exception {
+	public void setAllergies_shouldSetTheNonCodedConceptForNonCodedAllergenIfNotSpecified() {
         Patient patient = allergyService.getPatient(2);
         Allergen allergen = new Allergen(AllergenType.DRUG, null, "Some allergy name");
         Allergy allergy = new Allergy(patient, allergen, null, null, null);

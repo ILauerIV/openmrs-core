@@ -15,7 +15,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.Person;
 import org.openmrs.User;
-import org.openmrs.test.Verifies;
 
 /**
  * Tests the {@link PersonUnvoidHandler} class.
@@ -26,21 +25,19 @@ public class PersonUnvoidHandlerTest {
 	 * @see PersonUnvoidHandler#handle(Person,User,Date,String)
 	 */
 	@Test
-	@Verifies(value = "should unset the personVoided bit", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldUnsetThePersonVoidedBit() throws Exception {
+	public void handle_shouldUnsetThePersonVoidedBit() {
 		UnvoidHandler<Person> handler = new PersonUnvoidHandler();
 		Person person = new Person();
-		person.setPersonVoided(true); // make sure isPersonVoided is set
+		person.setPersonVoided(true); // make sure personVoided is set
 		handler.handle(person, null, null, null);
-		Assert.assertFalse(person.isPersonVoided());
+		Assert.assertFalse(person.getPersonVoided());
 	}
 	
 	/**
 	 * @see PersonUnvoidHandler#handle(Person,User,Date,String)
 	 */
 	@Test
-	@Verifies(value = "should unset the personVoider", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldUnsetThePersonVoider() throws Exception {
+	public void handle_shouldUnsetThePersonVoider() {
 		UnvoidHandler<Person> handler = new PersonUnvoidHandler();
 		Person person = new Person();
 		person.setPersonVoided(true);
@@ -53,8 +50,7 @@ public class PersonUnvoidHandlerTest {
 	 * @see PersonUnvoidHandler#handle(Person,User,Date,String)
 	 */
 	@Test
-	@Verifies(value = "should unset the personDateVoided", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldUnsetThePersonDateVoided() throws Exception {
+	public void handle_shouldUnsetThePersonDateVoided() {
 		UnvoidHandler<Person> handler = new PersonUnvoidHandler();
 		Person person = new Person();
 		person.setPersonVoided(true);
@@ -67,8 +63,7 @@ public class PersonUnvoidHandlerTest {
 	 * @see PersonUnvoidHandler#handle(Person,User,Date,String)
 	 */
 	@Test
-	@Verifies(value = "should unset the PersonVoidReason", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldUnsetThePersonVoidReason() throws Exception {
+	public void handle_shouldUnsetThePersonVoidReason() {
 		UnvoidHandler<Person> handler = new PersonUnvoidHandler();
 		Person person = new Person();
 		person.setPersonVoided(true);
@@ -81,8 +76,7 @@ public class PersonUnvoidHandlerTest {
 	 * @see PersonUnvoidHandler#handle(Person,User,Date,String)
 	 */
 	@Test
-	@Verifies(value = "should only act on already personVoided objects", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldOnlyActOnAlreadyVoidedObjects() throws Exception {
+	public void handle_shouldOnlyActOnAlreadyVoidedObjects() {
 		UnvoidHandler<Person> handler = new PersonUnvoidHandler();
 		Person person = new Person();
 		person.setPersonVoided(false);
@@ -94,8 +88,7 @@ public class PersonUnvoidHandlerTest {
 	 * @see PersonUnvoidHandler#handle(Person,User,Date,String)
 	 */
 	@Test
-	@Verifies(value = "should not act on objects with a different personPersonDateVoided", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldNotActOnObjectsWithADifferentPersonDateVoided() throws Exception {
+	public void handle_shouldNotActOnObjectsWithADifferentPersonDateVoided() {
 		Date d = new Date(new Date().getTime() - 1000); // a time that isn't right now
 		
 		UnvoidHandler<Person> handler = new PersonUnvoidHandler();
@@ -104,6 +97,6 @@ public class PersonUnvoidHandlerTest {
 		person.setPersonDateVoided(d);
 		
 		handler.handle(person, null, new Date(), "SOME REASON");
-		Assert.assertTrue(person.isPersonVoided());
+		Assert.assertTrue(person.getPersonVoided());
 	}
 }

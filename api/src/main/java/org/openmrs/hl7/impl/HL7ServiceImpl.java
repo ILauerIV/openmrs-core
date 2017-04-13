@@ -26,8 +26,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
@@ -55,6 +53,8 @@ import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
 import org.openmrs.util.PrivilegeConstants;
 import org.openmrs.validator.PatientIdentifierValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.uhn.hl7v2.HL7Exception;
@@ -82,7 +82,7 @@ import ca.uhn.hl7v2.parser.GenericParser;
 @Transactional
 public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service {
 	
-	private final Log log = LogFactory.getLog(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	private static HL7ServiceImpl instance;
 	
@@ -464,17 +464,33 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service {
 			// log.debug("searching for user by name");
 			try {
 				List<User> users = Context.getUserService().getUsersByName(givenName,familyName,true);
-				if( users == null) {
-					log.error(getFindingUserErrorMessage(idNumber, familyName, givenName) + ": User not found");
-					return null;
-				}
-				else if( users.size() == 1){
+				if (users.size() == 1) {
 					return users.get(0).getUserId();
 				}
-				else{
+				else if (users.size() > 1) {
 					//Return null if that user ambiguous
 					log.error(getFindingUserErrorMessage(idNumber, familyName, givenName) + ": Found " + users.size() + " ambiguous users.");
 					return null;
+				}
+				else { // size == 0
+					// legacy behavior is looking up by username
+					StringBuilder username = new StringBuilder();
+					if (familyName != null) {
+						username.append(familyName);
+					}
+					if (givenName != null) {
+						if (username.length() > 0) {
+							username.append(" "); // separate names with a space
+						}
+						username.append(givenName);
+					}
+					User user = Context.getUserService().getUserByUsername(username.toString());
+					
+					if (user == null) {
+						log.error(getFindingUserErrorMessage(idNumber, familyName, givenName) + ": User not found");
+						return null;
+					}
+					return user.getUserId();
 				}
 			}
 			catch (Exception e) {
@@ -570,7 +586,7 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service {
 	@Transactional(readOnly = true)
 	public Integer resolvePatientId(PID pid) throws HL7Exception {
 		Person p = resolvePersonFromIdentifiers(pid.getPatientIdentifierList());
-		if (p != null && p.isPatient()) {
+		if (p != null && p.getIsPatient()) {
 			return p.getPersonId();
 		}
 		return null;
@@ -777,7 +793,7 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service {
 		if (cause == null) {
 			hl7InError.setErrorDetails("");
 		} else {
-			log.error(cause);
+			log.error("Fatal error", cause);
 			hl7InError.setErrorDetails(ExceptionUtils.getStackTrace(cause));
 		}
 		Context.getHL7Service().saveHL7InError(hl7InError);

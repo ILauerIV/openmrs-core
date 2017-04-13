@@ -13,7 +13,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 
@@ -26,8 +25,7 @@ public class PersonAttributeTypeValidatorTest extends BaseContextSensitiveTest {
 	 * @see PersonAttributeTypeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if name is null", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfNameIsNull() throws Exception {
+	public void validate_shouldFailValidationIfNameIsNull() {
 		PersonAttributeType type = new PersonAttributeType();
 		
 		Errors errors = new BindException(type, "patObj");
@@ -40,8 +38,7 @@ public class PersonAttributeTypeValidatorTest extends BaseContextSensitiveTest {
 	 * @see PersonAttributeTypeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if name already in use", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfNameAlreadyInUse() throws Exception {
+	public void validate_shouldFailValidationIfNameAlreadyInUse() {
 		PersonAttributeType type = new PersonAttributeType();
 		type.setName("Birthplace");
 		
@@ -55,8 +52,7 @@ public class PersonAttributeTypeValidatorTest extends BaseContextSensitiveTest {
 	 * @see PersonAttributeTypeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if all fields are correct", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfAllFieldsAreCorreect() throws Exception {
+	public void validate_shouldPassValidationIfAllFieldsAreCorreect() {
 		PersonAttributeType type = new PersonAttributeType();
 		type.setName("Zodiac");
 		type.setFormat("java.lang.String");
@@ -72,8 +68,7 @@ public class PersonAttributeTypeValidatorTest extends BaseContextSensitiveTest {
 	 * @see PersonAttributeTypeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if format is empty", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfFormatIsEmpty() throws Exception {
+	public void validate_shouldFailValidationIfFormatIsEmpty() {
 		PersonAttributeType type = new PersonAttributeType();
 		type.setName("Zodiac");
 		type.setDescription("Zodiac Description");
@@ -88,8 +83,7 @@ public class PersonAttributeTypeValidatorTest extends BaseContextSensitiveTest {
 	 * @see PersonAttributeTypeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if description is null or empty or whitespace", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfDescriptionIsNullOrEmptyOrWhitespace() throws Exception {
+	public void validate_shouldPassValidationIfDescriptionIsNullOrEmptyOrWhitespace() {
 		PersonAttributeType type = new PersonAttributeType();
 		type.setName("name");
 		type.setDescription(null);
@@ -113,8 +107,7 @@ public class PersonAttributeTypeValidatorTest extends BaseContextSensitiveTest {
 	 * @see PersonAttributeTypeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if field lengths are correct", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfFieldLengthsAreCorrect() throws Exception {
+	public void validate_shouldPassValidationIfFieldLengthsAreCorrect() {
 		PersonAttributeType type = new PersonAttributeType();
 		type.setName("name");
 		type.setFormat("java.lang.String");
@@ -130,8 +123,7 @@ public class PersonAttributeTypeValidatorTest extends BaseContextSensitiveTest {
 	 * @see PersonAttributeTypeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if field lengths are not correct", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() throws Exception {
+	public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() {
 		PersonAttributeType type = new PersonAttributeType();
 		type
 		        .setName("too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text");

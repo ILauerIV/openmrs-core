@@ -13,7 +13,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.Role;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 
@@ -26,8 +25,7 @@ public class RoleValidatorTest extends BaseContextSensitiveTest {
 	 * @see RoleValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if role is null or empty or whitespace", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfRoleIsNullOrEmptyOrWhitespace() throws Exception {
+	public void validate_shouldFailValidationIfRoleIsNullOrEmptyOrWhitespace() {
 		Role role = new Role();
 		role.setRole(null);
 		role.setDescription("some text");
@@ -51,8 +49,7 @@ public class RoleValidatorTest extends BaseContextSensitiveTest {
 	 * @see RoleValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if description is null or empty or whitespace", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfDescriptionIsNullOrEmptyOrWhitespace() throws Exception {
+	public void validate_shouldPassValidationIfDescriptionIsNullOrEmptyOrWhitespace() {
 		Role role = new Role();
 		role.setRole("Bowling race car driver");
 		role.setDescription(null);
@@ -76,8 +73,7 @@ public class RoleValidatorTest extends BaseContextSensitiveTest {
 	 * @see RoleValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if role has leading or trailing space", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfRoleHasLeadingOrTrailingSpace() throws Exception {
+	public void validate_shouldFailValidationIfRoleHasLeadingOrTrailingSpace() {
 		Role role = new Role();
 		role.setDescription("some text");
 		role.setRole(" Bowling race car driver");
@@ -98,8 +94,7 @@ public class RoleValidatorTest extends BaseContextSensitiveTest {
 	 * @see RoleValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if all required fields have proper values", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfAllRequiredFieldsHaveProperValues() throws Exception {
+	public void validate_shouldPassValidationIfAllRequiredFieldsHaveProperValues() {
 		Role role = new Role();
 		role.setRole("Bowling race car driver");
 		role.setDescription("You don't bowl or race fast cars");
@@ -114,8 +109,7 @@ public class RoleValidatorTest extends BaseContextSensitiveTest {
 	 * @see RoleValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if field lengths are correct", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfFieldLengthsAreCorrect() throws Exception {
+	public void validate_shouldPassValidationIfFieldLengthsAreCorrect() {
 		Role role = new Role();
 		role.setRole("Bowling race car driver");
 		role.setDescription("description");
@@ -130,8 +124,7 @@ public class RoleValidatorTest extends BaseContextSensitiveTest {
 	 * @see RoleValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if field lengths are not correct", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() throws Exception {
+	public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() {
 		Role role = new Role();
 		role
 		        .setRole("too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text");

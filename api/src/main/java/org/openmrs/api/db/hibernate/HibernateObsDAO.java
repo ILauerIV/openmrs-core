@@ -14,9 +14,10 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
+import org.hibernate.FlushMode;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -35,6 +36,8 @@ import org.openmrs.User;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.api.db.ObsDAO;
 import org.openmrs.util.OpenmrsConstants.PERSON_TYPE;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Hibernate specific Observation related functions This class should not be used directly. All
@@ -45,7 +48,7 @@ import org.openmrs.util.OpenmrsConstants.PERSON_TYPE;
  */
 public class HibernateObsDAO implements ObsDAO {
 	
-	protected final Log log = LogFactory.getLog(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
 	protected SessionFactory sessionFactory;
 	
@@ -260,6 +263,35 @@ public class HibernateObsDAO implements ObsDAO {
 	public Obs getObsByUuid(String uuid) {
 		return (Obs) sessionFactory.getCurrentSession().createQuery("from Obs o where o.uuid = :uuid").setString("uuid",
 		    uuid).uniqueResult();
+	}
+
+	/**
+	 * @see org.openmrs.api.db.ObsDAO#getRevisionObs(org.openmrs.Obs)
+	 */
+	@Override
+	public Obs getRevisionObs(Obs initialObs) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Obs.class, "obs");
+		criteria.add(Restrictions.eq("previousVersion", initialObs));
+		return (Obs) criteria.uniqueResult();
+	}
+	
+	/**
+	 * @see org.openmrs.api.db.ObsDAO#getSavedStatus(org.openmrs.Obs)
+	 */
+	@Override
+	public Obs.Status getSavedStatus(Obs obs) {
+		// avoid premature flushes when this internal method is called from inside a service method
+		Session session = sessionFactory.getCurrentSession();
+		FlushMode flushMode = session.getFlushMode();
+		session.setFlushMode(FlushMode.MANUAL);
+		try {
+			SQLQuery sql = session.createSQLQuery("select status from obs where obs_id = :obsId");
+			sql.setInteger("obsId", obs.getObsId());
+			return Obs.Status.valueOf((String) sql.uniqueResult());
+		}
+		finally {
+			session.setFlushMode(flushMode);
+		}
 	}
 	
 }

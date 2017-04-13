@@ -25,10 +25,9 @@ public class VersionComparatorTest {
 	 * <br>
 	 * 
 	 * @see VersionComparator#compare(String,String)
-	 * @verifies compare via numeric value not string value
 	 */
 	@Test
-	public void compare_shouldCompareViaNumericValueNotStringValue() throws Exception {
+	public void compare_shouldCompareViaNumericValueNotStringValue() {
 		String[] correctStringSet = { "1.1", "1.2", "1.7", "1.10", "1.11", "1.20", "2.1.1", "2.1.9", "2.1.10", "2.1.20" };
 		String[] randomPurmutationSet = { "1.2", "2.1.10", "2.1.20", "1.1", "1.7", "2.1.1", "1.20", "1.10", "2.1.9", "1.11" };
 		

@@ -153,6 +153,9 @@ public class ObsServiceImpl extends BaseOpenmrsService implements ObsService {
 		Obs newObs = Obs.newInstance(obs);
 
 		unsetVoidedAndCreationProperties(newObs,obs);
+		
+		Obs.Status originalStatus = dao.getSavedStatus(obs);
+		updateStatusIfNecessary(newObs, originalStatus);
 
 		RequiredDataAdvice.recursivelyHandle(SaveHandler.class, newObs, changeMessage);
 
@@ -167,8 +170,14 @@ public class ObsServiceImpl extends BaseOpenmrsService implements ObsService {
 		return newObs;
 
 	}
-        
-        private void unsetVoidedAndCreationProperties(Obs newObs,Obs obs) {
+	
+	private void updateStatusIfNecessary(Obs newObs, Obs.Status originalStatus) {
+		if (Obs.Status.FINAL.equals(originalStatus)) {
+			newObs.setStatus(Obs.Status.AMENDED);
+		}
+	}
+	
+	private void unsetVoidedAndCreationProperties(Obs newObs,Obs obs) {
 		newObs.setVoided(false);
 		newObs.setVoidReason(null);
 		newObs.setDateVoided(null);
@@ -176,7 +185,7 @@ public class ObsServiceImpl extends BaseOpenmrsService implements ObsService {
 		newObs.setCreator(null);
 		newObs.setDateCreated(null);
 		newObs.setPreviousVersion(obs);
-        }
+	}
 
 	private Obs saveObsNotDirty(Obs obs, String changeMessage) {
 		if(!obs.isObsGrouping()){
@@ -477,7 +486,15 @@ public class ObsServiceImpl extends BaseOpenmrsService implements ObsService {
 	public Obs getObsByUuid(String uuid) throws APIException {
 		return dao.getObsByUuid(uuid);
 	}
-	
+
+	/**
+	 * @see org.openmrs.api.ObsService#getRevisionObs(org.openmrs.Obs)
+	 */
+	@Transactional(readOnly = true)
+	public Obs getRevisionObs(Obs initialObs) {
+		return dao.getRevisionObs(initialObs);
+	}
+
 	/**
 	 * @see org.openmrs.api.ObsService#getComplexObs(Integer, String)
 	 */

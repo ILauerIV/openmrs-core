@@ -22,10 +22,9 @@ public class WorkflowCollectionEditorTest extends BaseContextSensitiveTest {
 	
 	/**
 	 * @see WorkflowCollectionEditor#setAsText(String)
-	 * @verifies update workflows in program
 	 */
 	@Test
-	public void setAsText_shouldUpdateWorkflowsInProgram() throws Exception {
+	public void setAsText_shouldUpdateWorkflowsInProgram() {
 		Program program = Context.getProgramWorkflowService().getProgram(1);
 		WorkflowCollectionEditor editor = new WorkflowCollectionEditor();
 		

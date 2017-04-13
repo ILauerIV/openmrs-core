@@ -15,7 +15,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
-import org.openmrs.test.Verifies;
 
 /**
  *
@@ -39,8 +38,7 @@ public class VerhoeffIdentifierValidatorTest {
 	 * @see VerhoeffIdentifierValidator#getValidIdentifier(String)
 	 */
 	@Test
-	@Verifies(value = "should get valid identifier", method = "getValidIdentifier(String)")
-	public void getValidIdentifier_shouldGetValidIdentifier() throws Exception {
+	public void getValidIdentifier_shouldGetValidIdentifier() {
 		
 		//Make sure valid identifiers come back with the right check digit
 		

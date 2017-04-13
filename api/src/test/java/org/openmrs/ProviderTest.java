@@ -11,7 +11,6 @@ package org.openmrs;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmrs.test.Verifies;
 
 /**
  * This tests methods on the provider object.
@@ -22,8 +21,7 @@ public class ProviderTest {
 	 * @see Provider#getName()
 	 */
 	@Test
-	@Verifies(value = "return person full name if person is not null or null otherwise", method = "getName()")
-	public void getName_shouldReturnPersonFullNameIfPersonIsNotNullOrNullOtherwise() throws Exception {
+	public void getName_shouldReturnPersonFullNameIfPersonIsNotNullOrNullOtherwise() {
 		Provider provider = new Provider();
 		
 		Person person = new Person(1);
@@ -36,8 +34,7 @@ public class ProviderTest {
 	 * @see Provider#toString()
 	 */
 	@Test
-	@Verifies(value = "return person all names of person with specific format", method = "toString()")
-	public void toString_shouldReturnPersonAllNamesWithSpecificFormat() throws Exception {
+	public void toString_shouldReturnPersonAllNamesWithSpecificFormat() {
 		
 		Provider provider = new Provider();
 		provider.setProviderId(1);

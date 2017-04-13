@@ -20,7 +20,6 @@ import org.openmrs.Voidable;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 
 /**
  * Tests for the {@link RequireVoidReasonSaveHandler} class.
@@ -31,8 +30,7 @@ public class RequiredReasonVoidSaveHandlerTest extends BaseContextSensitiveTest 
 	 * @see RequireVoidReasonSaveHandler#handle(Voidable,User,Date,String)
 	 */
 	@Test(expected = APIException.class)
-	@Verifies(value = "should throw APIException if Patient voidReason is null", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldThrowAPIExceptionIfPatientVoidReasonIsNull() throws Exception {
+	public void handle_shouldThrowAPIExceptionIfPatientVoidReasonIsNull() {
 		Patient p = Context.getPatientService().getPatient(2);
 		p.setVoided(true);
 		p.setVoidReason(null);
@@ -43,8 +41,7 @@ public class RequiredReasonVoidSaveHandlerTest extends BaseContextSensitiveTest 
 	 * @see RequireVoidReasonSaveHandler#handle(Voidable,User,Date,String)
 	 */
 	@Test(expected = APIException.class)
-	@Verifies(value = "should throw APIException if Encounter voidReason is empty", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldThrowAPIExceptionIfEncounterVoidReasonIsEmpty() throws Exception {
+	public void handle_shouldThrowAPIExceptionIfEncounterVoidReasonIsEmpty() {
 		Encounter e = Context.getEncounterService().getEncounter(3);
 		e.setVoided(true);
 		e.setVoidReason("");
@@ -55,8 +52,7 @@ public class RequiredReasonVoidSaveHandlerTest extends BaseContextSensitiveTest 
 	 * @see RequireVoidReasonSaveHandler#handle(Voidable,User,Date,String)
 	 */
 	@Test(expected = APIException.class)
-	@Verifies(value = "should throw APIException if Encounter voidReason is blank", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldThrowAPIExceptionIfObsVoidReasonIsBlank() throws Exception {
+	public void handle_shouldThrowAPIExceptionIfObsVoidReasonIsBlank() {
 		Encounter e = Context.getEncounterService().getEncounter(3);
 		e.setVoided(true);
 		e.setVoidReason("  ");
@@ -67,8 +63,7 @@ public class RequiredReasonVoidSaveHandlerTest extends BaseContextSensitiveTest 
 	 * @see RequireVoidReasonSaveHandler#handle(Voidable,User,Date,String)
 	 */
 	@Test
-	@Verifies(value = "should not throw Exception if voidReason is not blank", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldNotThrowExceptionIfVoidReasonIsNotBlank() throws Exception {
+	public void handle_shouldNotThrowExceptionIfVoidReasonIsNotBlank() {
 		Encounter e = Context.getEncounterService().getEncounter(3);
 		e.setVoided(true);
 		e.setVoidReason("Some Reason");
@@ -79,8 +74,7 @@ public class RequiredReasonVoidSaveHandlerTest extends BaseContextSensitiveTest 
 	 * @see RequireVoidReasonSaveHandler#handle(Voidable,User,Date,String)
 	 */
 	@Test
-	@Verifies(value = "not throw Exception if voidReason is null for unsupported types", method = "handle(Voidable,User,Date,String)")
-	public void handle_shouldNotThrowExceptionIfVoidReasonIsNullForUnsupportedTypes() throws Exception {
+	public void handle_shouldNotThrowExceptionIfVoidReasonIsNullForUnsupportedTypes() {
 		Person p = Context.getPersonService().getPerson(1);
 		p.setVoided(true);
 		p.setVoidReason(null);

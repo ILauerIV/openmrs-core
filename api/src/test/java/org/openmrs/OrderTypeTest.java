@@ -14,7 +14,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmrs.test.Verifies;
 
 /**
  * This class tests all methods that are not getter or setters in the {@link org.openmrs.OrderType}
@@ -28,8 +27,7 @@ public class OrderTypeTest {
 	 * @see org.openmrs.OrderType#getJavaClass()
 	 */
 	@Test
-	@Verifies(value = "should get java class String as class", method = "getJavaClassObject()")
-	public void setJavaClass_shouldGetJavaClassObject() throws Exception {
+	public void setJavaClass_shouldGetJavaClassObject() {
 		//Create a new OrderType
 		OrderType orderType = new OrderType();
 		
@@ -41,11 +39,10 @@ public class OrderTypeTest {
 	}
 	
 	/**
-	 * @verifies add the specified concept class
 	 * @see OrderType#addConceptClass(ConceptClass)
 	 */
 	@Test
-	public void addConceptClass_shouldAddTheSpecifiedConceptClass() throws Exception {
+	public void addConceptClass_shouldAddTheSpecifiedConceptClass() {
 		OrderType ot = new OrderType();
 		ConceptClass cc = new ConceptClass();
 		ot.addConceptClass(cc);
@@ -56,11 +53,10 @@ public class OrderTypeTest {
 	 * Ensures that if the collection implementation gets changed from a set, that duplicates are
 	 * not added
 	 * 
-	 * @verifies not add a duplicate concept class
 	 * @see OrderType#addConceptClass(ConceptClass)
 	 */
 	@Test
-	public void addConceptClass_shouldNotAddADuplicateConceptClass() throws Exception {
+	public void addConceptClass_shouldNotAddADuplicateConceptClass() {
 		OrderType ot = new OrderType();
 		ConceptClass cc1 = new ConceptClass();
 		ot.addConceptClass(cc1);

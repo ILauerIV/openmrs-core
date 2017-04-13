@@ -18,7 +18,6 @@ import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.User;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 
 /**
  * Tests the {@link PersonSaveHandler} class
@@ -29,8 +28,7 @@ public class PersonSaveHandlerTest extends BaseContextSensitiveTest {
      * @see PersonSaveHandler#handle(Person,User, Date,String)
      */
     @Test
-    @Verifies(value = "should ignore blank addresses", method = "handle(Person,User,Date,String)")
-    public void handle_shouldIgnoreBlankAddresses() throws Exception {
+    public void handle_shouldIgnoreBlankAddresses() {
         PersonSaveHandler handler = new PersonSaveHandler();
         Person person = new Person();
         PersonName personName = new PersonName("John","","Smith");

@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.openmrs.VisitAttributeType;
 import org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 
@@ -24,8 +23,7 @@ public class VisitAttributeTypeValidatorTest extends BaseContextSensitiveTest {
 	 * @see VisitAttributeTypeValidator#validate(Object, org.springframework.validation.Errors)
 	 */
 	@Test
-	@Verifies(value = "should pass validation if field lengths are correct", method = "validate(Object,Errors)")
-	public void validate_shouldPassValidationIfFieldLengthsAreCorrect() throws Exception {
+	public void validate_shouldPassValidationIfFieldLengthsAreCorrect() {
 		VisitAttributeType visitAttributeType = new VisitAttributeType();
 		visitAttributeType.setName("name");
 		visitAttributeType.setMinOccurs(1);
@@ -44,8 +42,7 @@ public class VisitAttributeTypeValidatorTest extends BaseContextSensitiveTest {
 	 * @see VisitAttributeTypeValidator#validate(Object,Errors)
 	 */
 	@Test
-	@Verifies(value = "should fail validation if field lengths are not correct", method = "validate(Object,Errors)")
-	public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() throws Exception {
+	public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() {
 		VisitAttributeType visitAttributeType = new VisitAttributeType();
 		visitAttributeType
 		        .setName("too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text too long text");

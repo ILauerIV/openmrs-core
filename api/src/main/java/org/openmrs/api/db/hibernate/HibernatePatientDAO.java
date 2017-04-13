@@ -23,8 +23,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -49,6 +47,8 @@ import org.openmrs.api.db.hibernate.search.LuceneQuery;
 import org.openmrs.collection.ListPart;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Hibernate specific database methods for the PatientService
@@ -59,7 +59,7 @@ import org.openmrs.util.OpenmrsUtil;
  */
 public class HibernatePatientDAO implements PatientDAO {
 	
-	protected final Log log = LogFactory.getLog(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
 	/**
 	 * Hibernate session factory
@@ -249,16 +249,15 @@ public class HibernatePatientDAO implements PatientDAO {
 		// join with the patient table to prevent patient identifiers from patients
 		// that already voided getting returned
 		criteria.createAlias("patient", "patient");
+
 		criteria.add(Restrictions.eq("patient.voided", false));
 		
-		// make sure the patient object isn't voided
 		criteria.add(Restrictions.eq("voided", false));
 		
 		if (identifier != null) {
 			criteria.add(Restrictions.eq("identifier", identifier));
 		}
 		
-		// TODO add junit test for getting by identifier type
 		if (!patientIdentifierTypes.isEmpty()) {
 			criteria.add(Restrictions.in("identifierType", patientIdentifierTypes));
 		}
@@ -267,7 +266,6 @@ public class HibernatePatientDAO implements PatientDAO {
 			criteria.add(Restrictions.in("location", locations));
 		}
 		
-		// TODO add junit test for getting by patients
 		if (!patients.isEmpty()) {
 			criteria.add(Restrictions.in("patient", patients));
 		}

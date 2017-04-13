@@ -41,12 +41,12 @@ import java.util.WeakHashMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.APIException;
 import org.openmrs.util.OpenmrsClassLoader;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Standard implementation of module class loader. <br>
@@ -55,7 +55,7 @@ import org.openmrs.util.OpenmrsUtil;
  */
 public class ModuleClassLoader extends URLClassLoader {
 	
-	static Log log = LogFactory.getLog(ModuleClassLoader.class);
+	static Logger log = LoggerFactory.getLogger(ModuleClassLoader.class);
 	
 	private final Module module;
 	
@@ -70,12 +70,7 @@ public class ModuleClassLoader extends URLClassLoader {
 	private Set<String> providedPackages = new LinkedHashSet<String>();
 	
 	private boolean disposed = false;
-	
-	/**
-	 * Holds a list of all classes for this classloader so that they can be cleaned up.
-	 * This is also used to fix: https://tickets.openmrs.org/browse/TRUNK-4053
-	 */
-	private Map<String, Class<?>> loadedClasses = new HashMap<String, Class<?>>();
+
 	
 	/**
 	 * @param module Module
