@@ -754,4 +754,196 @@ public class OpenmrsUtilTest extends BaseContextSensitiveTest {
 		verify(output, times(1)).close();
 	}
 
+	/**
+	 * @verifies not find not existing string in array
+	 * @see OpenmrsUtil#isStringInArray(String, String[])
+	 */
+	@Test
+	public void isStringInArray_shouldNotFindNotExistingStringInArray() throws Exception {
+		String test = "Array";
+		String[] arr = {"Hello","World", " ", "test", "OpenMRS"};
+		Assert.assertFalse(OpenmrsUtil.isStringInArray(test,arr));
+	}
+
+	/**
+	 * @verifies reject null string
+	 * @see OpenmrsUtil#isStringInArray(String, String[])
+	 */
+	@Test
+	public void isStringInArray_shouldRejectNullString() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies reject null array
+	 * @see OpenmrsUtil#isStringInArray(String, String[])
+	 */
+	@Test
+	public void isStringInArray_shouldRejectNullArray() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies not copy the outputstream if outputstream is null
+	 * @see OpenmrsUtil#copyFile(InputStream, OutputStream)
+	 */
+	@Test
+	public void copyFile_shouldNotCopyTheOutputstreamIfOutputstreamIsNull() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies reject malformed arguments
+	 * @see OpenmrsUtil#parseParameterList(String)
+	 */
+	@Test
+	public void parseParameterList_shouldRejectMalformedArguments() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies return a pared parameter list
+	 * @see OpenmrsUtil#parseParameterList(String)
+	 */
+	@Test
+	public void parseParameterList_shouldReturnAParedParameterList() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies reject null dates
+	 * @see OpenmrsUtil#firstSecondOfDay(Date)
+	 */
+	@Test
+	public void firstSecondOfDay_shouldRejectNullDates() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies return first secdond of given day
+	 * @see OpenmrsUtil#firstSecondOfDay(Date)
+	 */
+	@Test
+	public void firstSecondOfDay_shouldReturnFirstSecdondOfGivenDay() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies reject not directories
+	 * @see OpenmrsUtil#deleteDirectory(java.io.File)
+	 */
+	@Test
+	public void deleteDirectory_shouldRejectNotDirectories() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies return a pattern with two h characters in it
+	 * @see OpenmrsUtil#getTimeFormat(Locale)
+	 */
+	@Test
+	public void getTimeFormat_shouldReturnAPatternWithTwoHCharactersInIt() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies not allow the returned SimpleDateFormat to be modified
+	 * @see OpenmrsUtil#getTimeFormat(Locale)
+	 */
+	@Test
+	public void getTimeFormat_shouldNotAllowTheReturnedSimpleDateFormatToBeModified() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies change hour pattern to two digit hour
+	 * @see OpenmrsUtil#getTimeFormat(Locale)
+	 */
+	@Test
+	public void getTimeFormat_shouldChangeHourPatternToTwoDigitHour() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies return a pattern with four y characters and two h characters in it
+	 * @see OpenmrsUtil#getDateTimeFormat(Locale)
+	 */
+	@Test
+	public void getDateTimeFormat_shouldReturnAPatternWithFourYCharactersAndTwoHCharactersInIt() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies not allow the returned SimpleDateFormat to be modified
+	 * @see OpenmrsUtil#getDateTimeFormat(Locale)
+	 */
+	@Test
+	public void getDateTimeFormat_shouldNotAllowTheReturnedSimpleDateFormatToBeModified() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies fail without both upper and lower case password by default
+	 * @see OpenmrsUtil#validatePassword(String, String, String)
+	 */
+	@Test
+	public void validatePassword_shouldFailWithoutBothUpperAndLowerCasePasswordByDefault() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies fail without both upper and lower case password if not allowed
+	 * @see OpenmrsUtil#validatePassword(String, String, String)
+	 */
+	@Test
+	public void validatePassword_shouldFailWithoutBothUpperAndLowerCasePasswordIfNotAllowed() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies pass without both upper and lower case password if allowed
+	 * @see OpenmrsUtil#validatePassword(String, String, String)
+	 */
+	@Test
+	public void validatePassword_shouldPassWithoutBothUpperAndLowerCasePasswordIfAllowed() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies return false if string contains any non-digits
+	 * @see OpenmrsUtil#containsOnlyDigits(String)
+	 */
+	@Test
+	public void containsOnlyDigits_shouldReturnFalseIfStringContainsAnyNondigits() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies find existing string in an array
+	 * @see OpenmrsUtil#isStringInArray(String, String[])
+	 */
+	@Test
+	public void isStringInArray_shouldFindExistingStringInAnArray() throws Exception {
+		String test = "test";
+		String[] arr = {"Hello","World", " ", "test", "OpenMRS"};
+		Assert.assertTrue(OpenmrsUtil.isStringInArray(test,arr));
+	}
 }
+

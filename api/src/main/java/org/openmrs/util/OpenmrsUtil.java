@@ -169,6 +169,17 @@ public class OpenmrsUtil {
 		
 		return returnList;
 	}
+
+	/**
+	 *
+	 * @param str string to search for
+	 * @param arr arr to search in
+	 * @return bool
+	 * @should find existing string in an array
+	 * @should not find not existing string in array
+	 * @should reject null string
+	 * @should reject null array
+	 */
 	
 	public static boolean isStringInArray(String str, String[] arr) {
 		boolean retVal = false;
@@ -182,7 +193,7 @@ public class OpenmrsUtil {
 		}
 		return retVal;
 	}
-	
+
 	public static Boolean isInNormalNumericRange(Float value, ConceptNumeric concept) {
 		if (concept.getHiNormal() == null || concept.getLowNormal() == null) {
 			return false;
@@ -580,6 +591,8 @@ public class OpenmrsUtil {
 	 * 
 	 * @param paramList <code>String</code> with a list of parameters
 	 * @return Map&lt;String, String&gt; of the parameters passed
+	 * @should reject malformed arguments
+	 * @should return a pared parameter list
 	 */
 	public static Map<String, String> parseParameterList(String paramList) {
 		Map<String, String> ret = new HashMap<String, String>();
@@ -864,6 +877,8 @@ public class OpenmrsUtil {
 	 * @param date date to adjust
 	 * @return a date that is the first possible time in the day
 	 * @since 1.9
+	 * @should reject null dates
+	 * @should return first secdond of given day
 	 */
 	public static Date firstSecondOfDay(Date date) {
 		if (date == null) {
@@ -890,6 +905,7 @@ public class OpenmrsUtil {
 	 * @param dir File directory to delete
 	 * @return true/false whether the delete was completed successfully
 	 * @throws IOException if <code>dir</code> is not a directory
+	 * @should reject not directories
 	 */
 	public static boolean deleteDirectory(File dir) throws IOException {
 		if (!dir.exists() || !dir.isDirectory()) {
@@ -1369,6 +1385,7 @@ public class OpenmrsUtil {
 	 * @should return a pattern with two h characters in it
 	 * @should not allow the returned SimpleDateFormat to be modified
 	 * @since 1.9
+	 * @should change hour pattern to two digit hour
 	 */
 	public static SimpleDateFormat getTimeFormat(Locale locale) {
 		if (timeFormatCache.containsKey(locale)) {
